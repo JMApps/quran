@@ -8,7 +8,7 @@ class WordScriptDatabaseService {
   WordScriptDatabaseService._();
   static final WordScriptDatabaseService instance = WordScriptDatabaseService._();
 
-  static const String _dbFileName = 'qpc-hafs-word-by-word.db';
+  static const String _dbFileName = 'qpc-hafs-word-by-word-v2.db';
   static const int _dbVersion = 1;
 
   static const String _assetPath = 'assets/databases/$_dbFileName';
