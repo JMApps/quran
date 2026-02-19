@@ -1,0 +1,27 @@
+import 'package:sqflite/sqflite.dart';
+
+import '../../../../core/database/layout_database_service.dart';
+import '../../domain/entities/layout_line_entity.dart';
+import '../../domain/repositories/layout_line_repository.dart';
+import '../mappers/layout_mapper.dart';
+import '../models/layout_line_model.dart';
+
+class LayoutLineRepositoryImpl implements LayoutLineRepository {
+  final LayoutDatabaseService _layoutDatabaseService;
+
+  LayoutLineRepositoryImpl(this._layoutDatabaseService);
+
+  @override
+  Future<List<LayoutLineEntity>> getLinesByPage({required int pageNumber}) async {
+    final Database database = await _layoutDatabaseService.db;
+
+    final List<Map<String, Object?>> rows = await database.query(
+      'Table_of_layouts',
+      where: 'page_number = ?',
+      whereArgs: [pageNumber],
+      orderBy: 'line_number ASC',
+    );
+
+    return rows.map((row) => LayoutLineModel.fromMap(row).toEntity()).toList();
+  }
+}
