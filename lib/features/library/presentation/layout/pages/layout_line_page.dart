@@ -15,6 +15,17 @@ class LayoutLinePage extends StatefulWidget {
 class _LayoutLinePageState extends State<LayoutLinePage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.pageNumber.toString()),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.language_rounded),
+          ),
+        ],
+      ),
+      body: Container(),
+    );
   }
 }

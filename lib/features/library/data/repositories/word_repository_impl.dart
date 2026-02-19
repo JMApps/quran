@@ -16,31 +16,13 @@ class WordRepositoryImpl implements WordRepository {
     required int fromId,
     required int toId,
   }) async {
-    final Database db = await _wordScriptDatabaseService.db;
+    final Database database = await _wordScriptDatabaseService.db;
 
-    final rows = await db.rawQuery(
-      '''
-      SELECT
-        wid AS id,
-        location,
-        surah,
-        ayah,
-        word,
-        text
-      FROM (
-        SELECT
-          ROW_NUMBER() OVER (ORDER BY surah, ayah, word) AS wid,
-          location,
-          surah,
-          ayah,
-          word,
-          text
-        FROM Table_of_words
-      )
-      WHERE wid BETWEEN ? AND ?
-      ORDER BY wid ASC
-      ''',
-      [fromId, toId],
+    final List<Map<String, Object?>> rows = await database.query(
+      'words',
+      where: 'id BETWEEN ? AND ?',
+      whereArgs: [fromId, toId],
+      orderBy: 'id ASC',
     );
 
     return rows.map((row) => WordModel.fromMap(row).toEntity()).toList();
