@@ -17,8 +17,7 @@ class AppTheme {
     return ThemeData(
       fontFamily: 'Gilroy',
       fontFamilyFallback: const [
-        // AppStringConstraints.fontFour,
-        // AppStringConstraints.fontFive,
+        'SP Pro'
       ],
       colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(
@@ -33,7 +32,7 @@ class AppTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
           border: Border.all(
             width: 1.0,
             color: colorScheme.primary,
