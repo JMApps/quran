@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/core/theme/app_strings.dart';
 import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../../core/database/surahs_database_service.dart';
@@ -30,10 +31,20 @@ class _SurahPageState extends State<SurahPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: false, title: const Text('Коран')),
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text(AppStrings.appName),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search_rounded),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<SurahEntity>>(
         future: _futureSurahs,
         builder: (context, snapshot) {
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -45,7 +56,7 @@ class _SurahPageState extends State<SurahPage> {
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
-                  'Ошибка загрузки сур:\n${snapshot.error}',
+                  '${AppStrings.errorLoadSurahsList}\n${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -53,10 +64,6 @@ class _SurahPageState extends State<SurahPage> {
           }
 
           final surahs = snapshot.data ?? const <SurahEntity>[];
-          if (surahs.isEmpty) {
-            return const Center(child: Text('Суры не найдены'));
-          }
-
           return SurahList(surahsList: surahs);
         },
       ),

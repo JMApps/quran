@@ -30,9 +30,6 @@ flutter:
   assets:
     - assets/databases/
     - assets/fonts/
-    - assets/pictures/
-    - assets/icons/
-    - assets/qpc_v2_fonts/
 
   fonts:
 

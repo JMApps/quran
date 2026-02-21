@@ -18,7 +18,6 @@ class SurahItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
-    final isNightMode = Theme.brightnessOf(context) == Brightness.dark;
     return ListTile(
       visualDensity: VisualDensity.standard,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
