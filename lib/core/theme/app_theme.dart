@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'app_strings.dart';
+import 'app_styles.dart';
+
 class AppTheme {
   final Color _appColor;
 
@@ -15,9 +18,9 @@ class AppTheme {
       seedColor: _appColor,
     );
     return ThemeData(
-      fontFamily: 'Gilroy',
+      fontFamily: AppStrings.fontGilroy,
       fontFamilyFallback: const [
-        'SP Pro'
+        AppStrings.fontSFPro,
       ],
       colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(
@@ -32,7 +35,7 @@ class AppTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          borderRadius: AppStyles.mainBorder,
           border: Border.all(
             width: 1.0,
             color: colorScheme.primary,
@@ -43,15 +46,6 @@ class AppTheme {
           fontSize: 14.0,
         ),
       ),
-      filledButtonTheme: FilledButtonThemeData(
-        style: ButtonStyle(
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        )
-      )
     );
   }
 }

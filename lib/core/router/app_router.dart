@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../features/library/presentation/layout/pages/layout_line_page.dart';
+import '../../features/library/presentation/layout/pages/surah_detail_page.dart';
 import 'names_router.dart';
 
 class AppRouter {
@@ -18,7 +18,6 @@ class AppRouter {
   }
 
   static Map<String, Widget Function(BuildContext, dynamic)> routes = {
-    NamesRouter.pageLayoutLine: (context, args) =>
-        LayoutLinePage(pageNumber: args as int),
+    NamesRouter.pageSurahDetail: (context, args) => SurahDetailPage(pageNumber: args as int),
   };
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/router/app_router.dart';
 
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_theme.dart';
 import 'surah_page.dart';
 
@@ -9,10 +10,11 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = AppTheme(Colors.brown);
+    final appTheme = AppTheme(Colors.orange);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: AppRouter.onRouteGenerator,
+      title: AppStrings.appName,
       theme: appTheme.lightTheme,
       darkTheme: appTheme.darkTheme,
       home: const SurahPage(),

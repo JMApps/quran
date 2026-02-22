@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../domain/entities/surah_entity.dart';
+import '../../state/surah_state.dart';
 
 class SurahItem extends StatelessWidget {
   const SurahItem({
@@ -49,9 +51,12 @@ class SurahItem extends StatelessWidget {
         ),
       ),
       onTap: () {
+        // Передаем в провайдер номер страницы
+        Provider.of<SurahState>(context, listen: false).currentPageNumber = surahModel.pageNumber;
+        // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,
-          NamesRouter.pageLayoutLine,
+          NamesRouter.pageSurahDetail,
           arguments: surahModel.pageNumber,
         );
       },

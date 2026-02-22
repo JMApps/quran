@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class LayoutLinePage extends StatefulWidget {
+class SurahDetailPage extends StatefulWidget {
   final int pageNumber;
 
-  const LayoutLinePage({
+  const SurahDetailPage({
     super.key,
     required this.pageNumber,
   });
 
   @override
-  State<LayoutLinePage> createState() => _LayoutLinePageState();
+  State<SurahDetailPage> createState() => _SurahDetailPageState();
 }
 
-class _LayoutLinePageState extends State<LayoutLinePage> {
+class _SurahDetailPageState extends State<SurahDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
