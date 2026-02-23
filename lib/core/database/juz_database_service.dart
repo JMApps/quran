@@ -4,11 +4,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
-class WordDatabaseService {
-  WordDatabaseService._();
-  static final WordDatabaseService instance = WordDatabaseService._();
+class JuzDatabaseService {
+  JuzDatabaseService._();
+  static final JuzDatabaseService instance = JuzDatabaseService._();
 
-  static const String _dbFileName = 'qpc-hafs-word-by-word.db';
+  static const String _dbFileName = 'juz_info.db';
   static const int _dbVersion = 1;
 
   static const String _assetPath = 'assets/databases/$_dbFileName';

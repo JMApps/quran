@@ -7,7 +7,7 @@ import '../mappers/word_mapper.dart';
 import '../models/word_model.dart';
 
 class WordRepositoryImpl implements WordRepository {
-  final WordScriptDatabaseService _wordScriptDatabaseService;
+  final WordDatabaseService _wordScriptDatabaseService;
 
   WordRepositoryImpl(this._wordScriptDatabaseService);
 
@@ -19,7 +19,7 @@ class WordRepositoryImpl implements WordRepository {
     final Database database = await _wordScriptDatabaseService.db;
 
     final List<Map<String, Object?>> rows = await database.query(
-      'words',
+      'Table_of_words',
       where: 'id BETWEEN ? AND ?',
       whereArgs: [fromId, toId],
       orderBy: 'id ASC',

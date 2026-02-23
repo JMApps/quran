@@ -17,11 +17,11 @@ class WordModel {
 
   factory WordModel.fromMap(Map<String, dynamic> map) {
     return WordModel(
-      id: map['id'] is int ? map['id'] : int.parse(map['id'].toString()),
+      id: map['id'] as int,
       location: map['location'] as String,
-      surah: map['surah'] is int ? map['surah'] : int.parse(map['surah'].toString()),
-      ayah: map['ayah'] is int ? map['ayah'] : int.parse(map['ayah'].toString()),
-      word: map['word'] is int ? map['word'] : int.parse(map['word'].toString()),
+      surah: map['surah'] as int,
+      ayah: map['ayah'] as int,
+      word: map['word'] as int,
       text: map['text'] as String,
     );
   }
