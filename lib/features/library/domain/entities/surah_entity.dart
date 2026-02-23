@@ -1,5 +1,5 @@
 class SurahEntity {
-  final int id;
+  final int surahNumber;
   final String nameArabic;
   final String nameTranslation;
   final String nameTranscription;
@@ -7,10 +7,10 @@ class SurahEntity {
   final String revelationPlace;
   final int ayahsCount;
   final int basmallaPre;
-  final int pageNumber;
+  final int startPageNumber;
 
   const SurahEntity({
-    required this.id,
+    required this.surahNumber,
     required this.nameArabic,
     required this.nameTranslation,
     required this.nameTranscription,
@@ -18,7 +18,7 @@ class SurahEntity {
     required this.revelationPlace,
     required this.ayahsCount,
     required this.basmallaPre,
-    required this.pageNumber,
+    required this.startPageNumber,
   });
 
   bool get hasBasmallaPre => basmallaPre == 1;

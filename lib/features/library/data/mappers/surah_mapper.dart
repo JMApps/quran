@@ -3,7 +3,7 @@ import '../models/surah_model.dart';
 
 extension SurahModelX on SurahModel {
   SurahEntity toEntity() => SurahEntity(
-    id: id,
+    surahNumber: surahNumber,
     nameArabic: nameArabic,
     nameTranslation: nameTranslation,
     nameTranscription: nameTranscription,
@@ -11,13 +11,13 @@ extension SurahModelX on SurahModel {
     revelationPlace: revelationPlace,
     ayahsCount: ayahsCount,
     basmallaPre: basmallaPre,
-    pageNumber: pageNumber,
+    startPageNumber: startPageNumber,
   );
 }
 
 extension SurahEntityX on SurahEntity {
   SurahModel toModel() => SurahModel(
-    id: id,
+    surahNumber: surahNumber,
     nameArabic: nameArabic,
     nameTranslation: nameTranslation,
     nameTranscription: nameTranscription,
@@ -25,6 +25,6 @@ extension SurahEntityX on SurahEntity {
     revelationPlace: revelationPlace,
     ayahsCount: ayahsCount,
     basmallaPre: basmallaPre,
-    pageNumber: pageNumber,
+    startPageNumber: startPageNumber,
   );
 }

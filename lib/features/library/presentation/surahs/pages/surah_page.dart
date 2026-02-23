@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../core/database/surahs_database_service.dart';
+import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../data/repositories/surah_repository_impl.dart';
@@ -31,8 +31,7 @@ class _SurahPageState extends State<SurahPage> {
       Provider.of<SurahState>(context, listen: false).updateFabVisibility(_scrollController.offset);
     });
 
-    final surahsDatabase = SurahsDatabaseService.instance;
-    final surahsRepository = SurahRepositoryImpl(surahsDatabase);
+    final surahsRepository = SurahRepositoryImpl(QuranDatabaseService.instance);
 
     _surahsUseCase = SurahUseCase(surahsRepository);
     _futureSurahs = _surahsUseCase.getAllSurahs();
@@ -69,7 +68,6 @@ class _SurahPageState extends State<SurahPage> {
       body: FutureBuilder<List<SurahEntity>>(
         future: _futureSurahs,
         builder: (context, snapshot) {
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),

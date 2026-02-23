@@ -1,5 +1,5 @@
 class SurahModel {
-  final int id;
+  final int surahNumber;
   final String nameArabic;
   final String nameTranslation;
   final String nameTranscription;
@@ -7,10 +7,10 @@ class SurahModel {
   final String revelationPlace;
   final int ayahsCount;
   final int basmallaPre;
-  final int pageNumber;
+  final int startPageNumber;
 
   const SurahModel({
-    required this.id,
+    required this.surahNumber,
     required this.nameArabic,
     required this.nameTranslation,
     required this.nameTranscription,
@@ -18,12 +18,12 @@ class SurahModel {
     required this.revelationPlace,
     required this.ayahsCount,
     required this.basmallaPre,
-    required this.pageNumber,
+    required this.startPageNumber,
   });
 
   factory SurahModel.fromMap(Map<String, Object?> map) {
     return SurahModel(
-      id: map['id'] as int,
+      surahNumber: map['surah_number'] as int,
       nameArabic: map['name_arabic'] as String,
       nameTranslation: map['name_translation'] as String,
       nameTranscription: map['name_transcription'] as String,
@@ -31,7 +31,7 @@ class SurahModel {
       revelationPlace: map['revelation_place'] as String,
       ayahsCount: map['ayahs_count'] as int,
       basmallaPre: map['bismillah_pre'] as int,
-      pageNumber: map['page_number'] as int,
+      startPageNumber: map['start_page_number'] as int,
     );
   }
 }

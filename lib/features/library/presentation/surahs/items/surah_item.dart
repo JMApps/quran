@@ -28,7 +28,7 @@ class SurahItem extends StatelessWidget {
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Text(
-          surahModel.id.toString(),
+          surahModel.surahNumber.toString(),
           style: TextStyle(
             fontSize: 16.0,
             color: appColors.primary,
@@ -44,7 +44,7 @@ class SurahItem extends StatelessWidget {
         '${surahModel.ayahsCount} аятов — ${surahModel.revelationPlace}',
       ),
       trailing: Text(
-        surahModel.pageNumber.toString(),
+        surahModel.startPageNumber.toString(),
         style: TextStyle(
           fontSize: 14.0,
           color: appColors.secondary,
@@ -52,12 +52,12 @@ class SurahItem extends StatelessWidget {
       ),
       onTap: () {
         // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageNumber = surahModel.pageNumber;
+        Provider.of<SurahState>(context, listen: false).currentPageNumber = surahModel.startPageNumber;
         // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahModel.pageNumber,
+          arguments: surahModel.startPageNumber,
         );
       },
     );

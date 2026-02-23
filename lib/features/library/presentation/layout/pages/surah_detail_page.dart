@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/database/layout_database_service.dart';
-import '../../../../../core/database/surahs_database_service.dart';
-import '../../../../../core/database/word_database_service.dart';
+import '../../../../../core/database/quran_database_service.dart';
 import '../../../data/repositories/layout_line_repository_impl.dart';
 import '../../../data/repositories/surah_repository_impl.dart';
 import '../../../data/repositories/word_repository_impl.dart';
@@ -33,9 +31,9 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     super.initState();
     final initial = (widget.pageNumber.clamp(1, 604) - 1);
     _controller = PageController(initialPage: initial);
-    _layoutLineUseCase = LayoutLineUseCase(LayoutLineRepositoryImpl(LayoutDatabaseService.instance));
-    _getPageWordsUseCase = GetPageWordsUseCase(WordRepositoryImpl(WordDatabaseService.instance));
-    _surahUseCase = SurahUseCase(SurahRepositoryImpl(SurahsDatabaseService.instance));
+    _layoutLineUseCase = LayoutLineUseCase(LayoutLineRepositoryImpl(QuranDatabaseService.instance));
+    _getPageWordsUseCase = GetPageWordsUseCase(WordRepositoryImpl(QuranDatabaseService.instance));
+    _surahUseCase = SurahUseCase(SurahRepositoryImpl(QuranDatabaseService.instance));
   }
 
   @override

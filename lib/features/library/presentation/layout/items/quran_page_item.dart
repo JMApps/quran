@@ -45,7 +45,7 @@ class QuranPageItem extends StatelessWidget {
 
     // Чтобы показать surah_name строку, нужен справочник сур
     final surahs = await surahUseCase.getAllSurahs();
-    final surahById = {for (final s in surahs) s.id: s};
+    final surahById = {for (final s in surahs) s.surahNumber: s};
 
     final rendered = <_RenderedLine>[];
 
