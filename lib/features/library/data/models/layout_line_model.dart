@@ -19,29 +19,15 @@ class LayoutLineModel {
     this.surahNumber,
   });
 
-  static LineType _parseLineType(Object? raw) {
-    final v = (raw ?? '').toString();
-    switch (v) {
-      case 'ayah':
-        return LineType.ayah;
-      case 'surah_name':
-        return LineType.surahName;
-      case 'basmallah':
-        return LineType.basmallah;
-      default:
-        return LineType.ayah;
-    }
-  }
-
   factory LayoutLineModel.fromMap(Map<String, dynamic> map) {
     return LayoutLineModel(
-      pageNumber: map['page_number'] as int,
-      lineNumber: map['line_number'] as int,
-      lineType: _parseLineType(map['line_type']),
-      isCentered: (map['is_centered'] as int) == 1,
-      firstWordId: map['first_word_id'] as int?,
-      lastWordId: map['last_word_id'] as int?,
-      surahNumber: map['surah_number'] as int?,
+      pageNumber: int.parse(map['page_number'].toString()),
+      lineNumber: int.parse(map['line_number'].toString()),
+      lineType: LineType.values.firstWhere((e) => e.name == map['line_type'], orElse: () => LineType.ayah),
+      isCentered: map['is_centered'] == 1,
+      firstWordId: map['first_word_id'] == null ? null : int.tryParse(map['first_word_id'].toString()),
+      lastWordId: map['last_word_id'] == null ? null : int.tryParse(map['last_word_id'].toString()),
+      surahNumber: map['surah_number'] == null ? null : int.tryParse(map['surah_number'].toString()),
     );
   }
 }
