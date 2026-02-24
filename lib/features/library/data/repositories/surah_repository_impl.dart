@@ -17,9 +17,25 @@ class SurahRepositoryImpl implements SurahRepository {
 
     final List<Map<String, Object?>> rows = await database.query(
       'Table_of_surahs',
-      orderBy: 'id ASC',
+      orderBy: 'surah_number ASC',
     );
 
     return rows.map((row) => SurahModel.fromMap(row).toEntity()).toList();
+  }
+
+  @override
+  Future<SurahEntity?> getSurahByPage({required int pageNumber}) async {
+    final Database database = await _quranDatabaseService.db;
+
+    final rows = await database.query(
+      'Table_of_surahs',
+      where: 'start_page_number <= ?',
+      whereArgs: [pageNumber],
+      orderBy: 'start_page_number DESC',
+      limit: 1,
+    );
+
+    if (rows.isEmpty) return null;
+    return SurahModel.fromMap(rows.first).toEntity();
   }
 }

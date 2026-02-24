@@ -15,8 +15,8 @@ class JuzModel {
 
   factory JuzModel.fromMap(Map<String, dynamic> map) {
     return JuzModel(
-      juzNumber: map['juz_number'] as int,
-      versesCount: map['verses_count'] as int,
+      juzNumber: int.parse(map['juz_number'].toString()),
+      versesCount: int.parse(map['verses_count'].toString()),
       firstVerseKey: map['first_verse_key'] as String,
       lastVerseKey: map['last_verse_key'] as String,
       verseMapping: map['verse_mapping'] as String,
