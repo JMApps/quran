@@ -9,6 +9,7 @@ import '../../../domain/entities/surah_entity.dart';
 import '../../../domain/usecases/surah_use_case.dart';
 import '../../state/surah_state.dart';
 import '../lists/surah_list.dart';
+import '../widgets/to_juz_surah_page.dart';
 
 class SurahPage extends StatefulWidget {
   const SurahPage({super.key});
@@ -58,6 +59,18 @@ class _SurahPageState extends State<SurahPage> {
         centerTitle: false,
         title: const Text(AppStrings.appName),
         actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return const ToJuzSurahPage();
+                },
+              );
+            },
+            tooltip: AppStrings.searchByAyahs,
+            icon: const Icon(Icons.arrow_circle_right_outlined),
+          ),
           IconButton(
             onPressed: () {},
             tooltip: AppStrings.searchByAyahs,
