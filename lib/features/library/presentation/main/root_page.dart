@@ -20,7 +20,7 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = AppTheme(Colors.orange);
+    final appTheme = AppTheme(Colors.blue);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MainState()),

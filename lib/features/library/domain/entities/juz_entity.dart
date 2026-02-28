@@ -4,6 +4,7 @@ class JuzEntity {
   final String firstVerseKey;
   final String lastVerseKey;
   final String verseMapping;
+  final int startPageNumber;
 
   const JuzEntity({
     required this.juzNumber,
@@ -11,5 +12,6 @@ class JuzEntity {
     required this.firstVerseKey,
     required this.lastVerseKey,
     required this.verseMapping,
+    required this.startPageNumber,
   });
 }

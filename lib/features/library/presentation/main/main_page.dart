@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/presentation/juz/pages/juzs_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -17,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   late final ScrollController _scrollController = ScrollController();
   late final List<Widget> _mainPages = [
     SurahPage(scrollController: _scrollController),
-    SurahPage(scrollController: _scrollController),
+    JuzsPage(scrollController: _scrollController),
     SurahPage(scrollController: _scrollController),
     SurahPage(scrollController: _scrollController),
     SurahPage(scrollController: _scrollController),
@@ -78,8 +79,9 @@ class _MainPageState extends State<MainPage> {
                 onTap: (int index) {
                   if (mainState.mainNavigatorIndex != index) {
                     mainState.mainNavigatorIndex = index;
+                  } else {
+                    _scrollToTop();
                   }
-                  _scrollToTop();
                 },
               ),
             ),

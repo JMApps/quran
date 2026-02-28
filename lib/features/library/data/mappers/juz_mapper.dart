@@ -8,6 +8,7 @@ extension JuzModelX on JuzModel {
     firstVerseKey: firstVerseKey,
     lastVerseKey: lastVerseKey,
     verseMapping: verseMapping,
+    startPageNumber: startPageNumber,
   );
 }
 
@@ -18,5 +19,6 @@ extension JuzEntityX on JuzEntity {
     firstVerseKey: firstVerseKey,
     lastVerseKey: lastVerseKey,
     verseMapping: verseMapping,
+    startPageNumber: startPageNumber,
   );
 }

@@ -4,6 +4,7 @@ class JuzModel {
   final String firstVerseKey;
   final String lastVerseKey;
   final String verseMapping;
+  final int startPageNumber;
 
   const JuzModel({
     required this.juzNumber,
@@ -11,6 +12,7 @@ class JuzModel {
     required this.firstVerseKey,
     required this.lastVerseKey,
     required this.verseMapping,
+    required this.startPageNumber,
   });
 
   factory JuzModel.fromMap(Map<String, dynamic> map) {
@@ -20,6 +22,7 @@ class JuzModel {
       firstVerseKey: map['first_verse_key'] as String,
       lastVerseKey: map['last_verse_key'] as String,
       verseMapping: map['verse_mapping'] as String,
+      startPageNumber: map['start_page_number'] as int,
     );
   }
 }

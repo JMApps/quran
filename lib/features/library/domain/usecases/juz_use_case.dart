@@ -6,6 +6,10 @@ class JuzUseCase {
 
   const JuzUseCase(this._juzRepository);
 
+  Future<List<JuzEntity>> getAllJuzs() {
+    return _juzRepository.getAllJuzs();
+  }
+
   Future<JuzEntity> getJuzInfo({required int pageNumber}) {
     return _juzRepository.getJuzInfo(pageNumber: pageNumber);
   }

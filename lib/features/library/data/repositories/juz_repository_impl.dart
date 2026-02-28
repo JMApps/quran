@@ -11,6 +11,19 @@ class JuzRepositoryImpl implements JuzRepository {
 
   JuzRepositoryImpl(this._quranDatabaseService);
 
+
+  @override
+  Future<List<JuzEntity>> getAllJuzs() async {
+    final database = await _quranDatabaseService.db;
+
+    final List<Map<String, Object?>> rows = await database.query(
+      'Table_of_juzs',
+      orderBy: 'juz_number ASC',
+    );
+
+    return rows.map((row) => JuzModel.fromMap(row).toEntity()).toList();
+  }
+
   @override
   Future<JuzEntity> getJuzInfo({required int pageNumber}) async {
     final db = await _quranDatabaseService.db;
