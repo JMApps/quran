@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_strings.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../domain/entities/surah_entity.dart';
@@ -40,8 +41,33 @@ class SurahItem extends StatelessWidget {
       title: Text(
         '${surahModel.nameTranscription} (${surahModel.nameTranslation})',
       ),
-      subtitle: Text(
-        '${surahModel.ayahsCount} аятов — ${surahModel.revelationPlace}',
+      subtitle: Row(
+        children: [
+          RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: appColors.onSurface,
+                fontFamily: AppStrings.fontGilroy,
+              ),
+              children: [
+                TextSpan(
+                  text:
+                  '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
+                  style: TextStyle(
+                    color: appColors.secondary,
+                  ),
+                ),
+                const TextSpan(text: ' – '),
+                TextSpan(
+                  text: surahModel.revelationPlace,
+                  style: TextStyle(
+                    color: appColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       trailing: Text(
         surahModel.startPageNumber.toString(),

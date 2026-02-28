@@ -27,8 +27,7 @@ class _SurahPageState extends State<SurahPage> {
   @override
   void initState() {
     super.initState();
-    final surahsRepository = SurahRepositoryImpl(QuranDatabaseService.instance);
-    _surahsUseCase = SurahUseCase(surahsRepository);
+    _surahsUseCase = SurahUseCase(SurahRepositoryImpl(QuranDatabaseService.instance));
     _futureSurahs = _surahsUseCase.getAllSurahs();
   }
 

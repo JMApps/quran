@@ -27,8 +27,7 @@ class _JuzsPageState extends State<JuzsPage> {
   @override
   void initState() {
     super.initState();
-    final juzsRepository = JuzRepositoryImpl(QuranDatabaseService.instance);
-    _juzUseCase = JuzUseCase(juzsRepository);
+    _juzUseCase = JuzUseCase(JuzRepositoryImpl(QuranDatabaseService.instance));
     _futureJuzs = _juzUseCase.getAllJuzs();
   }
 
@@ -53,7 +52,7 @@ class _JuzsPageState extends State<JuzsPage> {
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
-                  '${AppStrings.errorLoadSurahsList}\n${snapshot.error}',
+                  '${AppStrings.errorLoadJuzsList}\n${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),

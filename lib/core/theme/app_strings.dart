@@ -4,11 +4,29 @@ class AppStrings {
   static const String pages = 'Страницы';
   static const String settings = 'Настройки';
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
+  static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String goTo = 'Перейти к ...';
   static const String searchByAyahs = 'Поиск аятов';
 
   static const String fontGilroy = 'Gilroy';
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
+
+  static String ayahWord(int count) {
+    if (count % 100 >= 11 && count % 100 <= 14) {
+      return 'аятов';
+    }
+
+    switch (count % 10) {
+      case 1:
+        return 'аят';
+      case 2:
+      case 3:
+      case 4:
+        return 'аята';
+      default:
+        return 'аятов';
+    }
+  }
 
 }
