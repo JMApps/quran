@@ -15,9 +15,11 @@ class SurahList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomHeight = kBottomNavigationBarHeight + 16;
     return ListView.separated(
       controller: scrollController,
       itemCount: surahsList.length,
+      padding: EdgeInsets.only(bottom: bottomHeight),
       separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final surahModel = surahsList[index];

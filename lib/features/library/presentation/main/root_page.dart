@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/presentation/state/main_state.dart';
 
-import '../../../../../core/database/quran_database_service.dart';
-import '../../../../../core/router/app_router.dart';
-import '../../../../../core/theme/app_strings.dart';
-import '../../../../../core/theme/app_theme.dart';
-import '../../../data/repositories/juz_repository_impl.dart';
-import '../../../data/repositories/layout_line_repository_impl.dart';
-import '../../../data/repositories/surah_repository_impl.dart';
-import '../../../data/repositories/word_repository_impl.dart';
-import '../../../domain/usecases/get_page_word_use_case.dart';
-import '../../state/mushaf_reader_state.dart';
-import '../../state/surah_state.dart';
-import 'surah_page.dart';
+import '../../../../core/database/quran_database_service.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_strings.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../data/repositories/juz_repository_impl.dart';
+import '../../data/repositories/layout_line_repository_impl.dart';
+import '../../data/repositories/surah_repository_impl.dart';
+import '../../data/repositories/word_repository_impl.dart';
+import '../../domain/usecases/get_page_word_use_case.dart';
+import '../state/mushaf_reader_state.dart';
+import '../state/surah_state.dart';
+import 'main_page.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});
@@ -22,6 +23,7 @@ class RootPage extends StatelessWidget {
     final appTheme = AppTheme(Colors.orange);
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => MainState()),
         Provider.value(value: QuranDatabaseService.instance),
 
         Provider(create: (c) => LayoutLineRepositoryImpl(c.read<QuranDatabaseService>())),
@@ -45,7 +47,7 @@ class RootPage extends StatelessWidget {
         title: AppStrings.appName,
         theme: appTheme.lightTheme,
         darkTheme: appTheme.darkTheme,
-        home: const SurahPage(),
+        home: const MainPage(),
       ),
     );
   }

@@ -5,6 +5,7 @@ class ToJuzSurahPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(left: 16, bottom: 16),
       child: Column(
@@ -16,9 +17,12 @@ class ToJuzSurahPage extends StatelessWidget {
             title: const Text('Перейти к джузу'),
             trailing: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                // Открыть список всех джузов
               },
-              icon: const Icon(Icons.arrow_circle_right_outlined),
+              icon: Icon(
+                Icons.arrow_circle_right_rounded,
+                color: appColors.primary,
+              ),
             ),
           ),
           const Divider(endIndent: 16),
@@ -27,9 +31,12 @@ class ToJuzSurahPage extends StatelessWidget {
             title: const Text('Перейти к суре'),
             trailing: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                // Открыть список всех сур
               },
-              icon: const Icon(Icons.arrow_circle_right_outlined),
+              icon: Icon(
+                Icons.arrow_circle_right_rounded,
+                color: appColors.primary,
+              ),
             ),
           ),
           const Divider(endIndent: 16),
@@ -38,9 +45,12 @@ class ToJuzSurahPage extends StatelessWidget {
             title: const Text('Перейти к странице'),
             trailing: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                // Открыть список всех страниц
               },
-              icon: const Icon(Icons.arrow_circle_right_outlined),
+              icon: Icon(
+                Icons.arrow_circle_right_rounded,
+                color: appColors.primary,
+              ),
             ),
           ),
         ],

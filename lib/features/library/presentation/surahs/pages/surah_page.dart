@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
@@ -7,49 +6,30 @@ import '../../../../../core/theme/app_styles.dart';
 import '../../../data/repositories/surah_repository_impl.dart';
 import '../../../domain/entities/surah_entity.dart';
 import '../../../domain/usecases/surah_use_case.dart';
-import '../../state/surah_state.dart';
 import '../lists/surah_list.dart';
-import '../widgets/to_juz_surah_page.dart';
 
 class SurahPage extends StatefulWidget {
-  const SurahPage({super.key});
+  const SurahPage({
+    super.key,
+    required this.scrollController,
+  });
+
+  final ScrollController scrollController;
 
   @override
   State<SurahPage> createState() => _SurahPageState();
 }
 
 class _SurahPageState extends State<SurahPage> {
-  late final ScrollController _scrollController;
   late final SurahUseCase _surahsUseCase;
   late final Future<List<SurahEntity>> _futureSurahs;
 
   @override
   void initState() {
     super.initState();
-
-    _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      Provider.of<SurahState>(context, listen: false).updateFabVisibility(_scrollController.offset);
-    });
-
     final surahsRepository = SurahRepositoryImpl(QuranDatabaseService.instance);
-
     _surahsUseCase = SurahUseCase(surahsRepository);
     _futureSurahs = _surahsUseCase.getAllSurahs();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollToTop() {
-    _scrollController.animateTo(
-      0,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
@@ -61,18 +41,8 @@ class _SurahPageState extends State<SurahPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return const ToJuzSurahPage();
-                },
-              );
+              // Открыть showSearch(context: context, delegate: delegate)
             },
-            tooltip: AppStrings.searchByAyahs,
-            icon: const Icon(Icons.arrow_circle_right_outlined),
-          ),
-          IconButton(
-            onPressed: () {},
             tooltip: AppStrings.searchByAyahs,
             icon: const Icon(Icons.search_rounded),
           ),
@@ -101,20 +71,8 @@ class _SurahPageState extends State<SurahPage> {
 
           final surahs = snapshot.data ?? const <SurahEntity>[];
           return SurahList(
-            scrollController: _scrollController,
+            scrollController: widget.scrollController,
             surahsList: surahs,
-          );
-        },
-      ),
-      floatingActionButton: Consumer<SurahState>(
-        builder: (context, surahState, _) {
-          return AnimatedScale(
-            scale: surahState.showFab ? 1 : 0,
-            duration: const Duration(milliseconds: 200),
-            child: FloatingActionButton(
-              onPressed: _scrollToTop,
-              child: const Icon(Icons.arrow_upward),
-            ),
           );
         },
       ),
