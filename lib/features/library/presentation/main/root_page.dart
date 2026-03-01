@@ -7,9 +7,9 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../data/repositories/juz_repository_impl.dart';
-import '../../data/repositories/layout_line_repository_impl.dart';
-import '../../data/repositories/surah_repository_impl.dart';
-import '../../data/repositories/word_repository_impl.dart';
+import '../../data/repositories/layout_repository_impl.dart';
+import '../../data/repositories/surah_name_repository_impl.dart';
+import '../../data/repositories/ayah_word_repository_impl.dart';
 import '../../domain/usecases/get_page_word_use_case.dart';
 import '../state/mushaf_reader_state.dart';
 import '../state/surah_state.dart';
@@ -26,15 +26,15 @@ class RootPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MainState()),
         Provider.value(value: QuranDatabaseService.instance),
 
-        Provider(create: (c) => LayoutLineRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider(create: (c) => WordRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider(create: (c) => SurahRepositoryImpl(c.read<QuranDatabaseService>())),
+        Provider(create: (c) => LayoutRepositoryImpl(c.read<QuranDatabaseService>())),
+        Provider(create: (c) => AyahWordRepositoryImpl(c.read<QuranDatabaseService>())),
+        Provider(create: (c) => SurahNameRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider(create: (c) => JuzRepositoryImpl(c.read<QuranDatabaseService>())),
 
         Provider(create: (c) => GetMushafPageUseCase(
-          c.read<LayoutLineRepositoryImpl>(),
-          c.read<WordRepositoryImpl>(),
-          c.read<SurahRepositoryImpl>(),
+          c.read<LayoutRepositoryImpl>(),
+          c.read<AyahWordRepositoryImpl>(),
+          c.read<SurahNameRepositoryImpl>(),
           c.read<JuzRepositoryImpl>(),
         )),
 

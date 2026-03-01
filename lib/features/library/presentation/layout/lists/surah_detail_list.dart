@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_strings.dart';
 
 import '../../state/surah_state.dart';
-import '../items/mushaf_page_item.dart';
+import '../items/surah_detail_item.dart';
 
-class MushafPagesList extends StatelessWidget {
-  const MushafPagesList({
+class SurahDetailList extends StatelessWidget {
+  const SurahDetailList({
     super.key,
     required this.mushafPageController,
   });
@@ -16,13 +17,13 @@ class MushafPagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView.builder(
       controller: mushafPageController,
-      itemCount: 604,
+      itemCount: AppStrings.totalPages,
       reverse: true,
-      onPageChanged: (int page) {
-        Provider.of<SurahState>(context, listen: false).currentPageNumber = page;
+      onPageChanged: (int index) {
+        context.read<SurahState>().currentPageIndex = index;
       },
       itemBuilder: (context, index) {
-        return const MushafPageItem();
+        return const SurahDetailItem();
       },
     );
   }

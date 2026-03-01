@@ -1,4 +1,4 @@
-class SurahEntity {
+class SurahNameEntity {
   final int surahNumber;
   final String nameArabic;
   final String nameTranslation;
@@ -9,7 +9,7 @@ class SurahEntity {
   final int basmallaPre;
   final int startPageNumber;
 
-  const SurahEntity({
+  const SurahNameEntity({
     required this.surahNumber,
     required this.nameArabic,
     required this.nameTranslation,

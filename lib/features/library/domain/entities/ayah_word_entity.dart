@@ -1,4 +1,4 @@
-class WordEntity {
+class AyahWordEntity {
   final int id;
   final String location;
   final int surah;
@@ -6,7 +6,7 @@ class WordEntity {
   final int word;
   final String text;
 
-  const WordEntity({
+  const AyahWordEntity({
     required this.id,
     required this.location,
     required this.surah,

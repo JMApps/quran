@@ -1,4 +1,4 @@
-class SurahModel {
+class SurahNameModel {
   final int surahNumber;
   final String nameArabic;
   final String nameTranslation;
@@ -9,7 +9,7 @@ class SurahModel {
   final int basmallaPre;
   final int startPageNumber;
 
-  const SurahModel({
+  const SurahNameModel({
     required this.surahNumber,
     required this.nameArabic,
     required this.nameTranslation,
@@ -21,8 +21,8 @@ class SurahModel {
     required this.startPageNumber,
   });
 
-  factory SurahModel.fromMap(Map<String, Object?> map) {
-    return SurahModel(
+  factory SurahNameModel.fromMap(Map<String, Object?> map) {
+    return SurahNameModel(
       surahNumber: map['surah_number'] as int,
       nameArabic: map['name_arabic'] as String,
       nameTranslation: map['name_translation'] as String,

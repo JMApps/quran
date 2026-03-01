@@ -7,7 +7,7 @@ import '../../../settings/pages/app_settings_page.dart';
 import '../hizb/pages/hizbs_page.dart';
 import '../juz/pages/juzs_page.dart';
 import '../state/main_state.dart';
-import '../surahs/pages/surah_page.dart';
+import '../surahs/pages/surahs_name_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,7 +19,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late final ScrollController _scrollController = ScrollController();
   late final List<Widget> _mainPages = [
-    SurahPage(scrollController: _scrollController),
+    SurahNamePage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),
     HizbsPage(scrollController: _scrollController),
     const AppSettingsPage(),

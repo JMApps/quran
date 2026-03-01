@@ -1,8 +1,8 @@
-import '../../domain/entities/surah_entity.dart';
-import '../models/surah_model.dart';
+import '../../domain/entities/surah_name_entity.dart';
+import '../models/surah_name_model.dart';
 
-extension SurahModelX on SurahModel {
-  SurahEntity toEntity() => SurahEntity(
+extension SurahNameModelX on SurahNameModel {
+  SurahNameEntity toEntity() => SurahNameEntity(
     surahNumber: surahNumber,
     nameArabic: nameArabic,
     nameTranslation: nameTranslation,
@@ -15,8 +15,8 @@ extension SurahModelX on SurahModel {
   );
 }
 
-extension SurahEntityX on SurahEntity {
-  SurahModel toModel() => SurahModel(
+extension SurahNameEntityX on SurahNameEntity {
+  SurahNameModel toModel() => SurahNameModel(
     surahNumber: surahNumber,
     nameArabic: nameArabic,
     nameTranslation: nameTranslation,

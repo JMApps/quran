@@ -1,18 +1,18 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/quran_database_service.dart';
-import '../../domain/entities/layout_line_entity.dart';
-import '../../domain/repositories/layout_line_repository.dart';
+import '../../domain/entities/layout_entity.dart';
+import '../../domain/repositories/layout_repository.dart';
 import '../mappers/layout_mapper.dart';
-import '../models/layout_line_model.dart';
+import '../models/layout_model.dart';
 
-class LayoutLineRepositoryImpl implements LayoutLineRepository {
+class LayoutRepositoryImpl implements LayoutRepository {
   final QuranDatabaseService _quranDatabaseService;
 
-  LayoutLineRepositoryImpl(this._quranDatabaseService);
+  LayoutRepositoryImpl(this._quranDatabaseService);
 
   @override
-  Future<List<LayoutLineEntity>> getLinesByPage({required int pageNumber}) async {
+  Future<List<LayoutEntity>> getLinesByPage({required int pageNumber}) async {
     final Database database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> rows = await database.query(
@@ -22,6 +22,6 @@ class LayoutLineRepositoryImpl implements LayoutLineRepository {
       orderBy: 'line_number ASC',
     );
 
-    return rows.map((row) => LayoutLineModel.fromMap(row).toEntity()).toList();
+    return rows.map((row) => LayoutModel.fromMap(row).toEntity()).toList();
   }
 }

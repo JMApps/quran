@@ -1,8 +1,8 @@
-import '../../domain/entities/layout_line_entity.dart';
-import '../models/layout_line_model.dart';
+import '../../domain/entities/layout_entity.dart';
+import '../models/layout_model.dart';
 
-extension LayoutLineModelX on LayoutLineModel {
-  LayoutLineEntity toEntity() => LayoutLineEntity(
+extension LayoutModelX on LayoutModel {
+  LayoutEntity toEntity() => LayoutEntity(
     pageNumber: pageNumber,
     lineNumber: lineNumber,
     lineType: lineType,
@@ -13,8 +13,8 @@ extension LayoutLineModelX on LayoutLineModel {
   );
 }
 
-extension LayoutLineEntityX on LayoutLineEntity {
-  LayoutLineModel toModel() => LayoutLineModel(
+extension LayoutEntityX on LayoutEntity {
+  LayoutModel toModel() => LayoutModel(
     pageNumber: pageNumber,
     lineNumber: lineNumber,
     lineType: lineType,

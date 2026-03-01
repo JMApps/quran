@@ -3,17 +3,17 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/theme/app_strings.dart';
-import '../../../domain/entities/surah_entity.dart';
+import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/surah_state.dart';
 
-class SurahItem extends StatelessWidget {
-  const SurahItem({
+class SurahNameItem extends StatelessWidget {
+  const SurahNameItem({
     super.key,
     required this.surahModel,
     required this.index,
   });
 
-  final SurahEntity surahModel;
+  final SurahNameEntity surahModel;
   final int index;
 
   @override
@@ -82,7 +82,7 @@ class SurahItem extends StatelessWidget {
       ),
       onTap: () {
         // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageNumber = surahModel.startPageNumber;
+        Provider.of<SurahState>(context, listen: false).currentPageIndex = surahModel.startPageNumber;
         // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,

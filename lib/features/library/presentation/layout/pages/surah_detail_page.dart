@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/presentation/layout/lists/mushaf_pages_list.dart';
 
 import '../../state/surah_state.dart';
+import '../lists/surah_detail_list.dart';
 
 class SurahDetailPage extends StatefulWidget {
   const SurahDetailPage({
@@ -17,13 +17,13 @@ class SurahDetailPage extends StatefulWidget {
 }
 
 class _SurahDetailPageState extends State<SurahDetailPage> {
-  late final PageController _mushafPageController;
+  late final PageController _surahDetailPageController;
 
   @override
   void initState() {
     super.initState();
 
-    _mushafPageController = PageController(
+    _surahDetailPageController = PageController(
       initialPage: Provider.of<SurahState>(context, listen: false).currentPageNumber,
     );
   }
@@ -44,8 +44,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
           ),
         ],
       ),
-      body: MushafPagesList(
-        mushafPageController: _mushafPageController,
+      body: SurahDetailList(
+        mushafPageController: _surahDetailPageController,
       ),
     );
   }

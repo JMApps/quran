@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/mushaf_page_vm.dart';
+import '../../domain/entities/surah_detail_vm.dart';
 import '../../domain/usecases/get_page_word_use_case.dart';
 
 class MushafReaderState extends ChangeNotifier {
@@ -18,8 +18,8 @@ class MushafReaderState extends ChangeNotifier {
   Object? get error => _error;
 
   // небольшой кэш страниц
-  final Map<int, MushafPageVm> _cache = {};
-  MushafPageVm? getPageFromCache(int page) => _cache[page];
+  final Map<int, SurahDetailPageVm> _cache = {};
+  SurahDetailPageVm? getPageFromCache(int page) => _cache[page];
 
   Future<void> loadPage(int pageNumber) async {
     _currentPage = pageNumber;

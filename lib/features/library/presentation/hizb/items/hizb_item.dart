@@ -81,7 +81,7 @@ class HizbItem extends StatelessWidget {
       ),
       onTap: () {
         // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageNumber = hizbModel.startPageNumber;
+        Provider.of<SurahState>(context, listen: false).currentPageIndex = hizbModel.startPageNumber;
         // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,

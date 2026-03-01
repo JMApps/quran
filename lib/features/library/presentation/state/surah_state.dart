@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_strings.dart';
+
 class SurahState extends ChangeNotifier {
-  bool _showFab = false;
-  bool get showFab => _showFab;
+  // PageView index: 0..603
+  int _currentPageIndex = 0;
 
-  int _currentPageNumber = 1;
+  int get currentPageIndex => _currentPageIndex;
 
-  void updateFabVisibility(double offset) {
-    final shouldShow = offset > 200;
+  int get currentPageNumber => _currentPageIndex + 1;
 
-    if (shouldShow != _showFab) {
-      _showFab = shouldShow;
-      notifyListeners();
-    }
-  }
-
-  int get currentPageNumber => _currentPageNumber;
-
-  set currentPageNumber(int pageNumber) {
-    _currentPageNumber = pageNumber;
+  set currentPageIndex(int index) {
+    final clamped = index.clamp(0, AppStrings.totalPages - 1);
+    if (clamped == _currentPageIndex) return;
+    _currentPageIndex = clamped;
     notifyListeners();
   }
+
+  int get lastPageIndex => AppStrings.totalPages - 1;
+  bool get isAtEnd => _currentPageIndex >= lastPageIndex;
 }

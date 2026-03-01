@@ -1,6 +1,6 @@
 import '../../domain/entities/line_type.dart';
 
-class LayoutLineModel {
+class LayoutModel {
   final int pageNumber;
   final int lineNumber;
   final LineType lineType;
@@ -9,7 +9,7 @@ class LayoutLineModel {
   final int? lastWordId;
   final int? surahNumber;
 
-  const LayoutLineModel({
+  const LayoutModel({
     required this.pageNumber,
     required this.lineNumber,
     required this.lineType,
@@ -19,8 +19,8 @@ class LayoutLineModel {
     this.surahNumber,
   });
 
-  factory LayoutLineModel.fromMap(Map<String, dynamic> map) {
-    return LayoutLineModel(
+  factory LayoutModel.fromMap(Map<String, dynamic> map) {
+    return LayoutModel(
       pageNumber: int.parse(map['page_number'].toString()),
       lineNumber: int.parse(map['line_number'].toString()),
       lineType: LineType.values.firstWhere((e) => e.name == map['line_type'], orElse: () => LineType.ayah),

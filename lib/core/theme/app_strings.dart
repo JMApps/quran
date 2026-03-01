@@ -14,6 +14,8 @@ class AppStrings {
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
 
+  static const int totalPages = 604;
+
   static String ayahWord(int count) {
     if (count % 100 >= 11 && count % 100 <= 14) {
       return 'аятов';

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../data/repositories/surah_repository_impl.dart';
-import '../../../domain/entities/surah_entity.dart';
-import '../../../domain/usecases/surah_use_case.dart';
-import '../lists/surah_list.dart';
+import '../../../data/repositories/surah_name_repository_impl.dart';
+import '../../../domain/entities/surah_name_entity.dart';
+import '../../../domain/usecases/surah_name_use_case.dart';
+import '../lists/surahs_name_list.dart';
 
-class SurahPage extends StatefulWidget {
-  const SurahPage({
+class SurahNamePage extends StatefulWidget {
+  const SurahNamePage({
     super.key,
     required this.scrollController,
   });
@@ -17,17 +17,17 @@ class SurahPage extends StatefulWidget {
   final ScrollController scrollController;
 
   @override
-  State<SurahPage> createState() => _SurahPageState();
+  State<SurahNamePage> createState() => _SurahNamePageState();
 }
 
-class _SurahPageState extends State<SurahPage> {
-  late final SurahUseCase _surahsUseCase;
-  late final Future<List<SurahEntity>> _futureSurahs;
+class _SurahNamePageState extends State<SurahNamePage> {
+  late final SurahNameUseCase _surahsUseCase;
+  late final Future<List<SurahNameEntity>> _futureSurahs;
 
   @override
   void initState() {
     super.initState();
-    _surahsUseCase = SurahUseCase(SurahRepositoryImpl(QuranDatabaseService.instance));
+    _surahsUseCase = SurahNameUseCase(SurahNameRepositoryImpl(QuranDatabaseService.instance));
     _futureSurahs = _surahsUseCase.getAllSurahs();
   }
 
@@ -47,7 +47,7 @@ class _SurahPageState extends State<SurahPage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<SurahEntity>>(
+      body: FutureBuilder<List<SurahNameEntity>>(
         future: _futureSurahs,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,8 +68,8 @@ class _SurahPageState extends State<SurahPage> {
             );
           }
 
-          final surahs = snapshot.data ?? const <SurahEntity>[];
-          return SurahList(
+          final surahs = snapshot.data ?? const <SurahNameEntity>[];
+          return SurahsNameList(
             scrollController: widget.scrollController,
             surahsList: surahs,
           );

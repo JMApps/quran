@@ -1,6 +1,6 @@
 import 'line_type.dart';
 
-class LayoutLineEntity {
+class LayoutEntity {
   final int pageNumber;
   final int lineNumber;
   final LineType lineType;
@@ -9,7 +9,7 @@ class LayoutLineEntity {
   final int? lastWordId;
   final int? surahNumber;
 
-  const LayoutLineEntity({
+  const LayoutEntity({
     required this.pageNumber,
     required this.lineNumber,
     required this.lineType,

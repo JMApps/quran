@@ -1,18 +1,18 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/quran_database_service.dart';
-import '../../domain/entities/surah_entity.dart';
-import '../../domain/repositories/surah_repository.dart';
-import '../mappers/surah_mapper.dart';
-import '../models/surah_model.dart';
+import '../../domain/entities/surah_name_entity.dart';
+import '../../domain/repositories/surah_name_repository.dart';
+import '../mappers/surah_name_mapper.dart';
+import '../models/surah_name_model.dart';
 
-class SurahRepositoryImpl implements SurahRepository {
+class SurahNameRepositoryImpl implements SurahNameRepository {
   final QuranDatabaseService _quranDatabaseService;
 
-  SurahRepositoryImpl(this._quranDatabaseService);
+  SurahNameRepositoryImpl(this._quranDatabaseService);
 
   @override
-  Future<List<SurahEntity>> getAllSurahs() async {
+  Future<List<SurahNameEntity>> getAllSurahs() async {
     final Database database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> rows = await database.query(
@@ -20,11 +20,11 @@ class SurahRepositoryImpl implements SurahRepository {
       orderBy: 'surah_number ASC',
     );
 
-    return rows.map((row) => SurahModel.fromMap(row).toEntity()).toList();
+    return rows.map((row) => SurahNameModel.fromMap(row).toEntity()).toList();
   }
 
   @override
-  Future<SurahEntity?> getSurahByPage({required int pageNumber}) async {
+  Future<SurahNameEntity?> getSurahByPage({required int pageNumber}) async {
     final Database database = await _quranDatabaseService.db;
 
     final rows = await database.query(
@@ -36,6 +36,6 @@ class SurahRepositoryImpl implements SurahRepository {
     );
 
     if (rows.isEmpty) return null;
-    return SurahModel.fromMap(rows.first).toEntity();
+    return SurahNameModel.fromMap(rows.first).toEntity();
   }
 }

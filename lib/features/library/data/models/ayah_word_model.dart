@@ -1,4 +1,4 @@
-class WordModel {
+class AyahWordModel {
   final int id;
   final String location;
   final int surah;
@@ -6,7 +6,7 @@ class WordModel {
   final int word;
   final String text;
 
-  const WordModel({
+  const AyahWordModel({
     required this.id,
     required this.location,
     required this.surah,
@@ -15,8 +15,8 @@ class WordModel {
     required this.text,
   });
 
-  factory WordModel.fromMap(Map<String, dynamic> map) {
-    return WordModel(
+  factory AyahWordModel.fromMap(Map<String, dynamic> map) {
+    return AyahWordModel(
       id: map['id'] as int,
       location: map['location'] as String,
       surah: map['surah'] as int,
