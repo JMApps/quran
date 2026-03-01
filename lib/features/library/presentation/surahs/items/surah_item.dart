@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_strings.dart';
 
 import '../../../../../core/router/names_router.dart';
+import '../../../../../core/theme/app_strings.dart';
 import '../../../domain/entities/surah_entity.dart';
 import '../../state/surah_state.dart';
 
@@ -31,9 +31,7 @@ class SurahItem extends StatelessWidget {
         child: Text(
           surahModel.surahNumber.toString(),
           style: TextStyle(
-            fontSize: 16.0,
             color: appColors.primary,
-            fontFeatures: const [FontFeature.tabularFigures()],
           ),
           textAlign: TextAlign.center,
         ),
@@ -46,7 +44,6 @@ class SurahItem extends StatelessWidget {
             style: TextStyle(
               color: appColors.primary,
               fontFamily: AppStrings.fontUthmanicHafs,
-              fontSize: 18.0,
             ),
           ),
           Text(
@@ -54,37 +51,32 @@ class SurahItem extends StatelessWidget {
           ),
         ],
       ),
-      subtitle: Row(
-        children: [
-          RichText(
-            text: TextSpan(
-              style: TextStyle(
-                color: appColors.onSurface,
-                fontFamily: AppStrings.fontGilroy,
-              ),
-              children: [
-                TextSpan(
-                  text: '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
-                  style: TextStyle(
-                    color: appColors.secondary,
-                  ),
-                ),
-                const TextSpan(text: ' – '),
-                TextSpan(
-                  text: surahModel.revelationPlace,
-                  style: TextStyle(
-                    color: appColors.primary,
-                  ),
-                ),
-              ],
-            ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            color: appColors.onSurface,
+            fontFamily: AppStrings.fontGilroy,
           ),
-        ],
+          children: [
+            TextSpan(
+              text: '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
+              style: TextStyle(
+                color: appColors.secondary,
+              ),
+            ),
+            const TextSpan(text: ' – '),
+            TextSpan(
+              text: surahModel.revelationPlace,
+              style: TextStyle(
+                color: appColors.primary,
+              ),
+            ),
+          ],
+        ),
       ),
       trailing: Text(
         surahModel.startPageNumber.toString(),
         style: TextStyle(
-          fontSize: 14.0,
           color: appColors.secondary,
         ),
       ),

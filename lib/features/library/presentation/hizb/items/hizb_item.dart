@@ -29,49 +29,44 @@ class HizbItem extends StatelessWidget {
       title: Text(
         'Хизб – ${hizbModel.hizbNumber}',
       ),
-      subtitle: Row(
-        children: [
-          RichText(
-            text: TextSpan(
-              style: TextStyle(
-                color: appColors.onSurface,
-                fontFamily: AppStrings.fontGilroy,
-              ),
-              children: [
-                const TextSpan(text: 'Начало: '),
-                TextSpan(
-                  text: hizbModel.firstVerseKey,
-                  style: TextStyle(
-                    color: appColors.primary,
-                  ),
-                ),
-                const TextSpan(text: ' / '),
-                const TextSpan(text: 'Конец: '),
-                TextSpan(
-                  text: hizbModel.lastVerseKey,
-                  style: TextStyle(
-                    color: appColors.primary,
-                  ),
-                ),
-                const TextSpan(text: '\n'),
-                TextSpan(
-                  text:
-                  '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
-                  style: TextStyle(
-                    color: appColors.secondary,
-                  ),
-                ),
-              ],
-            ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            color: appColors.onSurface,
+            fontFamily: AppStrings.fontGilroy,
           ),
-        ],
+          children: [
+            const TextSpan(text: 'Начало: '),
+            TextSpan(
+              text: hizbModel.firstVerseKey,
+              style: TextStyle(
+                color: appColors.primary,
+              ),
+            ),
+            const TextSpan(text: ' / '),
+            const TextSpan(text: 'Конец: '),
+            TextSpan(
+              text: hizbModel.lastVerseKey,
+              style: TextStyle(
+                color: appColors.primary,
+              ),
+            ),
+            const TextSpan(text: '\n'),
+            TextSpan(
+              text:
+              '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
+              style: TextStyle(
+                color: appColors.secondary,
+              ),
+            ),
+          ],
+        ),
       ),
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Text(
           hizbModel.hizbNumber.toString(),
           style: TextStyle(
-            fontSize: 16.0,
             color: appColors.primary,
             fontFeatures: const [FontFeature.tabularFigures()],
           ),
@@ -81,7 +76,6 @@ class HizbItem extends StatelessWidget {
       trailing: Text(
         hizbModel.startPageNumber.toString(),
         style: TextStyle(
-          fontSize: 14.0,
           color: appColors.secondary,
         ),
       ),

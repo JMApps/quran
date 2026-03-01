@@ -35,7 +35,7 @@ class _MainPageState extends State<MainPage> {
     _scrollController.animateTo(
       0,
       duration: const Duration(milliseconds: 500),
-      curve: Curves.easeIn,
+      curve: Curves.easeOutQuart,
     );
   }
 

@@ -15,7 +15,7 @@ class JuzsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 16;
+    final bottomHeight = kBottomNavigationBarHeight + 20;
     return Scrollbar(
       controller: scrollController,
       child: ListView.separated(

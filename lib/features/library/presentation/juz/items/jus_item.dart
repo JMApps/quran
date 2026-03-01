@@ -29,49 +29,44 @@ class JuzItem extends StatelessWidget {
       title: Text(
         'Джуз – ${juzModel.juzNumber}',
       ),
-      subtitle: Row(
-        children: [
-          RichText(
-            text: TextSpan(
-              style: TextStyle(
-                color: appColors.onSurface,
-                fontFamily: AppStrings.fontGilroy,
-              ),
-              children: [
-                const TextSpan(text: 'Начало: '),
-                TextSpan(
-                  text: juzModel.firstVerseKey,
-                  style: TextStyle(
-                    color: appColors.primary,
-                  ),
-                ),
-                const TextSpan(text: ' / '),
-                const TextSpan(text: 'Конец: '),
-                TextSpan(
-                  text: juzModel.lastVerseKey,
-                  style: TextStyle(
-                    color: appColors.primary,
-                  ),
-                ),
-                const TextSpan(text: '\n'),
-                TextSpan(
-                  text:
-                  '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
-                  style: TextStyle(
-                    color: appColors.secondary,
-                  ),
-                ),
-              ],
-            ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            color: appColors.onSurface,
+            fontFamily: AppStrings.fontGilroy,
           ),
-        ],
+          children: [
+            const TextSpan(text: 'Начало: '),
+            TextSpan(
+              text: juzModel.firstVerseKey,
+              style: TextStyle(
+                color: appColors.primary,
+              ),
+            ),
+            const TextSpan(text: ' / '),
+            const TextSpan(text: 'Конец: '),
+            TextSpan(
+              text: juzModel.lastVerseKey,
+              style: TextStyle(
+                color: appColors.primary,
+              ),
+            ),
+            const TextSpan(text: '\n'),
+            TextSpan(
+              text:
+              '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
+              style: TextStyle(
+                color: appColors.secondary,
+              ),
+            ),
+          ],
+        ),
       ),
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Text(
           juzModel.juzNumber.toString(),
           style: TextStyle(
-            fontSize: 16.0,
             color: appColors.primary,
             fontFeatures: const [FontFeature.tabularFigures()],
           ),
@@ -81,7 +76,6 @@ class JuzItem extends StatelessWidget {
       trailing: Text(
         juzModel.startPageNumber.toString(),
         style: TextStyle(
-          fontSize: 14.0,
           color: appColors.secondary,
         ),
       ),
