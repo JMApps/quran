@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/juz_entity.dart';
-import '../items/jus_item.dart';
+import '../../../domain/entities/hizb_entity.dart';
+import '../items/hizb_item.dart';
 
-class JuzsList extends StatelessWidget {
-  const JuzsList({
+class HizbsList extends StatelessWidget {
+  const HizbsList({
     super.key,
     required this.scrollController,
-    required this.juzsList,
+    required this.hizbsList,
   });
 
   final ScrollController scrollController;
-  final List<JuzEntity> juzsList;
+  final List<HizbEntity> hizbsList;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,13 @@ class JuzsList extends StatelessWidget {
       controller: scrollController,
       child: ListView.separated(
         controller: scrollController,
-        itemCount: juzsList.length,
+        itemCount: hizbsList.length,
         padding: EdgeInsets.only(bottom: bottomHeight),
         separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
-          final juzModel = juzsList[index];
-          return JuzItem(
-            juzModel: juzModel,
+          final hizbModel = hizbsList[index];
+          return HizbItem(
+            hizbModel: hizbModel,
             index: index,
           );
         },

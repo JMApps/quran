@@ -1,10 +1,12 @@
 class AppStrings {
   static const String appName = 'Коран';
   static const String juzs = 'Джузы';
+  static const String hizbs = 'Хизбы';
   static const String pages = 'Страницы';
   static const String settings = 'Настройки';
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
+  static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
   static const String goTo = 'Перейти к ...';
   static const String searchByAyahs = 'Поиск аятов';
 
@@ -28,5 +30,4 @@ class AppStrings {
         return 'аятов';
     }
   }
-
 }

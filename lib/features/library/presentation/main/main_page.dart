@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/presentation/juz/pages/juzs_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../hizb/pages/hizbs_page.dart';
+import '../juz/pages/juzs_page.dart';
 import '../state/main_state.dart';
 import '../surahs/pages/surah_page.dart';
 
@@ -19,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   late final List<Widget> _mainPages = [
     SurahPage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),
-    SurahPage(scrollController: _scrollController),
+    HizbsPage(scrollController: _scrollController),
     SurahPage(scrollController: _scrollController),
     SurahPage(scrollController: _scrollController),
   ];
@@ -67,8 +68,8 @@ class _MainPageState extends State<MainPage> {
                     title: const Text('Джузы'),
                   ),
                   SalomonBottomBarItem(
-                    icon: const Icon(Icons.pages_rounded),
-                    title: const Text('Страницы'),
+                    icon: const Icon(Icons.pie_chart),
+                    title: const Text('Хизбы'),
                   ),
                   SalomonBottomBarItem(
                     icon: const Icon(Icons.settings_rounded),

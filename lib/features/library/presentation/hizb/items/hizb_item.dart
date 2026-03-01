@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_strings.dart';
 
 import '../../../../../core/router/names_router.dart';
-import '../../../domain/entities/surah_entity.dart';
+import '../../../../../core/theme/app_strings.dart';
+import '../../../domain/entities/hizb_entity.dart';
 import '../../state/surah_state.dart';
 
-class SurahItem extends StatelessWidget {
-  const SurahItem({
+class HizbItem extends StatelessWidget {
+  const HizbItem({
     super.key,
-    required this.surahModel,
+    required this.hizbModel,
     required this.index,
   });
 
-  final SurahEntity surahModel;
+  final HizbEntity hizbModel;
   final int index;
 
   @override
@@ -26,33 +26,8 @@ class SurahItem extends StatelessWidget {
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
-      leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Text(
-          surahModel.surahNumber.toString(),
-          style: TextStyle(
-            fontSize: 16.0,
-            color: appColors.primary,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            surahModel.nameArabic,
-            style: TextStyle(
-              color: appColors.primary,
-              fontFamily: AppStrings.fontUthmanicHafs,
-              fontSize: 18.0,
-            ),
-          ),
-          Text(
-            '${surahModel.nameTranscription} (${surahModel.nameTranslation})',
-          ),
-        ],
+      title: Text(
+        'Хизб – ${hizbModel.hizbNumber}',
       ),
       subtitle: Row(
         children: [
@@ -63,17 +38,27 @@ class SurahItem extends StatelessWidget {
                 fontFamily: AppStrings.fontGilroy,
               ),
               children: [
+                const TextSpan(text: 'Начало: '),
                 TextSpan(
-                  text: '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
-                  style: TextStyle(
-                    color: appColors.secondary,
-                  ),
-                ),
-                const TextSpan(text: ' – '),
-                TextSpan(
-                  text: surahModel.revelationPlace,
+                  text: hizbModel.firstVerseKey,
                   style: TextStyle(
                     color: appColors.primary,
+                  ),
+                ),
+                const TextSpan(text: ' / '),
+                const TextSpan(text: 'Конец: '),
+                TextSpan(
+                  text: hizbModel.lastVerseKey,
+                  style: TextStyle(
+                    color: appColors.primary,
+                  ),
+                ),
+                const TextSpan(text: '\n'),
+                TextSpan(
+                  text:
+                  '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
+                  style: TextStyle(
+                    color: appColors.secondary,
                   ),
                 ),
               ],
@@ -81,8 +66,20 @@ class SurahItem extends StatelessWidget {
           ),
         ],
       ),
+      leading: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        child: Text(
+          hizbModel.hizbNumber.toString(),
+          style: TextStyle(
+            fontSize: 16.0,
+            color: appColors.primary,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
       trailing: Text(
-        surahModel.startPageNumber.toString(),
+        hizbModel.startPageNumber.toString(),
         style: TextStyle(
           fontSize: 14.0,
           color: appColors.secondary,
@@ -90,12 +87,12 @@ class SurahItem extends StatelessWidget {
       ),
       onTap: () {
         // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageNumber = surahModel.startPageNumber;
+        Provider.of<SurahState>(context, listen: false).currentPageNumber = hizbModel.startPageNumber;
         // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahModel.startPageNumber,
+          arguments: hizbModel.startPageNumber,
         );
       },
     );
