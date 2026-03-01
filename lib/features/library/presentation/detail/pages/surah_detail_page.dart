@@ -23,16 +23,18 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
   void initState() {
     super.initState();
 
-    _surahDetailPageController = PageController(
-      initialPage: Provider.of<SurahState>(context, listen: false).currentPageNumber,
-    );
+    final initialIndex = context.read<SurahState>().currentPageIndex; // или твой фикс
+    _surahDetailPageController = PageController(initialPage: initialIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Страница ${Provider.of<SurahState>(context).currentPageNumber}'),
+        title: Selector<SurahState, int>(
+          selector: (_, s) => s.currentPageNumber,
+          builder: (_, pageNumber, _) => Text('Страница $pageNumber'),
+        ),
         actions: [
           IconButton(
             onPressed: () {},

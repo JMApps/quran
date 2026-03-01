@@ -82,12 +82,12 @@ class SurahNameItem extends StatelessWidget {
       ),
       onTap: () {
         // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageIndex = surahModel.startPageNumber;
+        Provider.of<SurahState>(context, listen: false).currentPageIndex = surahModel.startPageNumber - 1;
         // Открываем страницу с нужными аргументами
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahModel.startPageNumber,
+          arguments: surahModel.startPageNumber - 1,
         );
       },
     );

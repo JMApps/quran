@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../state/surah_state.dart';
 
 class SurahDetailItem extends StatelessWidget {
-  const SurahDetailItem({super.key});
+  const SurahDetailItem({
+    super.key,
+    required this.pageIndex,
+  });
+
+  final int pageIndex;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        Provider.of<SurahState>(context).currentPageNumber.toString(),
+        (pageIndex + 1).toString(),
       ),
     );
   }

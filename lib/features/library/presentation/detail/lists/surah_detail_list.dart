@@ -23,7 +23,9 @@ class SurahDetailList extends StatelessWidget {
         context.read<SurahState>().currentPageIndex = index;
       },
       itemBuilder: (context, index) {
-        return const SurahDetailItem();
+        return SurahDetailItem(
+          pageIndex: index,
+        );
       },
     );
   }

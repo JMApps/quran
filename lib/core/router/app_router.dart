@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../features/library/presentation/layout/pages/surah_detail_page.dart';
+import '../../features/library/presentation/detail/pages/surah_detail_page.dart';
 import 'names_router.dart';
 
 class AppRouter {
