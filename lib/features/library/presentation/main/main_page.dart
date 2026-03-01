@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../../settings/pages/app_settings_page.dart';
 import '../hizb/pages/hizbs_page.dart';
 import '../juz/pages/juzs_page.dart';
 import '../state/main_state.dart';
@@ -21,8 +22,7 @@ class _MainPageState extends State<MainPage> {
     SurahPage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),
     HizbsPage(scrollController: _scrollController),
-    SurahPage(scrollController: _scrollController),
-    SurahPage(scrollController: _scrollController),
+    const AppSettingsPage(),
   ];
 
   @override
