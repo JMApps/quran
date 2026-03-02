@@ -31,6 +31,7 @@ flutter:
   assets:
     - assets/databases/
     - assets/fonts/
+    - assets/ayahbyayah/
 
   fonts:
 
@@ -41,3 +42,5 @@ flutter:
       fonts:
         - asset: assets/fonts/uthmanic_hafs_v_22.ttf
     - family: 'SP Pro'
+      fonts:
+        - asset: assets/fonts/sf_pro_regular.ttf

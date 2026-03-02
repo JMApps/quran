@@ -1,8 +1,8 @@
 class AppStrings {
   static const String appName = 'Коран';
+  static const String surahs = 'Суры';
   static const String juzs = 'Джузы';
   static const String hizbs = 'Хизбы';
-  static const String pages = 'Страницы';
   static const String settings = 'Настройки';
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';

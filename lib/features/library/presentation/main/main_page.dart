@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_strings.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -42,53 +43,55 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    return Consumer<MainState>(
-      builder: (context, mainState, _) {
-        return Scaffold(
-          extendBody: true,
-          body: _mainPages[mainState.mainNavigatorIndex],
-          bottomNavigationBar: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            removeBottom: true,
-            child: Card(
-              margin: AppStyles.mainPadding,
-              shape: AppStyles.bigShape,
-              child: SalomonBottomBar(
-                itemShape: AppStyles.bigShape,
-                selectedItemColor: appColors.primary,
-                unselectedItemColor: appColors.onSurface.withAlpha(175),
-                items: [
-                  SalomonBottomBarItem(
-                    icon: const Icon(Icons.line_style_rounded),
-                    title: const Text('Суры'),
-                  ),
-                  SalomonBottomBarItem(
-                    icon: const Icon(Icons.circle_rounded),
-                    title: const Text('Джузы'),
-                  ),
-                  SalomonBottomBarItem(
-                    icon: const Icon(Icons.pie_chart),
-                    title: const Text('Хизбы'),
-                  ),
-                  SalomonBottomBarItem(
-                    icon: const Icon(Icons.settings_rounded),
-                    title: const Text('Настройки'),
-                  ),
-                ],
-                currentIndex: mainState.mainNavigatorIndex,
-                onTap: (int index) {
-                  if (mainState.mainNavigatorIndex != index) {
-                    mainState.mainNavigatorIndex = index;
-                  } else {
-                    _scrollToTop();
-                  }
-                },
+
+    final navIndex = context.select<MainState, int>(
+          (s) => s.mainNavigatorIndex,
+    );
+
+    return Scaffold(
+      extendBody: true,
+      body: _mainPages[navIndex],
+      bottomNavigationBar: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeBottom: true,
+        child: Card(
+          margin: AppStyles.mainPadding,
+          shape: AppStyles.bigShape,
+          child: SalomonBottomBar(
+            itemShape: AppStyles.bigShape,
+            selectedItemColor: appColors.primary,
+            unselectedItemColor: appColors.onSurface.withAlpha(175),
+            items: [
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.line_style_rounded),
+                title: const Text(AppStrings.surahs),
               ),
-            ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.circle_rounded),
+                title: const Text(AppStrings.juzs),
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.pie_chart),
+                title: const Text(AppStrings.hizbs),
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.settings_rounded),
+                title: const Text(AppStrings.settings),
+              ),
+            ],
+            currentIndex: navIndex,
+            onTap: (int index) {
+              final state = context.read<MainState>();
+              if (navIndex != index) {
+                state.mainNavigatorIndex = index;
+              } else {
+                _scrollToTop();
+              }
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

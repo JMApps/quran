@@ -13,18 +13,25 @@ class SurahDetailList extends StatelessWidget {
 
   final PageController mushafPageController;
 
+  int _pageNumberFromIndex(int index) => AppStrings.totalPages - index;
+
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
       controller: mushafPageController,
       itemCount: AppStrings.totalPages,
-      reverse: true,
+      reverse: false,
       onPageChanged: (int index) {
+        // Храним индекс как есть (0..603), но pageNumber считаем через формулу
         context.read<SurahState>().currentPageIndex = index;
+
+        // ВАЖНО: currentPageNumber внутри SurahState должен считаться как totalPages - index
+        // иначе заголовок/загрузка страниц будут неверными.
       },
       itemBuilder: (context, index) {
+        final pageNumber = _pageNumberFromIndex(index); // 604..1
         return SurahDetailItem(
-          pageIndex: index,
+          pageNumber: pageNumber, // <-- лучше так, чем pageIndex
         );
       },
     );
