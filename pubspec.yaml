@@ -31,7 +31,7 @@ flutter:
   assets:
     - assets/databases/
     - assets/fonts/
-    - assets/ayahbyayah/
+    - assets/fontpages/
 
   fonts:
 

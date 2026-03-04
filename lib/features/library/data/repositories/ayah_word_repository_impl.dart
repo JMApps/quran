@@ -16,7 +16,7 @@ class AyahWordRepositoryImpl implements AyahWordRepository {
     final Database database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> rows = await database.query(
-      'Table_of_words',
+      'Table_of_words_glyph',
       where: 'id BETWEEN ? AND ?',
       whereArgs: [fromId, toId],
       orderBy: 'id ASC',

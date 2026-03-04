@@ -87,7 +87,7 @@ class SurahNameItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahModel.startPageNumber - 1,
+          arguments: surahModel.startPageNumber,
         );
       },
     );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_strings.dart';
 
+import '../../../../../core/theme/app_strings.dart';
 import '../../state/surah_state.dart';
 import '../lists/surah_detail_list.dart';
 
 class SurahDetailPage extends StatefulWidget {
   const SurahDetailPage({
     super.key,
-    required this.pageNumber, // 1..604
+    required this.pageNumber,
   });
 
   final int pageNumber;
@@ -26,13 +26,11 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
   void initState() {
     super.initState();
 
-    // Открываем именно widget.pageNumber корректно для reverse:true
     final initialIndex = _indexFromPageNumber(widget.pageNumber);
     _controller = PageController(initialPage: initialIndex);
 
-    // Синхронизируем state, чтобы AppBar показал правильную страницу сразу
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SurahState>().currentPageIndex = initialIndex;
+      Provider.of<SurahState>(context, listen: false).currentPageIndex = initialIndex;
     });
   }
 

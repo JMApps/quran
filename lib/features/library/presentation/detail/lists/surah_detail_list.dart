@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_strings.dart';
 
+import '../../../../../core/theme/app_strings.dart';
 import '../../state/surah_state.dart';
 import '../items/surah_detail_item.dart';
 
@@ -22,16 +22,12 @@ class SurahDetailList extends StatelessWidget {
       itemCount: AppStrings.totalPages,
       reverse: false,
       onPageChanged: (int index) {
-        // Храним индекс как есть (0..603), но pageNumber считаем через формулу
-        context.read<SurahState>().currentPageIndex = index;
-
-        // ВАЖНО: currentPageNumber внутри SurahState должен считаться как totalPages - index
-        // иначе заголовок/загрузка страниц будут неверными.
+        Provider.of<SurahState>(context, listen: false).currentPageIndex = index;
       },
       itemBuilder: (context, index) {
-        final pageNumber = _pageNumberFromIndex(index); // 604..1
+        final pageNumber = _pageNumberFromIndex(index);
         return SurahDetailItem(
-          pageNumber: pageNumber, // <-- лучше так, чем pageIndex
+          pageNumber: pageNumber,
         );
       },
     );
