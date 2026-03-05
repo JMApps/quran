@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../data/repositories/surah_name_repository_impl.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../../domain/usecases/surah_name_use_case.dart';
 import '../lists/surahs_name_list.dart';
@@ -27,7 +26,7 @@ class _SurahNamePageState extends State<SurahNamePage> {
   @override
   void initState() {
     super.initState();
-    _surahsUseCase = SurahNameUseCase(SurahNameRepositoryImpl(QuranDatabaseService.instance));
+    _surahsUseCase = context.read<SurahNameUseCase>();
     _futureSurahs = _surahsUseCase.getAllSurahs();
   }
 

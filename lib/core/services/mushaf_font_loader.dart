@@ -1,25 +1,37 @@
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart' as ui;
 
 class MushafFontLoader {
   MushafFontLoader._();
-
   static final MushafFontLoader instance = MushafFontLoader._();
 
-  final Map<int, Future<String>> _cache = {};
+  final Set<int> _loadedPages = <int>{};
+  final Map<int, Future<void>> _inFlight = <int, Future<void>>{};
 
-  Future<String> ensureLoaded(int pageNumber) {
-    return _cache.putIfAbsent(pageNumber, () async {
-      final family = 'mushaf_page_$pageNumber';
+  String familyForPage(int pageNumber) => 'p$pageNumber';
 
-      final assetPath = 'assets/fontpages/p$pageNumber.ttf';
+  Future<void> loadPageFont(int pageNumber) {
+    if (_loadedPages.contains(pageNumber)) return Future.value();
 
-      final loader = ui.FontLoader(family);
-      loader.addFont(rootBundle.load(assetPath));
+    final existing = _inFlight[pageNumber];
+    if (existing != null) return existing;
+
+    final future = _load(pageNumber);
+    _inFlight[pageNumber] = future;
+    return future;
+  }
+
+  Future<void> _load(int pageNumber) async {
+    try {
+      final family = familyForPage(pageNumber);
+      final loader = FontLoader(family);
+
+      final data = await rootBundle.load('assets/fontpages/p$pageNumber.ttf');
+      loader.addFont(Future.value(data));
 
       await loader.load();
-
-      return family;
-    });
+      _loadedPages.add(pageNumber);
+    } finally {
+      _inFlight.remove(pageNumber);
+    }
   }
 }

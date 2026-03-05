@@ -20,7 +20,6 @@ class PageLineDto {
   });
 
   factory PageLineDto.fromMap(Map<String, Object?> map) {
-
     return PageLineDto(
       pageNumber: map['page_number'] as int,
       lineNumber: map['line_number'] as int,

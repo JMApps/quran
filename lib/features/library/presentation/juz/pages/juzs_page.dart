@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../data/repositories/juz_repository_impl.dart';
 import '../../../domain/entities/juz_entity.dart';
 import '../../../domain/usecases/juz_use_case.dart';
 import '../lists/juzs_list.dart';
@@ -27,7 +26,7 @@ class _JuzsPageState extends State<JuzsPage> {
   @override
   void initState() {
     super.initState();
-    _juzUseCase = JuzUseCase(JuzRepositoryImpl(QuranDatabaseService.instance));
+    _juzUseCase = context.read<JuzUseCase>();
     _futureJuzs = _juzUseCase.getAllJuzs();
   }
 

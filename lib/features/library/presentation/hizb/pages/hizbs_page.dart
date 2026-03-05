@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../core/database/quran_database_service.dart';
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../data/repositories/hizb_repository_impl.dart';
 import '../../../domain/entities/hizb_entity.dart';
 import '../../../domain/usecases/hizb_use_case.dart';
 import '../lists/hizbs_list.dart';
@@ -27,7 +26,7 @@ class _HizbsPageState extends State<HizbsPage> {
   @override
   void initState() {
     super.initState();
-    _hizbUseCase = HizbUseCase(HizbRepositoryImpl(QuranDatabaseService.instance));
+    _hizbUseCase = context.read<HizbUseCase>();
     _futureHizbs = _hizbUseCase.getAllHizbs();
   }
 

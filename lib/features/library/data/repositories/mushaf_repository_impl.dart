@@ -2,9 +2,9 @@ import 'package:sqflite/sqflite.dart';
 import '../../../../core/database/quran_database_service.dart';
 import '../models/page_line_dto.dart';
 
-class MushafPageRepository {
+class MushafRepositoryImpl {
   final QuranDatabaseService _dbService;
-  const MushafPageRepository(this._dbService);
+  const MushafRepositoryImpl(this._dbService);
 
   Future<List<PageLineDto>> getPageLines(int pageNumber) async {
     final Database db = await _dbService.db;

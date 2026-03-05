@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SurahDetailItem extends StatelessWidget {
+class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
     required this.pageNumber,
@@ -9,9 +9,14 @@ class SurahDetailItem extends StatelessWidget {
   final int pageNumber;
 
   @override
+  State<SurahDetailItem> createState() => _SurahDetailItemState();
+}
+
+class _SurahDetailItemState extends State<SurahDetailItem> {
+  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('$pageNumber'),
+      child: Text(widget.pageNumber.toString()),
     );
   }
 }
