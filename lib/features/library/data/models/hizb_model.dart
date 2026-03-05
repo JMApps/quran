@@ -17,8 +17,8 @@ class HizbModel {
 
   factory HizbModel.fromMap(Map<String, dynamic> map) {
     return HizbModel(
-      hizbNumber: int.parse(map['hizb_number'].toString()),
-      versesCount: int.parse(map['verses_count'].toString()),
+      hizbNumber: map['hizb_number'] as int,
+      versesCount: map['verses_count'] as int,
       firstVerseKey: map['first_verse_key'] as String,
       lastVerseKey: map['last_verse_key'] as String,
       verseMapping: map['verse_mapping'] as String,

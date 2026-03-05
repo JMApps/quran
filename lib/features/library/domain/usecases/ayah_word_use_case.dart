@@ -6,7 +6,7 @@ class AyahWordUseCase {
 
   const AyahWordUseCase(this._wordRepository);
 
-  Future<List<AyahWordEntity>> getWordsByRange({required int fromId, required int toId}) {
-    return _wordRepository.getWordsByRange(fromId: fromId, toId: toId);
+  Future<List<AyahWordEntity>> getWordsByRange({required int fromId, required int toId}) async {
+    return await _wordRepository.getWordsByRange(fromId: fromId, toId: toId);
   }
 }

@@ -10,7 +10,7 @@ class HizbUseCase {
     return _hizbRepository.getAllHizbs();
   }
 
-  Future<HizbEntity> getHizbInfo({required int pageNumber}) {
-    return _hizbRepository.getHizbInfo(pageNumber: pageNumber);
+  Future<HizbEntity?> getHizbByPage({required int pageNumber}) {
+    return _hizbRepository.getHizbByPage(pageNumber: pageNumber);
   }
 }

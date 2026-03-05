@@ -18,12 +18,22 @@ class HizbRepositoryImpl implements HizbRepository {
       orderBy: 'hizb_number ASC',
     );
 
-    return rows.map((row) => HizbModel.fromMap(row).toEntity()).toList();
+    return rows.map((row) => HizbModel.fromMap(row).toEntity()).toList(growable: false);
   }
 
   @override
-  Future<HizbEntity> getHizbInfo({required int pageNumber}) {
-    // TODO: implement getHizbInfo
-    throw UnimplementedError();
+  Future<HizbEntity?> getHizbByPage({required int pageNumber}) async {
+    final db = await _quranDatabaseService.db;
+
+    final rows = await db.query(
+      'Table_of_hizbs',
+      where: 'start_page_number <= ?',
+      whereArgs: [pageNumber],
+      orderBy: 'start_page_number DESC',
+      limit: 1,
+    );
+
+    if (rows.isEmpty) return null;
+    return HizbModel.fromMap(rows.first).toEntity();
   }
 }

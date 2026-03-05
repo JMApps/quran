@@ -20,7 +20,7 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
       orderBy: 'surah_number ASC',
     );
 
-    return rows.map((row) => SurahNameModel.fromMap(row).toEntity()).toList();
+    return rows.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);
   }
 
   @override
@@ -32,6 +32,21 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
       where: 'start_page_number <= ?',
       whereArgs: [pageNumber],
       orderBy: 'start_page_number DESC',
+      limit: 1,
+    );
+
+    if (rows.isEmpty) return null;
+    return SurahNameModel.fromMap(rows.first).toEntity();
+  }
+
+  @override
+  Future<SurahNameEntity?> getSurahByNumber({required int surahNumber}) async {
+    final Database database = await _quranDatabaseService.db;
+
+    final rows = await database.query(
+      'Table_of_surahs',
+      where: 'surah_number = ?',
+      whereArgs: [surahNumber],
       limit: 1,
     );
 

@@ -10,7 +10,7 @@ class JuzUseCase {
     return _juzRepository.getAllJuzs();
   }
 
-  Future<JuzEntity> getJuzInfo({required int pageNumber}) {
-    return _juzRepository.getJuzInfo(pageNumber: pageNumber);
+  Future<JuzEntity?> getJuzByPage({required int pageNumber}) {
+    return _juzRepository.getJuzByPage(pageNumber: pageNumber);
   }
 }

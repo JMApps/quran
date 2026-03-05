@@ -9,4 +9,12 @@ class SurahNameUseCase {
   Future<List<SurahNameEntity>> getAllSurahs() {
     return _surahRepository.getAllSurahs();
   }
+
+  Future<SurahNameEntity?> getSurahByPage({required int pageNumber}) {
+    return _surahRepository.getSurahByPage(pageNumber: pageNumber);
+  }
+
+  Future<SurahNameEntity?> getSurahByNumber({required int surahNumber}) {
+    return _surahRepository.getSurahByNumber(surahNumber: surahNumber);
+  }
 }

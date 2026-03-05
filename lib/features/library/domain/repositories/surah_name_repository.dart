@@ -4,4 +4,6 @@ abstract class SurahNameRepository {
   Future<List<SurahNameEntity>> getAllSurahs();
 
   Future<SurahNameEntity?> getSurahByPage({required int pageNumber});
+
+  Future<SurahNameEntity?> getSurahByNumber({required int surahNumber});
 }
