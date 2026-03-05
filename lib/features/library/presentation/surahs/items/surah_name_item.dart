@@ -81,9 +81,9 @@ class SurahNameItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageIndex = surahModel.startPageNumber - 1;
-        // Открываем страницу с нужными аргументами
+        final initialIndex = AppStrings.totalPages - surahModel.startPageNumber;
+        context.read<SurahState>().currentPageIndex = initialIndex;
+
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

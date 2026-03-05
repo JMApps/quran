@@ -10,6 +10,10 @@ import '../../data/repositories/juz_repository_impl.dart';
 import '../../data/repositories/layout_repository_impl.dart';
 import '../../data/repositories/surah_name_repository_impl.dart';
 import '../../data/repositories/ayah_word_repository_impl.dart';
+import '../../domain/usecases/ayah_word_use_case.dart';
+import '../../domain/usecases/layout_use_case.dart';
+import '../../domain/usecases/mushaf_page_use_case.dart';
+import '../../domain/usecases/surah_name_use_case.dart';
 import '../state/main_state.dart';
 import '../state/surah_state.dart';
 import 'main_page.dart';
@@ -32,6 +36,18 @@ class RootPage extends StatelessWidget {
         Provider(create: (c) => JuzRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider(create: (c) => LayoutRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider(create: (c) => SurahNameRepositoryImpl(c.read<QuranDatabaseService>())),
+
+        Provider(create: (c) => AyahWordUseCase(c.read<AyahWordRepositoryImpl>())),
+        Provider(create: (c) => LayoutUseCase(c.read<LayoutRepositoryImpl>())),
+        Provider(create: (c) => SurahNameUseCase(c.read<SurahNameRepositoryImpl>())),
+
+        Provider(
+          create: (c) => BuildMushafPageUseCase(
+            c.read<LayoutUseCase>(),
+            c.read<AyahWordUseCase>(),
+            c.read<SurahNameUseCase>(),
+          ),
+        ),
 
       ],
       child: MaterialApp(

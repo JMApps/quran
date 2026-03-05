@@ -1,3 +1,5 @@
+import '../../features/library/domain/entities/line_type.dart';
+
 class AppStrings {
   static const String appName = 'Коран';
   static const String surahs = 'Суры';
@@ -30,6 +32,19 @@ class AppStrings {
         return 'аята';
       default:
         return 'аятов';
+    }
+  }
+
+  static LineType lineTypeFromDb(String value) {
+    switch (value) {
+      case 'ayah':
+        return LineType.ayah;
+      case 'surah_name':
+        return LineType.surahName;
+      case 'basmallah':
+        return LineType.basmallah;
+      default:
+        return LineType.ayah;
     }
   }
 }
