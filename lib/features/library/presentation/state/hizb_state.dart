@@ -38,16 +38,11 @@ class HizbState extends ChangeNotifier {
   }
 
   HizbEntity? getHizbByPage(int pageNumber) {
-    HizbEntity? result;
-
     for (final hizb in _allHizbs) {
-      if (hizb.startPageNumber <= pageNumber) {
-        result = hizb;
-      } else {
-        break;
+      if (hizb.startPageNumber == pageNumber) {
+        return hizb;
       }
     }
-
-    return result;
+    return null;
   }
 }

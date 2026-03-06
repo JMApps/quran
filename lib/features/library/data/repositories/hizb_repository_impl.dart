@@ -31,11 +31,11 @@ class HizbRepositoryImpl implements HizbRepository {
       tableOfHizbs,
       where: 'start_page_number = ?',
       whereArgs: [pageNumber],
-      orderBy: 'start_page_number DESC',
       limit: 1,
     );
 
     if (rows.isEmpty) return null;
+
     return HizbModel.fromMap(rows.first).toEntity();
   }
 }
