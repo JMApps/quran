@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/juz_entity.dart';
-import '../items/jus_item.dart';
+import '../items/juz_item.dart';
 
 class JuzsList extends StatelessWidget {
   const JuzsList({

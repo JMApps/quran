@@ -6,28 +6,13 @@ import '../../../../../core/theme/app_styles.dart';
 import '../../state/juz_state.dart';
 import '../lists/juzs_list.dart';
 
-class JuzsPage extends StatefulWidget {
+class JuzsPage extends StatelessWidget {
   const JuzsPage({
     super.key,
     required this.scrollController,
   });
 
   final ScrollController scrollController;
-
-  @override
-  State<JuzsPage> createState() => _JuzsPageState();
-}
-
-class _JuzsPageState extends State<JuzsPage> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      if (mounted) {
-        context.read<JuzState>().loadAllJuzs();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +43,7 @@ class _JuzsPageState extends State<JuzsPage> {
           }
 
           return JuzsList(
-            scrollController: widget.scrollController,
+            scrollController: scrollController,
             juzsList: juzState.allJuzs,
           );
         },

@@ -62,8 +62,7 @@ class JuzItem extends StatelessWidget {
             ),
             const TextSpan(text: '\n'),
             TextSpan(
-              text:
-              '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
+              text: '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
               style: TextStyle(
                 color: appColors.secondary,
                 fontSize: 12.5,
