@@ -16,6 +16,7 @@ import '../../domain/usecases/hizb_use_case.dart';
 import '../../domain/usecases/juz_use_case.dart';
 import '../../domain/usecases/layout_use_case.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
+import '../state/hizb_state.dart';
 import '../state/juz_state.dart';
 import '../state/main_state.dart';
 import '../state/surah_state.dart';
@@ -31,16 +32,15 @@ class RootPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<QuranDatabaseService>(create: (_) => QuranDatabaseService.instance),
+        Provider<MushafFontLoader>(create: (_) => MushafFontLoader.instance),
 
         ChangeNotifierProvider(create: (_) => MainState()),
-        Provider<MushafFontLoader>(create: (_) => MushafFontLoader.instance),
 
         Provider<AyahWordRepositoryImpl>(create: (c) => AyahWordRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider<JuzRepositoryImpl>(create: (c) => JuzRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider<HizbRepositoryImpl>(create: (c) => HizbRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider<LayoutRepositoryImpl>(create: (c) => LayoutRepositoryImpl(c.read<QuranDatabaseService>())),
         Provider<SurahNameRepositoryImpl>(create: (c) => SurahNameRepositoryImpl(c.read<QuranDatabaseService>())),
-
 
         Provider(create: (c) => AyahWordUseCase(c.read<AyahWordRepositoryImpl>())),
         Provider(create: (c) => JuzUseCase(c.read<JuzRepositoryImpl>())),
@@ -49,6 +49,7 @@ class RootPage extends StatelessWidget {
 
         ChangeNotifierProvider(create: (c) => SurahState(SurahNameUseCase(c.read<SurahNameRepositoryImpl>()))),
         ChangeNotifierProvider(create: (c) => JuzState(JuzUseCase(c.read<JuzRepositoryImpl>()))),
+        ChangeNotifierProvider(create: (c) => HizbState(HizbUseCase(c.read<HizbRepositoryImpl>()))),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

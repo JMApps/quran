@@ -22,9 +22,9 @@ class HizbsList extends StatelessWidget {
         controller: scrollController,
         itemCount: hizbsList.length,
         padding: EdgeInsets.only(bottom: bottomHeight),
-        separatorBuilder: (context, index) => const Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 0.75),
         itemBuilder: (context, index) {
-          final hizbModel = hizbsList[index];
+          final HizbEntity hizbModel = hizbsList[index];
           return HizbItem(
             hizbModel: hizbModel,
             index: index,

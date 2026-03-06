@@ -7,6 +7,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../settings/pages/app_settings_page.dart';
 import '../hizb/pages/hizbs_page.dart';
 import '../juz/pages/juzs_page.dart';
+import '../state/hizb_state.dart';
 import '../state/juz_state.dart';
 import '../state/main_state.dart';
 import '../state/surah_state.dart';
@@ -29,7 +30,7 @@ class _MainPageState extends State<MainPage> {
       if (mounted) {
         context.read<SurahState>().loadAllSurahs();
         context.read<JuzState>().loadAllJuzs();
-        // context.read<HizbState>().loadAllHizbs();
+        context.read<HizbState>().loadAllHizbs();
       }
     });
   }

@@ -22,12 +22,21 @@ class HizbItem extends StatelessWidget {
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
     return ListTile(
-      visualDensity: VisualDensity.standard,
+      visualDensity: VisualDensity.comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
+      leading: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        child: Text(
+          hizbModel.hizbNumber.toString(),
+        ),
+      ),
       title: Text(
         'Хизб – ${hizbModel.hizbNumber}',
+        style: const TextStyle(
+          fontFamily: AppStrings.fontGilroyMedium,
+        ),
       ),
       subtitle: RichText(
         text: TextSpan(
@@ -53,24 +62,13 @@ class HizbItem extends StatelessWidget {
             ),
             const TextSpan(text: '\n'),
             TextSpan(
-              text:
-              '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
+              text: '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
               style: TextStyle(
                 color: appColors.secondary,
+                fontSize: 12.5,
               ),
             ),
           ],
-        ),
-      ),
-      leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Text(
-          hizbModel.hizbNumber.toString(),
-          style: TextStyle(
-            color: appColors.primary,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-          textAlign: TextAlign.center,
         ),
       ),
       trailing: Text(
@@ -80,9 +78,9 @@ class HizbItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        // Передаем в провайдер номер страницы
-        Provider.of<SurahState>(context, listen: false).currentPageIndex = hizbModel.startPageNumber;
-        // Открываем страницу с нужными аргументами
+        final initialIndex = AppStrings.totalPages - hizbModel.startPageNumber;
+        context.read<SurahState>().currentPageIndex = initialIndex;
+
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

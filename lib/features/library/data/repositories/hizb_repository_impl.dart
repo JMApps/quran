@@ -9,12 +9,14 @@ class HizbRepositoryImpl implements HizbRepository {
 
   HizbRepositoryImpl(this._quranDatabaseService);
 
+  static const String tableOfHizbs = 'Table_of_hizbs';
+
   @override
   Future<List<HizbEntity>> getAllHizbs() async {
     final database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> rows = await database.query(
-      'Table_of_hizbs',
+      tableOfHizbs,
       orderBy: 'hizb_number ASC',
     );
 
@@ -26,8 +28,8 @@ class HizbRepositoryImpl implements HizbRepository {
     final db = await _quranDatabaseService.db;
 
     final rows = await db.query(
-      'Table_of_hizbs',
-      where: 'start_page_number <= ?',
+      tableOfHizbs,
+      where: 'start_page_number = ?',
       whereArgs: [pageNumber],
       orderBy: 'start_page_number DESC',
       limit: 1,

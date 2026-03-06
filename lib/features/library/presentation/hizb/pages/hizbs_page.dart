@@ -3,11 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../domain/entities/hizb_entity.dart';
-import '../../../domain/usecases/hizb_use_case.dart';
+import '../../state/hizb_state.dart';
 import '../lists/hizbs_list.dart';
 
-class HizbsPage extends StatefulWidget {
+class HizbsPage extends StatelessWidget {
   const HizbsPage({
     super.key,
     required this.scrollController,
@@ -16,52 +15,36 @@ class HizbsPage extends StatefulWidget {
   final ScrollController scrollController;
 
   @override
-  State<HizbsPage> createState() => _HizbsPageState();
-}
-
-class _HizbsPageState extends State<HizbsPage> {
-  late final HizbUseCase _hizbUseCase;
-  late final Future<List<HizbEntity>> _futureHizbs;
-
-  @override
-  void initState() {
-    super.initState();
-    _hizbUseCase = context.read<HizbUseCase>();
-    _futureHizbs = _hizbUseCase.getAllHizbs();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final hizbState = context.read<HizbState>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: const Text(AppStrings.hizbs),
       ),
-      body: FutureBuilder<List<HizbEntity>>(
-        future: _futureHizbs,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: Builder(
+        builder: (context) {
+          if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (snapshot.hasError) {
+          if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
             return Center(
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
-                  '${AppStrings.errorLoadHizbsList}\n${snapshot.error}',
+                  '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
             );
           }
 
-          final hizbs = snapshot.data ?? const <HizbEntity>[];
           return HizbsList(
-            scrollController: widget.scrollController,
-            hizbsList: hizbs,
+            scrollController: scrollController,
+            hizbsList: hizbState.allHizbs,
           );
         },
       ),
