@@ -38,6 +38,9 @@ flutter:
     - family: 'Gilroy'
       fonts:
         - asset: assets/fonts/gilroy_regular.ttf
+    - family: 'Gilroy Medium'
+      fonts:
+        - asset: assets/fonts/gilroy_medium.ttf
     - family: 'Uthmanic Hafs'
       fonts:
         - asset: assets/fonts/uthmanic_hafs_v_22.ttf

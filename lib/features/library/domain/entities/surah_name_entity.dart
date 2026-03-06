@@ -20,6 +20,4 @@ class SurahNameEntity {
     required this.basmallaPre,
     required this.startPageNumber,
   });
-
-  bool get hasBasmallaPre => basmallaPre == 1;
 }

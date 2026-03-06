@@ -2,19 +2,15 @@ import '../entities/surah_name_entity.dart';
 import '../repositories/surah_name_repository.dart';
 
 class SurahNameUseCase {
-  final SurahNameRepository _surahRepository;
+  final SurahNameRepository _surahNameRepository;
 
-  const SurahNameUseCase(this._surahRepository);
+  const SurahNameUseCase(this._surahNameRepository);
 
   Future<List<SurahNameEntity>> getAllSurahs() {
-    return _surahRepository.getAllSurahs();
+    return _surahNameRepository.getAllSurahs();
   }
 
   Future<SurahNameEntity?> getSurahByPage({required int pageNumber}) {
-    return _surahRepository.getSurahByPage(pageNumber: pageNumber);
-  }
-
-  Future<SurahNameEntity?> getSurahByNumber({required int surahNumber}) {
-    return _surahRepository.getSurahByNumber(surahNumber: surahNumber);
+    return _surahNameRepository.getSurahByPage(pageNumber: pageNumber);
   }
 }

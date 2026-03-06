@@ -163,7 +163,7 @@ class BuildMushafPageUseCase {
     if (cached != null) return cached;
 
     final s =
-    await _surahNameUseCase.getSurahByNumber(surahNumber: surahNumber);
+    await _surahNameUseCase.getSurahByPage(pageNumber: surahNumber);
     final name = s?.nameTranslation ?? '';
     cache[surahNumber] = name;
     return name;

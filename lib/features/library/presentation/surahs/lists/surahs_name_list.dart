@@ -22,9 +22,9 @@ class SurahsNameList extends StatelessWidget {
         controller: scrollController,
         itemCount: surahsList.length,
         padding: EdgeInsets.only(bottom: bottomHeight),
-        separatorBuilder: (context, index) => const Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 0.75),
         itemBuilder: (context, index) {
-          final surahModel = surahsList[index];
+          final SurahNameEntity surahModel = surahsList[index];
           return SurahNameItem(
             surahModel: surahModel,
             index: index,

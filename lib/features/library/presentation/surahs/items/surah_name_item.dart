@@ -22,7 +22,7 @@ class SurahNameItem extends StatelessWidget {
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
     return ListTile(
-      visualDensity: VisualDensity.standard,
+      visualDensity: VisualDensity.comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
@@ -30,10 +30,6 @@ class SurahNameItem extends StatelessWidget {
         backgroundColor: Colors.transparent,
         child: Text(
           surahModel.surahNumber.toString(),
-          style: TextStyle(
-            color: appColors.primary,
-          ),
-          textAlign: TextAlign.center,
         ),
       ),
       title: Column(
@@ -48,6 +44,9 @@ class SurahNameItem extends StatelessWidget {
           ),
           Text(
             '${surahModel.nameTranscription} (${surahModel.nameTranslation})',
+            style: const TextStyle(
+              fontFamily: AppStrings.fontGilroyMedium,
+            ),
           ),
         ],
       ),
@@ -62,6 +61,7 @@ class SurahNameItem extends StatelessWidget {
               text: '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
               style: TextStyle(
                 color: appColors.secondary,
+                fontSize: 12.5,
               ),
             ),
             const TextSpan(text: ' – '),

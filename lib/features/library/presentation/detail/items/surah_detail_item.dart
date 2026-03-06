@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SurahDetailItem extends StatefulWidget {
+import '../../state/surah_state.dart';
+
+class SurahDetailItem extends StatelessWidget {
   const SurahDetailItem({
     super.key,
     required this.pageNumber,
@@ -9,14 +12,14 @@ class SurahDetailItem extends StatefulWidget {
   final int pageNumber;
 
   @override
-  State<SurahDetailItem> createState() => _SurahDetailItemState();
-}
-
-class _SurahDetailItemState extends State<SurahDetailItem> {
-  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(widget.pageNumber.toString()),
+      child: Column(
+        children: [
+          Text(context.read<SurahState>().getSurahByPage(pageNumber)!.nameArabic),
+          Text(pageNumber.toString()),
+        ],
+      ),
     );
   }
 }

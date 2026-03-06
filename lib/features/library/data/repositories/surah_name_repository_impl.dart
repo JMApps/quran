@@ -11,46 +11,34 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
 
   SurahNameRepositoryImpl(this._quranDatabaseService);
 
+  static const String tableOfSurahs = 'Table_of_surahs';
+
   @override
   Future<List<SurahNameEntity>> getAllSurahs() async {
     final Database database = await _quranDatabaseService.db;
 
-    final List<Map<String, Object?>> rows = await database.query(
-      'Table_of_surahs',
+    final List<Map<String, Object?>> allSurahs = await database.query(
+      tableOfSurahs,
       orderBy: 'surah_number ASC',
     );
 
-    return rows.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);
+    return allSurahs.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);
   }
 
   @override
   Future<SurahNameEntity?> getSurahByPage({required int pageNumber}) async {
     final Database database = await _quranDatabaseService.db;
 
-    final rows = await database.query(
-      'Table_of_surahs',
+    final surahByPage = await database.query(
+      tableOfSurahs,
       where: 'start_page_number <= ?',
       whereArgs: [pageNumber],
       orderBy: 'start_page_number DESC',
       limit: 1,
     );
 
-    if (rows.isEmpty) return null;
-    return SurahNameModel.fromMap(rows.first).toEntity();
-  }
+    if (surahByPage.isEmpty) return null;
 
-  @override
-  Future<SurahNameEntity?> getSurahByNumber({required int surahNumber}) async {
-    final Database database = await _quranDatabaseService.db;
-
-    final rows = await database.query(
-      'Table_of_surahs',
-      where: 'surah_number = ?',
-      whereArgs: [surahNumber],
-      limit: 1,
-    );
-
-    if (rows.isEmpty) return null;
-    return SurahNameModel.fromMap(rows.first).toEntity();
+    return SurahNameModel.fromMap(surahByPage.first).toEntity();
   }
 }

@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/theme/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../domain/entities/surah_name_entity.dart';
-import '../../../domain/usecases/surah_name_use_case.dart';
+import '../../state/surah_state.dart';
 import '../lists/surahs_name_list.dart';
 
 class SurahNamePage extends StatefulWidget {
@@ -20,18 +19,20 @@ class SurahNamePage extends StatefulWidget {
 }
 
 class _SurahNamePageState extends State<SurahNamePage> {
-  late final SurahNameUseCase _surahsUseCase;
-  late final Future<List<SurahNameEntity>> _futureSurahs;
 
   @override
   void initState() {
     super.initState();
-    _surahsUseCase = context.read<SurahNameUseCase>();
-    _futureSurahs = _surahsUseCase.getAllSurahs();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<SurahState>().loadAllSurahs();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final surahState = context.watch<SurahState>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -46,31 +47,29 @@ class _SurahNamePageState extends State<SurahNamePage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<SurahNameEntity>>(
-        future: _futureSurahs,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: Builder(
+        builder: (context) {
+          if (surahState.isLoading && surahState.allSurahs.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (snapshot.hasError) {
+          if (surahState.error != null && surahState.allSurahs.isEmpty) {
             return Center(
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
-                  '${AppStrings.errorLoadSurahsList}\n${snapshot.error}',
+                  '${AppStrings.errorLoadSurahsList}\n${surahState.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
             );
           }
 
-          final surahs = snapshot.data ?? const <SurahNameEntity>[];
           return SurahsNameList(
             scrollController: widget.scrollController,
-            surahsList: surahs,
+            surahsList: surahState.allSurahs,
           );
         },
       ),
