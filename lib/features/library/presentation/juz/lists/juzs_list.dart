@@ -22,9 +22,9 @@ class JuzsList extends StatelessWidget {
         controller: scrollController,
         itemCount: juzsList.length,
         padding: EdgeInsets.only(bottom: bottomHeight),
-        separatorBuilder: (context, index) => const Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 0.75),
         itemBuilder: (context, index) {
-          final juzModel = juzsList[index];
+          final JuzEntity juzModel = juzsList[index];
           return JuzItem(
             juzModel: juzModel,
             index: index,

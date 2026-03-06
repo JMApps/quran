@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_strings.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+import '../../../../core/theme/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../settings/pages/app_settings_page.dart';
 import '../hizb/pages/hizbs_page.dart';
 import '../juz/pages/juzs_page.dart';
+import '../state/juz_state.dart';
 import '../state/main_state.dart';
+import '../state/surah_state.dart';
 import '../surahs/pages/surahs_name_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -19,6 +21,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (mounted) {
+        context.read<SurahState>().loadAllSurahs();
+        context.read<JuzState>().loadAllJuzs();
+        // context.read<HizbState>().loadAllHizbs();
+      }
+    });
+  }
   late final List<Widget> _mainPages = [
     SurahNamePage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),

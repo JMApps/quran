@@ -16,6 +16,7 @@ import '../../domain/usecases/hizb_use_case.dart';
 import '../../domain/usecases/juz_use_case.dart';
 import '../../domain/usecases/layout_use_case.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
+import '../state/juz_state.dart';
 import '../state/main_state.dart';
 import '../state/surah_state.dart';
 import 'main_page.dart';
@@ -45,7 +46,9 @@ class RootPage extends StatelessWidget {
         Provider(create: (c) => JuzUseCase(c.read<JuzRepositoryImpl>())),
         Provider(create: (c) => HizbUseCase(c.read<HizbRepositoryImpl>())),
         Provider(create: (c) => LayoutUseCase(c.read<LayoutRepositoryImpl>())),
+
         ChangeNotifierProvider(create: (c) => SurahState(SurahNameUseCase(c.read<SurahNameRepositoryImpl>()))),
+        ChangeNotifierProvider(create: (c) => JuzState(JuzUseCase(c.read<JuzRepositoryImpl>()))),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
