@@ -45,6 +45,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     final pageNumberTitle = context.select<SurahState, int>((s) => s.currentPageNumber);
 
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('Страница $pageNumberTitle'),
         actions: [
@@ -59,6 +61,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
         ],
       ),
       body: SafeArea(
+        bottom: false,
         child: SurahDetailList(mushafPageController: _controller),
       ),
     );

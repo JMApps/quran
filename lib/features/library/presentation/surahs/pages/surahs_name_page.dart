@@ -6,29 +6,13 @@ import '../../../../../core/theme/app_styles.dart';
 import '../../state/surah_state.dart';
 import '../lists/surahs_name_list.dart';
 
-class SurahNamePage extends StatefulWidget {
+class SurahNamePage extends StatelessWidget {
   const SurahNamePage({
     super.key,
     required this.scrollController,
   });
 
   final ScrollController scrollController;
-
-  @override
-  State<SurahNamePage> createState() => _SurahNamePageState();
-}
-
-class _SurahNamePageState extends State<SurahNamePage> {
-
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      if (mounted) {
-        context.read<SurahState>().loadAllSurahs();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +52,7 @@ class _SurahNamePageState extends State<SurahNamePage> {
           }
 
           return SurahsNameList(
-            scrollController: widget.scrollController,
+            scrollController: scrollController,
             surahsList: surahState.allSurahs,
           );
         },
