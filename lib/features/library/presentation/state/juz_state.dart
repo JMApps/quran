@@ -6,7 +6,9 @@ import '../../domain/usecases/juz_use_case.dart';
 class JuzState extends ChangeNotifier {
   final JuzUseCase _juzUseCase;
 
-  JuzState(this._juzUseCase);
+  JuzState(this._juzUseCase) {
+    loadAllJuzs();
+  }
 
   List<JuzEntity> _allJuzs = const [];
   bool _isLoading = false;

@@ -6,7 +6,9 @@ import '../../domain/usecases/hizb_use_case.dart';
 class HizbState extends ChangeNotifier {
   final HizbUseCase _hizbUseCase;
 
-  HizbState(this._hizbUseCase);
+  HizbState(this._hizbUseCase) {
+    loadAllHizbs();
+  }
 
   List<HizbEntity> _allHizbs = const [];
   bool _isLoading = false;

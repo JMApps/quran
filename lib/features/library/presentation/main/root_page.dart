@@ -27,7 +27,7 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = AppTheme(Colors.blue);
+    final appTheme = AppTheme(Colors.brown);
 
     return MultiProvider(
       providers: [

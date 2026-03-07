@@ -8,7 +8,9 @@ class SurahState extends ChangeNotifier {
 
   final SurahNameUseCase _surahNameUseCase;
 
-  SurahState(this._surahNameUseCase);
+  SurahState(this._surahNameUseCase) {
+    loadAllSurahs();
+  }
 
   int _currentPageIndex = 0;
 

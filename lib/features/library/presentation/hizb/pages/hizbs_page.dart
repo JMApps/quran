@@ -16,35 +16,38 @@ class HizbsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hizbState = context.read<HizbState>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: const Text(AppStrings.hizbs),
       ),
-      body: Builder(
-        builder: (context) {
-          if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: Consumer<HizbState>(
+        builder: (BuildContext context, hizbState, _) {
+          return Builder(
+            builder: (context) {
+              if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
 
-          if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: AppStyles.mainPadding,
-                child: Text(
-                  '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
+              if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: AppStyles.mainPadding,
+                    child: Text(
+                      '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
 
-          return HizbsList(
-            scrollController: scrollController,
-            hizbsList: hizbState.allHizbs,
+              return HizbsList(
+                scrollController: scrollController,
+                hizbsList: hizbState.allHizbs,
+              );
+            },
           );
         },
       ),
