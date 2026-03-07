@@ -3,6 +3,7 @@ import '../../features/library/domain/entities/line_type.dart';
 class AppStrings {
   static const String appName = 'Коран';
   static const String surahs = 'Суры';
+  static const String bookmarks = 'Избранное';
   static const String juzs = 'Джузы';
   static const String hizbs = 'Хизбы';
   static const String settings = 'Настройки';

@@ -36,6 +36,7 @@ class _MainPageState extends State<MainPage> {
   }
   late final List<Widget> _mainPages = [
     SurahNamePage(scrollController: _scrollController),
+    SurahNamePage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),
     HizbsPage(scrollController: _scrollController),
     const AppSettingsPage(),
@@ -81,6 +82,10 @@ class _MainPageState extends State<MainPage> {
               SalomonBottomBarItem(
                 icon: const Icon(Icons.line_style_rounded),
                 title: const Text(AppStrings.surahs),
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.bookmark_rounded),
+                title: const Text(AppStrings.bookmarks),
               ),
               SalomonBottomBarItem(
                 icon: const Icon(Icons.circle_rounded),
