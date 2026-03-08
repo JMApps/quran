@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/theme/app_strings.dart';
 
@@ -16,7 +17,20 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
       appBar: AppBar(
         title: const Text(AppStrings.settings),
       ),
-      body: Container(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            SwitchListTile(
+              visualDensity: VisualDensity.comfortable,
+              contentPadding: AppStyles.hrMainPadding,
+              value: true,
+              onChanged: (bool onChanged) {},
+              title: const Text('Название сур на арабском'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
