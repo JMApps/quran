@@ -6,9 +6,7 @@ import '../../domain/usecases/juz_use_case.dart';
 class JuzState extends ChangeNotifier {
   final JuzUseCase _juzUseCase;
 
-  JuzState(this._juzUseCase) {
-    loadAllJuzs();
-  }
+  JuzState(this._juzUseCase);
 
   List<JuzEntity> _allJuzs = const [];
   bool _isLoading = false;
@@ -19,10 +17,12 @@ class JuzState extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool get isLoaded => _isLoaded;
+
   Object? get error => _error;
 
   Future<void> loadAllJuzs() async {
-    if (_isLoaded || _isLoading) return;
+    if (_isLoading || _isLoaded) return;
 
     _isLoading = true;
     _error = null;
@@ -40,16 +40,12 @@ class JuzState extends ChangeNotifier {
   }
 
   JuzEntity? getJuzByPage(int pageNumber) {
-    JuzEntity? result;
-
     for (final juz in _allJuzs) {
       if (juz.startPageNumber <= pageNumber) {
-        result = juz;
-      } else {
-        break;
+        return juz;
       }
     }
 
-    return result;
+    return null;
   }
 }

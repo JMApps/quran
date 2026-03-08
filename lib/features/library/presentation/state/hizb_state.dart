@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../domain/entities/hizb_entity.dart';
 import '../../domain/usecases/hizb_use_case.dart';
@@ -6,9 +6,7 @@ import '../../domain/usecases/hizb_use_case.dart';
 class HizbState extends ChangeNotifier {
   final HizbUseCase _hizbUseCase;
 
-  HizbState(this._hizbUseCase) {
-    loadAllHizbs();
-  }
+  HizbState(this._hizbUseCase);
 
   List<HizbEntity> _allHizbs = const [];
   bool _isLoading = false;
@@ -19,10 +17,12 @@ class HizbState extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool get isLoaded => _isLoaded;
+
   Object? get error => _error;
 
   Future<void> loadAllHizbs() async {
-    if (_isLoaded || _isLoading) return;
+    if (_isLoading || _isLoaded) return;
 
     _isLoading = true;
     _error = null;

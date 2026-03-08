@@ -5,12 +5,9 @@ import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
 
 class SurahState extends ChangeNotifier {
-
   final SurahNameUseCase _surahNameUseCase;
 
-  SurahState(this._surahNameUseCase) {
-    loadAllSurahs();
-  }
+  SurahState(this._surahNameUseCase);
 
   int _currentPageIndex = 0;
 
@@ -28,11 +25,13 @@ class SurahState extends ChangeNotifier {
   Object? _error;
 
   List<SurahNameEntity> get allSurahs => List.unmodifiable(_allSurahs);
+
   bool get isLoading => _isLoading;
+
   Object? get error => _error;
 
   Future<void> loadAllSurahs() async {
-    if (_isLoaded || _isLoading) return;
+    if (_isLoading || _isLoaded) return;
 
     _isLoading = true;
     _error = null;
@@ -50,16 +49,11 @@ class SurahState extends ChangeNotifier {
   }
 
   SurahNameEntity? getSurahByPage(int pageNumber) {
-    SurahNameEntity? result;
-
     for (final surah in _allSurahs) {
       if (surah.startPageNumber <= pageNumber) {
-        result = surah;
-      } else {
-        break;
+        return surah;
       }
     }
-
-    return result;
+    return null;
   }
 }

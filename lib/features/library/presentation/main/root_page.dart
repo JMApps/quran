@@ -31,25 +31,87 @@ class RootPage extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        Provider<QuranDatabaseService>(create: (_) => QuranDatabaseService.instance),
-        Provider<MushafFontLoader>(create: (_) => MushafFontLoader.instance),
+        Provider<QuranDatabaseService>(
+          create: (_) => QuranDatabaseService.instance,
+        ),
+        Provider<MushafFontLoader>(
+          create: (_) => MushafFontLoader.instance,
+        ),
 
-        ChangeNotifierProvider(create: (_) => MainState()),
+        ChangeNotifierProvider<MainState>(
+          create: (_) => MainState(),
+        ),
 
-        Provider<AyahWordRepositoryImpl>(create: (c) => AyahWordRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider<JuzRepositoryImpl>(create: (c) => JuzRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider<HizbRepositoryImpl>(create: (c) => HizbRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider<LayoutRepositoryImpl>(create: (c) => LayoutRepositoryImpl(c.read<QuranDatabaseService>())),
-        Provider<SurahNameRepositoryImpl>(create: (c) => SurahNameRepositoryImpl(c.read<QuranDatabaseService>())),
+        Provider<AyahWordRepositoryImpl>(
+          create: (context) => AyahWordRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
+        Provider<JuzRepositoryImpl>(
+          create: (context) => JuzRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
+        Provider<HizbRepositoryImpl>(
+          create: (context) => HizbRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
+        Provider<LayoutRepositoryImpl>(
+          create: (context) => LayoutRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
+        Provider<SurahNameRepositoryImpl>(
+          create: (context) => SurahNameRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
 
-        Provider(create: (c) => AyahWordUseCase(c.read<AyahWordRepositoryImpl>())),
-        Provider(create: (c) => JuzUseCase(c.read<JuzRepositoryImpl>())),
-        Provider(create: (c) => HizbUseCase(c.read<HizbRepositoryImpl>())),
-        Provider(create: (c) => LayoutUseCase(c.read<LayoutRepositoryImpl>())),
+        Provider<AyahWordUseCase>(
+          create: (context) => AyahWordUseCase(
+            context.read<AyahWordRepositoryImpl>(),
+          ),
+        ),
+        Provider<JuzUseCase>(
+          create: (context) => JuzUseCase(
+            context.read<JuzRepositoryImpl>(),
+          ),
+        ),
+        Provider<HizbUseCase>(
+          create: (context) => HizbUseCase(
+            context.read<HizbRepositoryImpl>(),
+          ),
+        ),
+        Provider<LayoutUseCase>(
+          create: (context) => LayoutUseCase(
+            context.read<LayoutRepositoryImpl>(),
+          ),
+        ),
+        Provider<SurahNameUseCase>(
+          create: (context) => SurahNameUseCase(
+            context.read<SurahNameRepositoryImpl>(),
+          ),
+        ),
 
-        ChangeNotifierProvider(create: (c) => SurahState(SurahNameUseCase(c.read<SurahNameRepositoryImpl>()))),
-        ChangeNotifierProvider(create: (c) => JuzState(JuzUseCase(c.read<JuzRepositoryImpl>()))),
-        ChangeNotifierProvider(create: (c) => HizbState(HizbUseCase(c.read<HizbRepositoryImpl>()))),
+        ChangeNotifierProvider<SurahState>(
+          lazy: false,
+          create: (context) => SurahState(
+            context.read<SurahNameUseCase>(),
+          )..loadAllSurahs(),
+        ),
+        ChangeNotifierProvider<JuzState>(
+          lazy: false,
+          create: (context) => JuzState(
+            context.read<JuzUseCase>(),
+          )..loadAllJuzs(),
+        ),
+        ChangeNotifierProvider<HizbState>(
+          lazy: false,
+          create: (context) => HizbState(
+            context.read<HizbUseCase>(),
+          )..loadAllHizbs(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
