@@ -47,22 +47,50 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text('Страница $pageNumberTitle'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.bookmark_border_rounded),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.public_outlined),
-          ),
-        ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Consumer<SurahState>(
+          builder: (context, surahState, _) {
+            return AnimatedSlide(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              offset: surahState.showAppBar ? Offset.zero : const Offset(0, -1),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: surahState.showAppBar ? 1 : 0,
+                child: IgnorePointer(
+                  ignoring: !surahState.showAppBar,
+                  child: AppBar(
+                    elevation: 5.0,
+                    title: Text('Страница $pageNumberTitle'),
+                    actions: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.bookmark_border_rounded),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.public_outlined),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
-      body: SafeArea(
-        bottom: false,
-        child: SurahDetailList(mushafPageController: _controller),
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+        ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: Provider.of<SurahState>(context, listen: false).toggleShowAppBar,
+          child: SurahDetailList(
+            mushafPageController: _controller,
+          ),
+        ),
       ),
     );
   }

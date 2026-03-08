@@ -19,6 +19,15 @@ class SurahState extends ChangeNotifier {
 
   int get currentPageNumber => AppStrings.totalPages - _currentPageIndex;
 
+  bool _showAppBar = true;
+
+  bool get showAppBar => _showAppBar;
+
+  void toggleShowAppBar() {
+    _showAppBar = !_showAppBar;
+    notifyListeners();
+  }
+
   List<SurahNameEntity> _allSurahs = const [];
   bool _isLoading = false;
   bool _isLoaded = false;
