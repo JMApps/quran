@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../core/theme/app_strings.dart';
+import '../../../domain/entities/mushaf_page_meta_entity.dart';
+import '../../state/mushaf_page_meta_state.dart';
 import '../../state/surah_state.dart';
 import '../lists/surah_detail_list.dart';
 
@@ -42,8 +44,10 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pageNumberTitle = context.select<SurahState, int>((s) => s.currentPageNumber);
-
+    final pageNumber = context.select<SurahState, int>((s) => s.currentPageNumber);
+    final meta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
+      (s) => s.getPageMetaByPageNumber(pageNumber),
+    );
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -62,7 +66,28 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                   ignoring: !surahState.showAppBar,
                   child: AppBar(
                     elevation: 5.0,
-                    title: Text('Страница $pageNumberTitle'),
+                    title: Column(
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        Text('Сура ${meta?.nameTranscription}'),
+                        Row(
+                          children: [
+                            Text(
+                              'Страница ${meta?.pageNumber}, ',
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                              ),
+                            ),
+                            Text(
+                              'джуз ${meta?.juzNumber}',
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     actions: [
                       IconButton(
                         onPressed: () {},

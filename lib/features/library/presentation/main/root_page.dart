@@ -10,15 +10,18 @@ import '../../data/repositories/ayah_word_repository_impl.dart';
 import '../../data/repositories/hizb_repository_impl.dart';
 import '../../data/repositories/juz_repository_impl.dart';
 import '../../data/repositories/layout_repository_impl.dart';
+import '../../data/repositories/mushaf_page_meta_repository_impl.dart';
 import '../../data/repositories/surah_name_repository_impl.dart';
 import '../../domain/usecases/ayah_word_use_case.dart';
 import '../../domain/usecases/hizb_use_case.dart';
 import '../../domain/usecases/juz_use_case.dart';
 import '../../domain/usecases/layout_use_case.dart';
+import '../../domain/usecases/mushaf_page_meta_use_case.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
 import '../state/hizb_state.dart';
 import '../state/juz_state.dart';
 import '../state/main_state.dart';
+import '../state/mushaf_page_meta_state.dart';
 import '../state/surah_state.dart';
 import 'main_page.dart';
 
@@ -67,6 +70,11 @@ class RootPage extends StatelessWidget {
             context.read<QuranDatabaseService>(),
           ),
         ),
+        Provider<MushafPageMetaRepositoryImpl>(
+          create: (context) => MushafPageMetaRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
 
         Provider<AyahWordUseCase>(
           create: (context) => AyahWordUseCase(
@@ -93,6 +101,11 @@ class RootPage extends StatelessWidget {
             context.read<SurahNameRepositoryImpl>(),
           ),
         ),
+        Provider<MushafPageMetaUseCase>(
+          create: (context) => MushafPageMetaUseCase(
+            context.read<MushafPageMetaRepositoryImpl>(),
+          ),
+        ),
 
         ChangeNotifierProvider<SurahState>(
           lazy: false,
@@ -111,6 +124,12 @@ class RootPage extends StatelessWidget {
           create: (context) => HizbState(
             context.read<HizbUseCase>(),
           )..loadAllHizbs(),
+        ),
+        ChangeNotifierProvider<MushafPageMetaState>(
+          lazy: false,
+          create: (context) => MushafPageMetaState(
+            context.read<MushafPageMetaUseCase>(),
+          )..loadAllPagesMeta(),
         ),
       ],
       child: MaterialApp(

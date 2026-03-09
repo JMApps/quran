@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/presentation/state/hizb_state.dart';
-import 'package:quran/features/library/presentation/state/juz_state.dart';
 
-import '../../../domain/entities/hizb_entity.dart';
-import '../../state/surah_state.dart';
+import '../../../domain/entities/mushaf_page_meta_entity.dart';
+import '../../state/mushaf_page_meta_state.dart';
 
 class SurahDetailItem extends StatelessWidget {
   const SurahDetailItem({
@@ -16,7 +14,7 @@ class SurahDetailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HizbEntity? hizb = context.read<HizbState>().getHizbByPage(pageNumber);
+    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPageNumber(pageNumber));
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -24,10 +22,10 @@ class SurahDetailItem extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('Сура ${context.read<SurahState>().getSurahByPage(pageNumber)!.nameTranscription}'),
+                Text('Сура ${mushafPageMeta?.nameTranscription}'),
                 const Expanded(child: SizedBox()),
-                Text('Джуз ${context.read<JuzState>().getJuzByPage(pageNumber)!.juzNumber}${hizb != null ? ',' : ''}'),
-                Text(hizb != null ? ' Хизб ${hizb.hizbNumber}' : ''),
+                Text('Джуз ${mushafPageMeta?.juzNumber}'),
+                Text(mushafPageMeta?.hizbNumber == null ? '' : ', Хизб ${mushafPageMeta?.hizbNumber}')
               ],
             ),
             const Expanded(
