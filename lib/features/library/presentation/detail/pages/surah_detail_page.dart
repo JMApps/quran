@@ -32,7 +32,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     _controller = PageController(initialPage: initialIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<SurahState>(context, listen: false).currentPageIndex = initialIndex;
+      Provider.of<SurahState>(context, listen: false).mushafCurrentPageIndex = initialIndex;
     });
   }
 
@@ -44,7 +44,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pageNumber = context.select<SurahState, int>((s) => s.currentPageNumber);
+    final pageNumber = context.select<SurahState, int>((s) => s.currentMushafPage);
     final meta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
       (s) => s.getPageMetaByPageNumber(pageNumber),
     );

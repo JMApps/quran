@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../domain/entities/mushaf_page_meta_entity.dart';
 import '../../state/mushaf_page_meta_state.dart';
@@ -7,17 +8,17 @@ import '../../state/mushaf_page_meta_state.dart';
 class SurahDetailItem extends StatelessWidget {
   const SurahDetailItem({
     super.key,
-    required this.pageNumber,
+    required this.currentMushafPageNumber,
   });
 
-  final int pageNumber;
+  final int currentMushafPageNumber;
 
   @override
   Widget build(BuildContext context) {
-    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPageNumber(pageNumber));
+    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPageNumber(currentMushafPageNumber));
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: AppStyles.hrMiniPadding,
         child: Column(
           children: [
             Row(
@@ -36,7 +37,7 @@ class SurahDetailItem extends StatelessWidget {
                 ),
               ),
             ),
-            Text(pageNumber.toString()),
+            Text(currentMushafPageNumber.toString()),
           ],
         ),
       ),

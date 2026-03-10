@@ -9,15 +9,15 @@ class SurahState extends ChangeNotifier {
 
   SurahState(this._surahNameUseCase);
 
-  int _currentPageIndex = 0;
+  int _mushafPageIndex = 0;
 
-  set currentPageIndex(int pageIndex) {
-    if (pageIndex == _currentPageIndex) return;
-    _currentPageIndex = pageIndex;
+  set mushafCurrentPageIndex(int pageIndex) {
+    if (pageIndex == _mushafPageIndex) return;
+    _mushafPageIndex = pageIndex;
     notifyListeners();
   }
 
-  int get currentPageNumber => AppStrings.totalPages - _currentPageIndex;
+  int get currentMushafPage => AppStrings.totalPages - _mushafPageIndex;
 
   bool _showAppBar = true;
 
@@ -55,14 +55,5 @@ class SurahState extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  SurahNameEntity? getSurahByPage(int pageNumber) {
-    for (final surah in _allSurahs) {
-      if (surah.startPageNumber <= pageNumber) {
-        return surah;
-      }
-    }
-    return null;
   }
 }

@@ -22,12 +22,12 @@ class SurahDetailList extends StatelessWidget {
       itemCount: AppStrings.totalPages,
       reverse: false,
       onPageChanged: (int index) {
-        Provider.of<SurahState>(context, listen: false).currentPageIndex = index;
+        Provider.of<SurahState>(context, listen: false).mushafCurrentPageIndex = index;
       },
       itemBuilder: (context, index) {
-        final pageNumber = _pageNumberFromIndex(index);
+        final currentMushafPage= _pageNumberFromIndex(index);
         return SurahDetailItem(
-          pageNumber: pageNumber,
+          currentMushafPageNumber: currentMushafPage,
         );
       },
     );

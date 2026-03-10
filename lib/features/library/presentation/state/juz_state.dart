@@ -38,14 +38,4 @@ class JuzState extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  JuzEntity? getJuzByPage(int pageNumber) {
-    for (final juz in _allJuzs) {
-      if (juz.startPageNumber <= pageNumber) {
-        return juz;
-      }
-    }
-
-    return null;
-  }
 }

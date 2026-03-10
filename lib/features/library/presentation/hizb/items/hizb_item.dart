@@ -79,7 +79,7 @@ class HizbItem extends StatelessWidget {
       ),
       onTap: () {
         final initialIndex = AppStrings.totalPages - hizbModel.startPageNumber;
-        context.read<SurahState>().currentPageIndex = initialIndex;
+        context.read<SurahState>().mushafCurrentPageIndex = initialIndex;
 
         Navigator.pushNamed(
           context,

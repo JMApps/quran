@@ -79,7 +79,7 @@ class JuzItem extends StatelessWidget {
       ),
       onTap: () {
         final initialIndex = AppStrings.totalPages - juzModel.startPageNumber;
-        context.read<SurahState>().currentPageIndex = initialIndex;
+        context.read<SurahState>().mushafCurrentPageIndex = initialIndex;
 
         Navigator.pushNamed(
           context,
