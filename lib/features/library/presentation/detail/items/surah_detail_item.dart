@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
+import '../../../../../core/theme/app_styles.dart';
 import '../../../domain/entities/mushaf_page_meta_entity.dart';
 import '../../state/mushaf_page_meta_state.dart';
+import '../../state/surah_state.dart';
 
 class SurahDetailItem extends StatelessWidget {
-  const SurahDetailItem({
-    super.key,
-    required this.currentMushafPageNumber,
-  });
-
-  final int currentMushafPageNumber;
+  const SurahDetailItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPageNumber(currentMushafPageNumber));
+    final int mushafPageIndex = context.select<SurahState, int>((s) => s.currentMushafPageIndex);
+    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPageNumber(mushafPageIndex));
     return Center(
       child: Padding(
         padding: AppStyles.hrMiniPadding,
@@ -25,8 +22,8 @@ class SurahDetailItem extends StatelessWidget {
               children: [
                 Text('Сура ${mushafPageMeta?.nameTranscription}'),
                 const Expanded(child: SizedBox()),
-                Text('Джуз ${mushafPageMeta?.juzNumber}'),
-                Text(mushafPageMeta?.hizbNumber == null ? '' : ', Хизб ${mushafPageMeta?.hizbNumber}')
+                Text('джуз ${mushafPageMeta?.juzNumber}'),
+                Text(mushafPageMeta?.hizbNumber == null ? '' : ', хизб ${mushafPageMeta?.hizbNumber}')
               ],
             ),
             const Expanded(
@@ -37,7 +34,7 @@ class SurahDetailItem extends StatelessWidget {
                 ),
               ),
             ),
-            Text(currentMushafPageNumber.toString()),
+            Text('${mushafPageIndex + 1}'),
           ],
         ),
       ),

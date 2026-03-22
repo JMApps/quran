@@ -78,13 +78,12 @@ class JuzItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        final initialIndex = AppStrings.totalPages - juzModel.startPageNumber;
-        context.read<SurahState>().mushafCurrentPageIndex = initialIndex;
-
+        final surahState = Provider.of<SurahState>(context, listen: false);
+        surahState.mushafCurrentPageIndex = juzModel.startPageNumber - 1;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: juzModel.startPageNumber,
+          arguments: surahState.currentMushafPageIndex,
         );
       },
     );

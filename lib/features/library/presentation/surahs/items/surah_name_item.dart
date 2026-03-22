@@ -35,11 +35,15 @@ class SurahNameItem extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            surahModel.nameArabic,
-            style: TextStyle(
-              color: appColors.primary,
-              fontFamily: AppStrings.fontUthmanicHafs,
+          // Show/hide from settings
+          Visibility(
+            visible: false,
+            child: Text(
+              surahModel.nameArabic,
+              style: TextStyle(
+                color: appColors.primary,
+                fontFamily: AppStrings.fontUthmanicHafs,
+              ),
             ),
           ),
           Text(
@@ -81,13 +85,12 @@ class SurahNameItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        final initialIndex = AppStrings.totalPages - surahModel.startPageNumber;
-        context.read<SurahState>().mushafCurrentPageIndex = initialIndex;
-
+        final surahState = Provider.of<SurahState>(context, listen: false);
+        surahState.mushafCurrentPageIndex = surahModel.startPageNumber - 1;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahModel.startPageNumber,
+          arguments: surahState.currentMushafPageIndex,
         );
       },
     );

@@ -18,6 +18,6 @@ class AppRouter {
   }
 
   static Map<String, Widget Function(BuildContext, dynamic)> routes = {
-    NamesRouter.pageSurahDetail: (context, args) => SurahDetailPage(pageNumber: args as int),
+    NamesRouter.pageSurahDetail: (context, args) => SurahDetailPage(currentMushafPageIndex: args as int),
   };
 }

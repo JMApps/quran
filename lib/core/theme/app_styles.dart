@@ -7,6 +7,10 @@ class AppStyles {
   static const hrMiniPadding = EdgeInsets.symmetric(horizontal: 8);
   static const vrMainPadding = EdgeInsets.symmetric(vertical: 16);
   static const vrMiniPadding = EdgeInsets.symmetric(vertical: 8);
+  static const topMiniPadding = EdgeInsets.only(top: 8);
+
+  static const withoutTopPadding = EdgeInsets.only(left: 16, bottom: 16, right: 16);
+  static const withoutTopPaddingMini = EdgeInsets.only(left: 8, bottom: 8, right: 8);
 
   static const mainBorder = BorderRadius.all(Radius.circular(14));
   static const borderMini = BorderRadius.all(Radius.circular(7));

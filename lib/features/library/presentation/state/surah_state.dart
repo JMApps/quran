@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/theme/app_strings.dart';
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
 
@@ -12,12 +11,11 @@ class SurahState extends ChangeNotifier {
   int _mushafPageIndex = 0;
 
   set mushafCurrentPageIndex(int pageIndex) {
-    if (pageIndex == _mushafPageIndex) return;
     _mushafPageIndex = pageIndex;
     notifyListeners();
   }
 
-  int get currentMushafPage => AppStrings.totalPages - _mushafPageIndex;
+  int get currentMushafPageIndex => _mushafPageIndex;
 
   bool _showAppBar = true;
 

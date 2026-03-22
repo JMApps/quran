@@ -13,22 +13,17 @@ class SurahDetailList extends StatelessWidget {
 
   final PageController mushafPageController;
 
-  int _pageNumberFromIndex(int index) => AppStrings.totalPages - index;
-
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      reverse: true,
       controller: mushafPageController,
       itemCount: AppStrings.totalPages,
-      reverse: false,
       onPageChanged: (int index) {
         Provider.of<SurahState>(context, listen: false).mushafCurrentPageIndex = index;
       },
       itemBuilder: (context, index) {
-        final currentMushafPage= _pageNumberFromIndex(index);
-        return SurahDetailItem(
-          currentMushafPageNumber: currentMushafPage,
-        );
+        return const SurahDetailItem();
       },
     );
   }

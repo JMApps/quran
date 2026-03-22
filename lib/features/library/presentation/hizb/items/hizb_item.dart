@@ -78,13 +78,12 @@ class HizbItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        final initialIndex = AppStrings.totalPages - hizbModel.startPageNumber;
-        context.read<SurahState>().mushafCurrentPageIndex = initialIndex;
-
+        final surahState = Provider.of<SurahState>(context, listen: false);
+        surahState.mushafCurrentPageIndex = hizbModel.startPageNumber - 1;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: hizbModel.startPageNumber,
+          arguments: surahState.currentMushafPageIndex,
         );
       },
     );

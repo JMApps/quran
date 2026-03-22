@@ -35,10 +35,10 @@ class MushafPageMetaState extends ChangeNotifier {
     }
   }
 
-  MushafPageMetaEntity? getPageMetaByPageNumber(int pageNumber) {
+  MushafPageMetaEntity? getPageMetaByPageNumber(int mushafPageIndex) {
     if (_allPagesMeta.isEmpty) return null;
-    if (pageNumber < 1 || pageNumber > _allPagesMeta.length) return null;
+    if (mushafPageIndex < 0 || mushafPageIndex >= _allPagesMeta.length) return null;
 
-    return _allPagesMeta[pageNumber - 1];
+    return _allPagesMeta[mushafPageIndex];
   }
 }
