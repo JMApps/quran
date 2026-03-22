@@ -26,10 +26,10 @@ class SurahDetailItem extends StatelessWidget {
                 Text(mushafPageMeta?.hizbNumber == null ? '' : ', хизб ${mushafPageMeta?.hizbNumber}')
               ],
             ),
-            const Expanded(
+            Expanded(
               child: Center(
                 child: Text(
-                  'Страница мусхафа на арабском\n(на стадии разработки)',
+                  'Страница мусхафа на арабском\n(на стадии разработки) ${mushafPageIndex + 1}',
                   textAlign: TextAlign.center,
                 ),
               ),

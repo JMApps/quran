@@ -104,7 +104,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                     actions: [
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.bookmark_border_rounded),
+                        icon: const Icon(Icons.bookmark_outline_rounded),
                       ),
                       IconButton(
                         onPressed: () {},
