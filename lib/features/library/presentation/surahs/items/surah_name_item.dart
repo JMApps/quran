@@ -37,7 +37,7 @@ class SurahNameItem extends StatelessWidget {
         children: [
           // Show/hide from settings
           Visibility(
-            visible: false,
+            visible: true,
             child: Text(
               surahModel.nameArabic,
               style: TextStyle(
@@ -54,28 +54,10 @@ class SurahNameItem extends StatelessWidget {
           ),
         ],
       ),
-      subtitle: RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: appColors.onSurface,
-            fontFamily: AppStrings.fontGilroy,
-          ),
-          children: [
-            TextSpan(
-              text: '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)}',
-              style: TextStyle(
-                color: appColors.secondary,
-                fontSize: 12.5,
-              ),
-            ),
-            const TextSpan(text: ' – '),
-            TextSpan(
-              text: surahModel.revelationPlace,
-              style: TextStyle(
-                color: appColors.primary,
-              ),
-            ),
-          ],
+      subtitle: Text(
+        '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)} – ${surahModel.revelationPlace}',
+        style: const TextStyle(
+          fontSize: 12.0,
         ),
       ),
       trailing: Text(

@@ -65,7 +65,7 @@ class HizbItem extends StatelessWidget {
               text: '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
               style: TextStyle(
                 color: appColors.secondary,
-                fontSize: 12.5,
+                fontSize: 12.0,
               ),
             ),
           ],

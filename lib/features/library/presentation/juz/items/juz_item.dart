@@ -65,7 +65,7 @@ class JuzItem extends StatelessWidget {
               text: '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
               style: TextStyle(
                 color: appColors.secondary,
-                fontSize: 12.5,
+                fontSize: 12.0,
               ),
             ),
           ],
