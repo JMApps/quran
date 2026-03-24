@@ -13,8 +13,8 @@ class MushafPageMetaState extends ChangeNotifier {
   bool _isLoaded = false;
   Object? _error;
 
-  List<MushafPageMetaEntity> get allPagesMeta => List.unmodifiable(_allPagesMeta);
   bool get isLoading => _isLoading;
+  bool get isLoaded => _isLoaded;
   Object? get error => _error;
 
   Future<void> loadAllPagesMeta() async {
@@ -25,7 +25,10 @@ class MushafPageMetaState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _allPagesMeta = await _mushafPageMetaUseCase.getAllPagesMeta();
+      final List<MushafPageMetaEntity> result =
+      await _mushafPageMetaUseCase.getAllPagesMeta();
+
+      _allPagesMeta = result;
       _isLoaded = true;
     } catch (e) {
       _error = e;
@@ -40,5 +43,20 @@ class MushafPageMetaState extends ChangeNotifier {
     if (mushafPageIndex < 0 || mushafPageIndex >= _allPagesMeta.length) return null;
 
     return _allPagesMeta[mushafPageIndex];
+  }
+
+  List<MushafPageMetaEntity> loadFavoritePagesMeta(List<int> pageIds) {
+    if (_allPagesMeta.isEmpty || pageIds.isEmpty) return const [];
+
+    final List<MushafPageMetaEntity> result = [];
+
+    for (final int pageId in pageIds) {
+      final MushafPageMetaEntity? pageMeta = getPageMetaByPageNumber(pageId);
+      if (pageMeta != null) {
+        result.add(pageMeta);
+      }
+    }
+
+    return result;
   }
 }

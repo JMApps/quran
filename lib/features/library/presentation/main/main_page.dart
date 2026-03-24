@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/bookmarks/pages/favorite_mushaf_pages_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/theme/app_strings.dart';
@@ -27,7 +28,7 @@ class _MainPageState extends State<MainPage> {
 
   late final List<Widget> _mainPages = [
     SurahNamePage(scrollController: _scrollController),
-    SurahNamePage(scrollController: _scrollController),
+    FavoriteMushafPagesPage(scrollController: _scrollController),
     JuzsPage(scrollController: _scrollController),
     HizbsPage(scrollController: _scrollController),
     const AppSettingsPage(),

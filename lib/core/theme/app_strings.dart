@@ -10,6 +10,10 @@ class AppStrings {
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
+  static const String errorMushafFavoritesList = 'Ошибка загрузки избранного: ';
+
+  static const String lastMushafPages = 'Недавние страницы: ';
+  static const String favoriteMushafPages = 'Избранные страницы';
   static const String goTo = 'Перейти к ...';
   static const String searchByAyahs = 'Поиск аятов';
 
