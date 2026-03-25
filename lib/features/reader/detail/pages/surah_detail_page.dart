@@ -1,0 +1,142 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../../core/theme/app_strings.dart';
+import '../../../library/domain/entities/mushaf_page_meta_entity.dart';
+import '../../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../../library/presentation/state/surah_state.dart';
+import '../lists/surah_detail_list.dart';
+import '../widgets/favorite_mushaf_page_button.dart';
+import '../widgets/to_mushaf_page_button.dart';
+import '../widgets/translate_mushaf_page_button.dart';
+
+class SurahDetailPage extends StatefulWidget {
+  const SurahDetailPage({
+    super.key,
+    required this.currentMushafPage,
+  });
+
+  final int currentMushafPage;
+
+  @override
+  State<SurahDetailPage> createState() => _SurahDetailPageState();
+}
+
+class _SurahDetailPageState extends State<SurahDetailPage> {
+  late final PageController _mushafPageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mushafPageController = PageController(initialPage: widget.currentMushafPage - 1);
+  }
+
+  @override
+  void dispose() {
+    _showSystemUiWithDelay();
+    _mushafPageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showSystemUiWithDelay() async {
+    await Future<void>.delayed(const Duration(milliseconds: 125));
+
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+  }
+
+  Future<void> _hideSystemUiWithDelay() async {
+    await Future<void>.delayed(const Duration(milliseconds: 125));
+
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: const [],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double topSafePadding = MediaQuery.of(context).padding.top;
+    final int mushafPage = context.select<SurahState, int>((s) => s.currentMushafPage);
+    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
+      (s) => s.getPageMetaByPage(mushafPage),
+    );
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        Provider.of<MushafPageMetaState>(context, listen: false).addLastOpenedPage(mushafPage);
+      },
+      child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Consumer<SurahState>(
+            builder: (context, surahState, _) {
+              return AnimatedSlide(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                offset: surahState.showAppBar ? Offset.zero : const Offset(0, -1),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: surahState.showAppBar ? 1 : 0,
+                  child: IgnorePointer(
+                    ignoring: !surahState.showAppBar,
+                    child: AppBar(
+                      elevation: 5.0,
+                      title: Column(
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          Text('${AppStrings.surah} ${mushafPageMeta?.nameTranscription}'),
+                          Row(
+                            children: [
+                              Text(
+                                '${AppStrings.page} ${mushafPageMeta?.pageNumber}, ',
+                                style: const TextStyle(
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                              Text(
+                                '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
+                                style: const TextStyle(
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        const FavoriteMushafPageButton(),
+                        const TranslateMushafPageButton(),
+                        ToMushafPageButton(mushafPageController: _mushafPageController),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        body: Padding(
+          padding: EdgeInsets.only(
+            top: topSafePadding,
+          ),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              final surahState = Provider.of<SurahState>(context, listen: false);
+              surahState.toggleShowAppBar();
+              surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
+            },
+            child: SurahDetailList(
+              mushafPageController: _mushafPageController,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -33,7 +33,7 @@ class HizbItem extends StatelessWidget {
         ),
       ),
       title: Text(
-        'Хизб – ${hizbModel.hizbNumber}',
+        '${AppStrings.hizb} – ${hizbModel.hizbNumber}',
         style: const TextStyle(
           fontFamily: AppStrings.fontGilroyMedium,
         ),
@@ -45,7 +45,7 @@ class HizbItem extends StatelessWidget {
             fontFamily: AppStrings.fontGilroy,
           ),
           children: [
-            const TextSpan(text: 'Начало: '),
+            const TextSpan(text: AppStrings.start),
             TextSpan(
               text: hizbModel.firstVerseKey,
               style: TextStyle(
@@ -53,7 +53,7 @@ class HizbItem extends StatelessWidget {
               ),
             ),
             const TextSpan(text: ' / '),
-            const TextSpan(text: 'Конец: '),
+            const TextSpan(text: AppStrings.end),
             TextSpan(
               text: hizbModel.lastVerseKey,
               style: TextStyle(
@@ -79,11 +79,11 @@ class HizbItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPageIndex = hizbModel.startPageNumber - 1;
+        surahState.mushafCurrentPage = hizbModel.startPageNumber;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPageIndex,
+          arguments: surahState.currentMushafPage,
         );
       },
     );

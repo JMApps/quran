@@ -68,11 +68,11 @@ class SurahNameItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPageIndex = surahModel.startPageNumber - 1;
+        surahState.mushafCurrentPage = surahModel.startPageNumber;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPageIndex,
+          arguments: surahState.currentMushafPage,
         );
       },
     );

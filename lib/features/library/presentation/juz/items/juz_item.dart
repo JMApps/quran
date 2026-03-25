@@ -33,7 +33,7 @@ class JuzItem extends StatelessWidget {
         ),
       ),
       title: Text(
-        'Джуз – ${juzModel.juzNumber}',
+        '${AppStrings.juz} – ${juzModel.juzNumber}',
         style: const TextStyle(
           fontFamily: AppStrings.fontGilroyMedium,
         ),
@@ -45,7 +45,7 @@ class JuzItem extends StatelessWidget {
             fontFamily: AppStrings.fontGilroy,
           ),
           children: [
-            const TextSpan(text: 'Начало: '),
+            const TextSpan(text: AppStrings.start),
             TextSpan(
               text: juzModel.firstVerseKey,
               style: TextStyle(
@@ -53,7 +53,7 @@ class JuzItem extends StatelessWidget {
               ),
             ),
             const TextSpan(text: ' / '),
-            const TextSpan(text: 'Конец: '),
+            const TextSpan(text: AppStrings.end),
             TextSpan(
               text: juzModel.lastVerseKey,
               style: TextStyle(
@@ -79,11 +79,11 @@ class JuzItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPageIndex = juzModel.startPageNumber - 1;
+        surahState.mushafCurrentPage = juzModel.startPageNumber;
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPageIndex,
+          arguments: surahState.currentMushafPage,
         );
       },
     );

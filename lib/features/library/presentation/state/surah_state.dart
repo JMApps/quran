@@ -8,14 +8,14 @@ class SurahState extends ChangeNotifier {
 
   SurahState(this._surahNameUseCase);
 
-  int _mushafPageIndex = 0;
+  int _mushafPage = 1;
 
-  set mushafCurrentPageIndex(int pageIndex) {
-    _mushafPageIndex = pageIndex;
+  set mushafCurrentPage(int page) {
+    _mushafPage = page;
     notifyListeners();
   }
 
-  int get currentMushafPageIndex => _mushafPageIndex;
+  int get currentMushafPage => _mushafPage;
 
   bool _showAppBar = true;
 

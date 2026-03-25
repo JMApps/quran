@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           child: Card(
-            margin: AppStyles.mainPadding,
+            margin: AppStyles.withoutTopPadding,
             shape: AppStyles.bigShape,
             child: SalomonBottomBar(
               itemShape: AppStyles.bigShape,
