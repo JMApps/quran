@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 
 class TranslateMushafPageButton extends StatelessWidget {
   const TranslateMushafPageButton({super.key});

@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/quran_database_service.dart';
 import '../../../../core/strings/db_value_strings.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../domain/entities/mushaf_page_meta_entity.dart';
 import '../../domain/repositories/mushaf_page_meta_repository.dart';
 import '../mappers/mushaf_page_meta_mapper.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../../library/presentation/state/surah_state.dart';
 import '../items/surah_detail_item.dart';
@@ -19,7 +19,6 @@ class SurahDetailList extends StatefulWidget {
 }
 
 class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingObserver {
-
   late final MushafPageMetaState _mushafPageMetaState;
 
   int _currentPage = 1;
@@ -61,7 +60,9 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
         _currentPage = index + 1;
       },
       itemBuilder: (context, index) {
-        return const SurahDetailItem();
+        return SurahDetailItem(
+          index: index,
+        );
       },
     );
   }

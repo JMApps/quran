@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:quran/features/bookmarks/pages/favorite_mushaf_pages_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../settings/pages/app_settings_page.dart';
 import '../hizb/pages/hizbs_page.dart';

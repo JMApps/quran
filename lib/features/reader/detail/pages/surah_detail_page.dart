@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../../library/presentation/state/surah_state.dart';
@@ -59,7 +59,6 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final double topSafePadding = MediaQuery.of(context).padding.top;
     final int mushafPage = context.select<SurahState, int>((s) => s.currentMushafPage);
     final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
       (s) => s.getPageMetaByPage(mushafPage),
@@ -120,20 +119,15 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             },
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.only(
-            top: topSafePadding,
-          ),
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              final surahState = Provider.of<SurahState>(context, listen: false);
-              surahState.toggleShowAppBar();
-              surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
-            },
-            child: SurahDetailList(
-              mushafPageController: _mushafPageController,
-            ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            final surahState = Provider.of<SurahState>(context, listen: false);
+            surahState.toggleShowAppBar();
+            surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
+          },
+          child: SurahDetailList(
+            mushafPageController: _mushafPageController,
           ),
         ),
       ),

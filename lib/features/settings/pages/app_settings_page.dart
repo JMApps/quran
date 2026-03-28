@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/theme/app_styles.dart';
+import 'package:provider/provider.dart';
 
-import '../../../core/theme/app_strings.dart';
+import '../../../core/strings/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
+import '../state/app_settings_state.dart';
 
 class AppSettingsPage extends StatefulWidget {
   const AppSettingsPage({super.key});
@@ -18,17 +20,23 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
         title: const Text(AppStrings.settings),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            SwitchListTile(
-              visualDensity: VisualDensity.comfortable,
-              contentPadding: AppStyles.hrMainPadding,
-              value: true,
-              onChanged: (bool onChanged) {},
-              title: const Text('Название сур на арабском'),
-            ),
-          ],
+        child: Consumer<AppSettingsState>(
+          builder: (context, appSettingsState, _) {
+            return Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                SwitchListTile(
+                  visualDensity: .comfortable,
+                  contentPadding: AppStyles.hrMainPadding,
+                  value: appSettingsState.arabicNameSurah,
+                  onChanged: (bool onChanged) {
+                    appSettingsState.arabicNameSurah = onChanged;
+                  },
+                  title: const Text('Название сур на арабском'),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

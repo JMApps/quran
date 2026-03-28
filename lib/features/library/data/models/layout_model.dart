@@ -1,4 +1,4 @@
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../domain/entities/line_type.dart';
 
 class LayoutModel {

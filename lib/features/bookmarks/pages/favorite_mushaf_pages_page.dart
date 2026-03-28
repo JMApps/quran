@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_strings.dart';
+import '../../../core/strings/app_strings.dart';
 import '../lists/favorite_mushaf_pages_list.dart';
 import '../lists/last_favorite_mushaf_pages_list.dart';
 

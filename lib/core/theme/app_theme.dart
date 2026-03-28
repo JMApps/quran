@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'app_strings.dart';
+import '../strings/app_strings.dart';
 import 'app_styles.dart';
 
 class AppTheme {

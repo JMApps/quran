@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/router/names_router.dart';
-import '../../../core/theme/app_strings.dart';
+import '../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../library/presentation/state/surah_state.dart';
 

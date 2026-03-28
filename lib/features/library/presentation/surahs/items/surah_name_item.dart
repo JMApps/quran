@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../core/router/names_router.dart';
-import '../../../../../core/theme/app_strings.dart';
+import '../../../../../core/strings/app_strings.dart';
+import '../../../../settings/state/app_settings_state.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/surah_state.dart';
 
@@ -36,15 +37,19 @@ class SurahNameItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Show/hide from settings
-          Visibility(
-            visible: true,
-            child: Text(
-              surahModel.nameArabic,
-              style: TextStyle(
-                color: appColors.primary,
-                fontFamily: AppStrings.fontUthmanicHafs,
-              ),
-            ),
+          Consumer<AppSettingsState>(
+            builder: (context, appSettingsState, _) {
+              return Visibility(
+                visible: appSettingsState.arabicNameSurah,
+                child: Text(
+                  surahModel.nameArabic,
+                  style: TextStyle(
+                    color: appColors.primary,
+                    fontFamily: AppStrings.fontUthmanicHafs,
+                  ),
+                ),
+              );
+            },
           ),
           Text(
             '${surahModel.nameTranscription} (${surahModel.nameTranslation})',

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/settings/state/app_settings_state.dart';
 
 import '../../../../core/database/quran_database_service.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/mushaf_font_loader.dart';
-import '../../../../core/theme/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../data/repositories/ayah_word_repository_impl.dart';
 import '../../data/repositories/hizb_repository_impl.dart';
@@ -34,6 +35,9 @@ class RootPage extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<AppSettingsState>(
+          create: (_) => AppSettingsState(),
+        ),
         Provider<QuranDatabaseService>(
           create: (_) => QuranDatabaseService.instance,
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive.dart';
 
-import '../../../../core/theme/app_keys.dart';
+import '../../../../core/strings/app_keys.dart';
 import '../../domain/entities/mushaf_page_meta_entity.dart';
 import '../../domain/usecases/mushaf_page_meta_use_case.dart';
 
@@ -12,7 +12,7 @@ class MushafPageMetaState extends ChangeNotifier {
 
   final MushafPageMetaUseCase _mushafPageMetaUseCase;
 
-  final Box _settingsBox = Hive.box(AppKeys.mushafFavoriteSettingsBox);
+  final Box _favoriteSettingsBox = Hive.box(AppKeys.mushafFavoriteSettingsBox);
 
   List<MushafPageMetaEntity> _allPagesMeta = const [];
   List<int> _lastMushafPageIds = [];
@@ -27,8 +27,8 @@ class MushafPageMetaState extends ChangeNotifier {
   Object? get error => _error;
 
   void _loadPersistedSettings() {
-    final List<dynamic>? savedLastOpened = _settingsBox.get(AppKeys.lastOpenedPagesKey) as List<dynamic>?;
-    final List<dynamic>? savedFavorite = _settingsBox.get(AppKeys.favoritePagesKey) as List<dynamic>?;
+    final List<dynamic>? savedLastOpened = _favoriteSettingsBox.get(AppKeys.keyLastOpenedPages) as List<dynamic>?;
+    final List<dynamic>? savedFavorite = _favoriteSettingsBox.get(AppKeys.keyFavoritePages) as List<dynamic>?;
 
     if (savedLastOpened != null) {
       final List<int> parsedLastOpened = savedLastOpened.whereType<int>().where(_isValidPage).take(3).toList();
@@ -52,7 +52,7 @@ class MushafPageMetaState extends ChangeNotifier {
   }
 
   Future<void> _saveFavoritePages() async {
-    await _settingsBox.put(AppKeys.favoritePagesKey, _favoriteMushafPageIds);
+    await _favoriteSettingsBox.put(AppKeys.keyFavoritePages, _favoriteMushafPageIds);
   }
 
   Future<void> loadAllPagesMeta() async {
@@ -112,7 +112,7 @@ class MushafPageMetaState extends ChangeNotifier {
       _lastMushafPageIds = _lastMushafPageIds.take(3).toList();
     }
 
-    await _settingsBox.put(AppKeys.lastOpenedPagesKey, _lastMushafPageIds);
+    await _favoriteSettingsBox.put(AppKeys.keyLastOpenedPages, _lastMushafPageIds);
     notifyListeners();
   }
 
