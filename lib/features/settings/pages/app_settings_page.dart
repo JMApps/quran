@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
-import '../../../core/theme/app_styles.dart';
 import '../state/app_settings_state.dart';
+import '../widgets/setting_list_tile_item.dart';
+import '../widgets/theme_color_picker.dart';
+import '../widgets/theme_mode_drop_down.dart';
 
-class AppSettingsPage extends StatefulWidget {
+class AppSettingsPage extends StatelessWidget {
   const AppSettingsPage({super.key});
 
-  @override
-  State<AppSettingsPage> createState() => _AppSettingsPageState();
-}
-
-class _AppSettingsPageState extends State<AppSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +22,44 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
             return Column(
               crossAxisAlignment: .stretch,
               children: [
-                SwitchListTile(
-                  visualDensity: .comfortable,
-                  contentPadding: AppStyles.hrMainPadding,
+                const Divider(indent: 16, endIndent: 16),
+                SettingListTileItem(
                   value: appSettingsState.arabicNameSurah,
+                  title: 'Название сур на арабском',
                   onChanged: (bool onChanged) {
                     appSettingsState.arabicNameSurah = onChanged;
                   },
-                  title: const Text('Название сур на арабском'),
+                ),
+                SettingListTileItem(
+                  value: appSettingsState.translationNameSurah,
+                  title: 'Перевод названия сур',
+                  onChanged: (bool onChanged) {
+                    appSettingsState.translationNameSurah = onChanged;
+                  },
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                SettingListTileItem(
+                  value: appSettingsState.displayAlwaysOn,
+                  title: 'Дисплей всегда включен',
+                  onChanged: (bool onChanged) {
+                    appSettingsState.setDisplayAlwaysOn(onChanged);
+                  },
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                ThemeModeDropDown(
+                  value: appSettingsState.appThemeModeIndex,
+                  title: 'Тема приложения',
+                  onChanged: (int? index) {
+                    appSettingsState.appThemeModeIndex = index!;
+                  },
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                ThemeColorPicker(
+                  color: appSettingsState.themeColor,
+                  onChanged: (Color? color) {
+                    Navigator.pop(context);
+                    appSettingsState.themeColor = color!;
+                  },
                 ),
               ],
             );

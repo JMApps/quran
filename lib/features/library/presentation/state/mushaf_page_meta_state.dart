@@ -23,29 +23,25 @@ class MushafPageMetaState extends ChangeNotifier {
   Object? _error;
 
   bool get isLoading => _isLoading;
+
   bool get isLoaded => _isLoaded;
+
   Object? get error => _error;
 
   void _loadPersistedSettings() {
-    final List<dynamic>? savedLastOpened = _favoriteSettingsBox.get(AppKeys.keyLastOpenedPages) as List<dynamic>?;
-    final List<dynamic>? savedFavorite = _favoriteSettingsBox.get(AppKeys.keyFavoritePages) as List<dynamic>?;
+    final List<int> savedLastOpened = _favoriteSettingsBox.get(AppKeys.keyLastOpenedPages, defaultValue: [1]);
+    final List<int> savedFavorite = _favoriteSettingsBox.get(AppKeys.keyFavoritePages, defaultValue: [293]);
 
-    if (savedLastOpened != null) {
-      final List<int> parsedLastOpened = savedLastOpened.whereType<int>().where(_isValidPage).take(3).toList();
+    final List<int> parsedLastOpened = savedLastOpened.whereType<int>().where(_isValidPage).take(3).toList();
 
-      if (parsedLastOpened.isNotEmpty) {
-        _lastMushafPageIds = parsedLastOpened;
-      }
+    if (parsedLastOpened.isNotEmpty) {
+      _lastMushafPageIds = parsedLastOpened;
     }
 
-    if (savedFavorite != null) {
-      final List<int> parsedFavorite = savedFavorite.whereType<int>().where(_isValidPage).toSet().toList();
+    final List<int> parsedFavorite = savedFavorite.whereType<int>().where(_isValidPage).toSet().toList();
 
-      if (parsedFavorite.isNotEmpty) {
-        _favoriteMushafPageIds = parsedFavorite;
-      } else {
-        _favoriteMushafPageIds = [];
-      }
+    if (parsedFavorite.isNotEmpty) {
+      _favoriteMushafPageIds = parsedFavorite;
     } else {
       _favoriteMushafPageIds = [];
     }
@@ -63,8 +59,7 @@ class MushafPageMetaState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final List<MushafPageMetaEntity> result =
-      await _mushafPageMetaUseCase.getAllPagesMeta();
+      final List<MushafPageMetaEntity> result = await _mushafPageMetaUseCase.getAllPagesMeta();
 
       _allPagesMeta = result;
       _isLoaded = true;

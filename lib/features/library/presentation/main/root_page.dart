@@ -31,8 +31,6 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = AppTheme(Colors.indigo);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppSettingsState>(
@@ -136,13 +134,19 @@ class RootPage extends StatelessWidget {
           )..loadAllPagesMeta(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: AppRouter.onRouteGenerator,
-        title: AppStrings.appName,
-        theme: appTheme.lightTheme,
-        darkTheme: appTheme.darkTheme,
-        home: const MainPage(),
+      child: Consumer<AppSettingsState>(
+        builder: (context, appSettingsState, _) {
+          final appTheme = AppTheme(appSettingsState.themeColor);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: AppRouter.onRouteGenerator,
+            title: AppStrings.appName,
+            theme: appTheme.lightTheme,
+            darkTheme: appTheme.darkTheme,
+            themeMode: appSettingsState.appThemeMode,
+            home: const MainPage(),
+          );
+        },
       ),
     );
   }

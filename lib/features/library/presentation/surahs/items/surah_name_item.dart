@@ -33,13 +33,13 @@ class SurahNameItem extends StatelessWidget {
           surahModel.surahNumber.toString(),
         ),
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Show/hide from settings
-          Consumer<AppSettingsState>(
-            builder: (context, appSettingsState, _) {
-              return Visibility(
+      title: Consumer<AppSettingsState>(
+        builder: (context, appSettingsState, _) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Show/hide from settings
+              Visibility(
                 visible: appSettingsState.arabicNameSurah,
                 child: Text(
                   surahModel.nameArabic,
@@ -48,16 +48,31 @@ class SurahNameItem extends StatelessWidget {
                     fontFamily: AppStrings.fontUthmanicHafs,
                   ),
                 ),
-              );
-            },
-          ),
-          Text(
-            '${surahModel.nameTranscription} (${surahModel.nameTranslation})',
-            style: const TextStyle(
-              fontFamily: AppStrings.fontGilroyMedium,
-            ),
-          ),
-        ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    surahModel.nameTranscription,
+                    style: const TextStyle(
+                      fontFamily: AppStrings.fontGilroyMedium,
+                    ),
+                  ),
+                  Visibility(
+                    visible: appSettingsState.translationNameSurah,
+                    child: Text(
+                      ' (${surahModel.nameTranslation})',
+                      style: const TextStyle(
+                        fontFamily: AppStrings.fontGilroy,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      maxLines: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
       subtitle: Text(
         '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)} – ${surahModel.revelationPlace}',

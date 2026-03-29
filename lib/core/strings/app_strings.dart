@@ -40,6 +40,12 @@ class AppStrings {
 
   static const int totalPages = 604;
 
+  static const List<String> appThemeModeNames = [
+    'Системная',
+    'Светлая',
+    'Тёмная',
+  ];
+
   static String ayahWord(int count) {
     if (count % 100 >= 11 && count % 100 <= 14) {
       return 'аятов';

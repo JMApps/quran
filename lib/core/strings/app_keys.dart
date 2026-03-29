@@ -6,6 +6,8 @@ class AppKeys {
 
   static const String mainAppSettingsBox = 'main_app_settings_box';
   static const String keySurahArabicName = 'key_surah_arabic_name';
-  static const String keyLastOpenedItemsLength = 'key_last_opened_items_length';
+  static const String keyTranslationNameSurah = 'key_translation_surah_name';
   static const String keyAlwaysDisplayOn = 'key_always_display_on';
+  static const String keyAppThemeModeIndex = 'key_app_theme_mode_index';
+  static const String keyAppThemeColor = 'key_app_theme_color';
 }

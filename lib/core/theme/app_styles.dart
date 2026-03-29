@@ -11,6 +11,7 @@ class AppStyles {
 
   static const withoutTopPadding = EdgeInsets.only(left: 16, bottom: 16, right: 16);
   static const withoutTopPaddingMini = EdgeInsets.only(left: 8, bottom: 8, right: 8);
+  static const withoutRightPaddingMini = EdgeInsets.only(left: 8, top: 8, bottom: 8);
 
   static const mainBorder = BorderRadius.all(Radius.circular(14));
   static const borderMini = BorderRadius.all(Radius.circular(7));
