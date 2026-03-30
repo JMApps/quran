@@ -9,8 +9,4 @@ class JuzUseCase {
   Future<List<JuzEntity>> getAllJuzs() {
     return _juzRepository.getAllJuzs();
   }
-
-  Future<JuzEntity?> getJuzByPage({required int pageNumber}) {
-    return _juzRepository.getJuzByPage(pageNumber: pageNumber);
-  }
 }

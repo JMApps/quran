@@ -10,7 +10,7 @@ import '../models/surah_name_model.dart';
 class SurahNameRepositoryImpl implements SurahNameRepository {
   final QuranDatabaseService _quranDatabaseService;
 
-  SurahNameRepositoryImpl(this._quranDatabaseService);
+  const SurahNameRepositoryImpl(this._quranDatabaseService);
 
   @override
   Future<List<SurahNameEntity>> getAllSurahs() async {
@@ -22,22 +22,5 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
     );
 
     return allSurahs.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);
-  }
-
-  @override
-  Future<SurahNameEntity?> getSurahByPage({required int pageNumber}) async {
-    final Database database = await _quranDatabaseService.db;
-
-    final surahByPage = await database.query(
-      DbValueStrings.tableOfSurahs,
-      where: 'start_page_number <= ?',
-      whereArgs: [pageNumber],
-      orderBy: 'start_page_number DESC',
-      limit: 1,
-    );
-
-    if (surahByPage.isEmpty) return null;
-
-    return SurahNameModel.fromMap(surahByPage.first).toEntity();
   }
 }
