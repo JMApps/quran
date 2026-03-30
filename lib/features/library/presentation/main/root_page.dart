@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/data/repositories/ayah_by_ayah_repository_impl.dart';
+import 'package:quran/features/library/domain/usecases/ayah_by_ayah_use_case.dart';
+import 'package:quran/features/library/presentation/state/ayah_by_ayah_state.dart';
+import 'package:quran/features/library/presentation/state/page_layout_state.dart';
 import 'package:quran/features/settings/state/app_settings_state.dart';
 
 import '../../../../core/database/quran_database_service.dart';
@@ -47,6 +51,11 @@ class RootPage extends StatelessWidget {
           create: (_) => MainState(),
         ),
 
+        Provider<AyahByAyahRepositoryImpl>(
+          create: (context) => AyahByAyahRepositoryImpl(
+            context.read<QuranDatabaseService>(),
+          ),
+        ),
         Provider<AyahWordRepositoryImpl>(
           create: (context) => AyahWordRepositoryImpl(
             context.read<QuranDatabaseService>(),
@@ -78,6 +87,11 @@ class RootPage extends StatelessWidget {
           ),
         ),
 
+        Provider<AyahByAyahUseCase>(
+          create: (context) => AyahByAyahUseCase(
+            context.read<AyahByAyahRepositoryImpl>(),
+          ),
+        ),
         Provider<AyahWordUseCase>(
           create: (context) => AyahWordUseCase(
             context.read<AyahWordRepositoryImpl>(),
@@ -109,6 +123,12 @@ class RootPage extends StatelessWidget {
           ),
         ),
 
+        ChangeNotifierProvider<AyahByAyahState>(
+          lazy: false,
+          create: (context) => AyahByAyahState(
+            context.read<AyahByAyahUseCase>(),
+          ),
+        ),
         ChangeNotifierProvider<SurahState>(
           lazy: false,
           create: (context) => SurahState(
@@ -132,6 +152,12 @@ class RootPage extends StatelessWidget {
           create: (context) => MushafPageMetaState(
             context.read<MushafPageMetaUseCase>(),
           )..loadAllPagesMeta(),
+        ),
+        ChangeNotifierProvider<PageLayoutState>(
+          lazy: false,
+          create: (context) => PageLayoutState(
+            context.read<LayoutUseCase>(),
+          ),
         ),
       ],
       child: Consumer<AppSettingsState>(
