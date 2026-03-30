@@ -7,12 +7,7 @@ import '../../state/hizb_state.dart';
 import '../lists/hizbs_list.dart';
 
 class HizbsPage extends StatelessWidget {
-  const HizbsPage({
-    super.key,
-    required this.scrollController,
-  });
-
-  final ScrollController scrollController;
+  const HizbsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +39,6 @@ class HizbsPage extends StatelessWidget {
               }
 
               return HizbsList(
-                scrollController: scrollController,
                 hizbsList: hizbState.allHizbs,
               );
             },

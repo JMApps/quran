@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/router/names_router.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
@@ -20,6 +21,15 @@ class JuzsPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         title: const Text(AppStrings.juzs),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, NamesRouter.pageAllHizbs);
+            },
+            tooltip: AppStrings.hizbs,
+            icon: const Icon(Icons.pie_chart),
+          ),
+        ],
       ),
       body: Consumer<JuzState>(
         builder: (context, juzState, _) {

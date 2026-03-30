@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/bookmarks/pages/favorite_mushaf_pages_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../bookmarks/pages/favorite_mushaf_pages_page.dart';
 import '../../../settings/pages/app_settings_page.dart';
-import '../hizb/pages/hizbs_page.dart';
 import '../juz/pages/juzs_page.dart';
 import '../state/main_state.dart';
 import '../surahs/pages/surahs_name_page.dart';
@@ -24,21 +23,21 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    _mainPages  = [
+      SurahNamePage(scrollController: _scrollController),
+      FavoriteMushafPagesPage(scrollController: _scrollController),
+      JuzsPage(scrollController: _scrollController),
+      const AppSettingsPage(),
+    ];
   }
-
-  late final List<Widget> _mainPages = [
-    SurahNamePage(scrollController: _scrollController),
-    FavoriteMushafPagesPage(scrollController: _scrollController),
-    JuzsPage(scrollController: _scrollController),
-    HizbsPage(scrollController: _scrollController),
-    const AppSettingsPage(),
-  ];
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
+  late final List<Widget> _mainPages;
 
   void _scrollToTop() {
     _scrollController.animateTo(
@@ -104,10 +103,6 @@ class _MainPageState extends State<MainPage> {
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.circle_rounded),
                   title: const Text(AppStrings.juzs),
-                ),
-                SalomonBottomBarItem(
-                  icon: const Icon(Icons.pie_chart),
-                  title: const Text(AppStrings.hizbs),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.settings_rounded),
