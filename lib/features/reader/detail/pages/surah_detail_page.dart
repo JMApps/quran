@@ -109,7 +109,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       ),
                       actions: [
                         const FavoriteMushafPageButton(),
-                        const TranslateMushafPageButton(),
+                        TranslateMushafPageButton(currentMushafPage: surahState.currentMushafPage),
                         ToMushafPageButton(mushafPageController: _mushafPageController),
                       ],
                     ),

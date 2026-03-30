@@ -46,7 +46,7 @@ class LayoutModel {
     return false;
   }
 
-  factory LayoutModel.fromMap(Map<String, dynamic> map) {
+  factory LayoutModel.fromMap(Map<String, Object?> map) {
     return LayoutModel(
       pageNumber: _asInt(map['page_number'], 'page_number'),
       lineNumber: _asInt(map['line_number'], 'line_number'),

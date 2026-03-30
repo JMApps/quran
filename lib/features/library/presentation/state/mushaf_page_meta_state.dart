@@ -28,6 +28,15 @@ class MushafPageMetaState extends ChangeNotifier {
 
   Object? get error => _error;
 
+  bool _translationState = false;
+
+  bool get translationState => _translationState;
+
+  set translationState(bool translationState) {
+    _translationState = translationState;
+    notifyListeners();
+  }
+
   void _loadPersistedSettings() {
     final List<int> savedLastOpened = _favoriteSettingsBox.get(AppKeys.keyLastOpenedPages, defaultValue: [1]);
     final List<int> savedFavorite = _favoriteSettingsBox.get(AppKeys.keyFavoritePages, defaultValue: [293]);
