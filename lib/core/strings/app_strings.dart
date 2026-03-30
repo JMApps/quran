@@ -72,7 +72,7 @@ class AppStrings {
       case 'basmallah':
         return LineType.basmallah;
       default:
-        return LineType.ayah;
+        throw StateError("Unknown line_type value: $value");
     }
   }
 }
