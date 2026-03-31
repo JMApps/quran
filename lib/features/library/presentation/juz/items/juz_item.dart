@@ -5,6 +5,7 @@ import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../domain/entities/juz_entity.dart';
 import '../../state/surah_state.dart';
+import '../widgets/juz_verse_key_row.dart';
 
 class JuzItem extends StatelessWidget {
   const JuzItem({
@@ -19,63 +20,75 @@ class JuzItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final itemOddColor = appColors.secondary.withAlpha(15);
-    final itemEvenColor = appColors.secondary.withAlpha(0);
+    final itemOddColor = appColors.primary.withAlpha(15);
+    final itemEvenColor = appColors.primary.withAlpha(0);
     return ListTile(
       visualDensity: VisualDensity.comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
       leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Text(
-          juzModel.juzNumber.toString(),
-        ),
-      ),
-      title: Text(
-        '${AppStrings.juz} – ${juzModel.juzNumber}',
-        style: const TextStyle(
-          fontFamily: AppStrings.fontGilroyMedium,
-        ),
-      ),
-      subtitle: RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: appColors.onSurface,
-            fontFamily: AppStrings.fontGilroy,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(
+            juzModel.juzNumber.toString(),
+            style: TextStyle(
+              color: appColors.secondary,
+              fontSize: 15.0,
+              fontWeight: .bold,
+            ),
           ),
-          children: [
-            const TextSpan(text: AppStrings.start),
-            TextSpan(
-              text: juzModel.firstVerseKey,
-              style: TextStyle(
-                color: appColors.primary,
-              ),
-            ),
-            const TextSpan(text: ' / '),
-            const TextSpan(text: AppStrings.end),
-            TextSpan(
-              text: juzModel.lastVerseKey,
-              style: TextStyle(
-                color: appColors.primary,
-              ),
-            ),
-            const TextSpan(text: '\n'),
-            TextSpan(
-              text: '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
-              style: TextStyle(
-                color: appColors.secondary,
-                fontSize: 12.0,
-              ),
-            ),
-          ],
         ),
       ),
-      trailing: Text(
-        juzModel.startPageNumber.toString(),
-        style: TextStyle(
-          color: appColors.secondary,
-        ),
+      subtitle: Row(
+        mainAxisAlignment: .center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .stretch,
+              children: [
+                JuzVerseKeyRow(
+                  title: AppStrings.start,
+                  firstColor: appColors.primary,
+                  lastColor: appColors.secondaryContainer,
+                  verseKey: juzModel.firstVerseKey,
+                ),
+                const SizedBox(height: 3.5),
+                JuzVerseKeyRow(
+                  title: AppStrings.end,
+                  firstColor: appColors.secondary,
+                  lastColor: appColors.tertiaryContainer,
+                  verseKey: juzModel.lastVerseKey,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Text(
+              '${juzModel.versesCount}\n${AppStrings.ayahWord(juzModel.versesCount)}',
+              style: TextStyle(
+                color: appColors.tertiary,
+              ),
+              textAlign: .center,
+            ),
+          ),
+        ],
+      ),
+      trailing: Column(
+        mainAxisAlignment: .center,
+        children: [
+          const Text(AppStrings.pageShort),
+          Text(
+            juzModel.startPageNumber.toString(),
+            style: TextStyle(
+              color: appColors.secondary,
+              fontSize: 13.0,
+              fontWeight: .bold,
+            ),
+          ),
+        ],
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
