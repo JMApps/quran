@@ -38,7 +38,6 @@ class SurahNameItem extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Show/hide from settings
               Visibility(
                 visible: appSettingsState.arabicNameSurah,
                 child: Text(

@@ -8,48 +8,102 @@ class AyahByAyahState extends ChangeNotifier {
 
   AyahByAyahState(this._useCase);
 
-  final Map<int, List<AyahByAyahEntity>> _pagesCache = {};
+  final Map<String, List<AyahByAyahEntity>> _pagesCache = {};
+  final Map<String, bool> _loadingMap = {};
+  final Map<String, Object?> _errorMap = {};
+  final Set<String> _inFlight = {};
 
-  bool _isLoading = false;
-  Object? _error;
-
-  bool get isLoading => _isLoading;
-  Object? get error => _error;
-
-  /// Получить аяты страницы (из кеша)
-  List<AyahByAyahEntity> getPageAyahs(int pageNumber) {
-    return _pagesCache[pageNumber] ?? const [];
+  String _makeKey({
+    required int pageNumber,
+    required String tableName,
+  }) {
+    return '$tableName:$pageNumber';
   }
 
-  /// Проверка: загружена ли страница
-  bool isPageLoaded(int pageNumber) {
-    return _pagesCache.containsKey(pageNumber);
+  List<AyahByAyahEntity> getPageAyahs({
+    required int pageNumber,
+    required String tableName,
+  }) {
+    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+    return _pagesCache[key] ?? const [];
   }
 
-  /// Загрузка аятов страницы
-  Future<void> loadPageAyahs(int pageNumber) async {
-    // защита от повторной загрузки
-    if (_pagesCache.containsKey(pageNumber)) return;
+  bool isPageLoaded({
+    required int pageNumber,
+    required String tableName,
+  }) {
+    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+    return _pagesCache.containsKey(key);
+  }
 
-    _isLoading = true;
-    _error = null;
+  bool isPageLoading({
+    required int pageNumber,
+    required String tableName,
+  }) {
+    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+    return _loadingMap[key] ?? false;
+  }
+
+  Object? getPageError({
+    required int pageNumber,
+    required String tableName,
+  }) {
+    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+    return _errorMap[key];
+  }
+
+  Future<void> loadPageAyahs({
+    required int pageNumber,
+    required String tableName,
+  }) async {
+    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+
+    if (_pagesCache.containsKey(key)) return;
+    if (_inFlight.contains(key)) return;
+
+    _inFlight.add(key);
+    _loadingMap[key] = true;
+    _errorMap[key] = null;
     notifyListeners();
 
     try {
-      final result = await _useCase.getAyahsByPage(pageNumber);
+      final result = await _useCase.getAyahsByPage(
+        pageNumber: pageNumber,
+        tableName: tableName,
+      );
 
-      _pagesCache[pageNumber] = result;
+      _pagesCache[key] = result;
     } catch (e) {
-      _error = e;
+      _errorMap[key] = e;
     } finally {
-      _isLoading = false;
+      _inFlight.remove(key);
+      _loadingMap[key] = false;
       notifyListeners();
     }
   }
 
-  /// Очистка кеша (например при смене перевода)
   void clearCache() {
     _pagesCache.clear();
+    _loadingMap.clear();
+    _errorMap.clear();
+    _inFlight.clear();
+    notifyListeners();
+  }
+
+  void clearCacheByTable(String tableName) {
+    final prefix = '$tableName:';
+
+    final keys = _pagesCache.keys
+        .where((key) => key.startsWith(prefix))
+        .toList();
+
+    for (final key in keys) {
+      _pagesCache.remove(key);
+      _loadingMap.remove(key);
+      _errorMap.remove(key);
+      _inFlight.remove(key);
+    }
+
     notifyListeners();
   }
 }

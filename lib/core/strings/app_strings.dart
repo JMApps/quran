@@ -20,6 +20,7 @@ class AppStrings {
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
   static const String errorMushafFavoritesList = 'Ошибка загрузки избранного: ';
   static const String errorMushafLastFavoritesList = 'Ошибка загрузки недавних страниц: ';
+  static const String errorLoad = 'Ошибка загрузки: ';
   static const String addedToFavorite = 'Добавлено в избранное';
   static const String addToFavorite = 'Добавить в избранное';
   static const String removedFromFavorite = 'Удалено из избранного';

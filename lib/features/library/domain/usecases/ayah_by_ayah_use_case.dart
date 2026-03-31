@@ -6,7 +6,7 @@ class AyahByAyahUseCase {
 
   const AyahByAyahUseCase(this._ayahByAyahRepository);
 
-  Future<List<AyahByAyahEntity>> getAyahsByPage(int pageNumber) {
-    return _ayahByAyahRepository.getAyahsByPage(pageNumber);
+  Future<List<AyahByAyahEntity>> getAyahsByPage({required int pageNumber, required String tableName}) {
+    return _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
   }
 }

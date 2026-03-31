@@ -20,8 +20,8 @@ class HizbItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final itemOddColor = appColors.primary.withAlpha(15);
-    final itemEvenColor = appColors.primary.withAlpha(0);
+    final itemOddColor = appColors.secondary.withAlpha(15);
+    final itemEvenColor = appColors.secondary.withAlpha(0);
     return ListTile(
       visualDensity: VisualDensity.comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
@@ -51,13 +51,13 @@ class HizbItem extends StatelessWidget {
               children: [
                 HizbVerseKeyRow(
                   title: AppStrings.start,
-                  color: appColors.secondaryContainer,
+                  color: appColors.secondaryContainer.withAlpha(105),
                   verseKey: hizbModel.firstVerseKey,
                 ),
                 const SizedBox(height: 3.5),
                 HizbVerseKeyRow(
                   title: AppStrings.end,
-                  color: appColors.tertiaryContainer,
+                  color: appColors.tertiaryContainer.withAlpha(105),
                   verseKey: hizbModel.lastVerseKey,
                 ),
               ],

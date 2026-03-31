@@ -4,6 +4,7 @@ class AyahByAyahModel {
   final int surahNumber;
   final int ayahNumber;
   final String ayahArabic;
+  final String ayahTranslation;
 
   const AyahByAyahModel({
     required this.ayahId,
@@ -11,6 +12,7 @@ class AyahByAyahModel {
     required this.surahNumber,
     required this.ayahNumber,
     required this.ayahArabic,
+    required this.ayahTranslation,
   });
 
   factory AyahByAyahModel.fromMap(Map<String, Object?> map) {
@@ -20,6 +22,7 @@ class AyahByAyahModel {
       surahNumber: map['surah_number'] as int,
       ayahNumber: map['ayah_number'] as int,
       ayahArabic: map['ayah_arabic'] as String,
+      ayahTranslation: map['ayah_translation'] as String,
     );
   }
 }

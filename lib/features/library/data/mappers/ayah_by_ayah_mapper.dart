@@ -8,6 +8,7 @@ extension AyahByAyahModelX on AyahByAyahModel {
     surahNumber: surahNumber,
     ayahNumber: ayahNumber,
     ayahArabic: ayahArabic,
+    ayahTranslation: ayahTranslation,
   );
 }
 
@@ -18,5 +19,6 @@ extension AyahByAyahEntityX on AyahByAyahEntity {
     surahNumber: surahNumber,
     ayahNumber: ayahNumber,
     ayahArabic: ayahArabic,
+    ayahTranslation: ayahTranslation,
   );
 }

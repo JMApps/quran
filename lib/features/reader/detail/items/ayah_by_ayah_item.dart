@@ -17,38 +17,43 @@ class AyahByAyahItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    return ListTile(
-      visualDensity: VisualDensity.compact,
-      contentPadding: AppStyles.miniPadding,
-      title: Column(
-        crossAxisAlignment: .stretch,
+    return Container(
+      padding: AppStyles.mainPadding,
+      child: Column(
+        crossAxisAlignment: .start,
         children: [
           Container(
+            width: 50,
             padding: AppStyles.microPadding,
             decoration: BoxDecoration(
-              color: appColors.secondaryContainer,
+              color: appColors.secondaryContainer.withAlpha(155),
               borderRadius: AppStyles.miniBorder,
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 3.5),
-              child: Text(
-                ayahByAyahModel.verseKey,
-                style: TextStyle(
-                  color: appColors.secondary,
-                ),
-              ),
-            ),
+            alignment: Alignment.center,
+            child: Text(ayahByAyahModel.verseKey),
           ),
           const SizedBox(height: 16),
-          Text(
-            ayahByAyahModel.ayahArabic,
-            style: const TextStyle(
-              fontSize: 20.0,
-              fontFamily: AppStrings.fontUthmanicHafs,
-              height: 2.0,
-            ),
-            textDirection: TextDirection.rtl,
-
+          Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              Text(
+                ayahByAyahModel.ayahArabic,
+                style: const TextStyle(
+                  fontSize: 19.0,
+                  fontFamily: AppStrings.fontUthmanicHafs,
+                  height: 2.0,
+                ),
+                textDirection: TextDirection.rtl,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                ayahByAyahModel.ayahTranslation,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: AppStrings.fontGilroy,
+                ),
+              ),
+            ],
           ),
         ],
       ),
