@@ -51,15 +51,13 @@ class HizbItem extends StatelessWidget {
               children: [
                 HizbVerseKeyRow(
                   title: AppStrings.start,
-                  firstColor: appColors.primary,
-                  lastColor: appColors.secondaryContainer,
+                  color: appColors.secondaryContainer,
                   verseKey: hizbModel.firstVerseKey,
                 ),
                 const SizedBox(height: 3.5),
                 HizbVerseKeyRow(
                   title: AppStrings.end,
-                  firstColor: appColors.secondary,
-                  lastColor: appColors.tertiaryContainer,
+                  color: appColors.tertiaryContainer,
                   verseKey: hizbModel.lastVerseKey,
                 ),
               ],

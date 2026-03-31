@@ -51,15 +51,13 @@ class JuzItem extends StatelessWidget {
               children: [
                 JuzVerseKeyRow(
                   title: AppStrings.start,
-                  firstColor: appColors.primary,
-                  lastColor: appColors.secondaryContainer,
+                  color: appColors.secondaryContainer,
                   verseKey: juzModel.firstVerseKey,
                 ),
                 const SizedBox(height: 3.5),
                 JuzVerseKeyRow(
                   title: AppStrings.end,
-                  firstColor: appColors.secondary,
-                  lastColor: appColors.tertiaryContainer,
+                  color: appColors.tertiaryContainer,
                   verseKey: juzModel.lastVerseKey,
                 ),
               ],

@@ -6,14 +6,12 @@ class JuzVerseKeyRow extends StatelessWidget {
   const JuzVerseKeyRow({
     super.key,
     required this.title,
-    required this.firstColor,
-    required this.lastColor,
+    required this.color,
     required this.verseKey,
   });
 
   final String title;
-  final Color firstColor;
-  final Color lastColor;
+  final Color color;
   final String verseKey;
 
   @override
@@ -35,7 +33,7 @@ class JuzVerseKeyRow extends StatelessWidget {
             padding: AppStyles.microPadding,
             alignment: .center,
             decoration: BoxDecoration(
-              color: lastColor,
+              color: color,
               borderRadius: AppStyles.miniBorder,
             ),
             child: Text(
