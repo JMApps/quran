@@ -18,7 +18,7 @@ class AyahByAyahItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     return Container(
-      padding: AppStyles.mainPadding,
+      padding: AppStyles.miniPadding,
       child: Column(
         crossAxisAlignment: .start,
         children: [
