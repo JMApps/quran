@@ -38,12 +38,13 @@ class AyahByAyahItem extends StatelessWidget {
             children: [
               Text(
                 ayahByAyahModel.ayahArabic,
+                textDirection: TextDirection.rtl,
                 style: const TextStyle(
                   fontSize: 19.0,
                   fontFamily: AppStrings.fontUthmanicHafs,
-                  height: 2.0,
+                  height: 1.75,
+                  letterSpacing: 0,
                 ),
-                textDirection: TextDirection.rtl,
               ),
               const SizedBox(height: 16),
               Text(

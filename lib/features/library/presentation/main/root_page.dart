@@ -113,6 +113,7 @@ class _RootPageState extends State<RootPage> {
         ),
 
         ChangeNotifierProvider<AyahByAyahState>(
+          lazy: false,
           create: (context) => AyahByAyahState(
             context.read<AyahByAyahUseCase>(),
           ),

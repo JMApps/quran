@@ -13,49 +13,31 @@ class AyahByAyahState extends ChangeNotifier {
   final Map<String, Object?> _errorMap = {};
   final Set<String> _inFlight = {};
 
-  String _makeKey({
-    required int pageNumber,
-    required String tableName,
-  }) {
+  String _makeKey({required int pageNumber, required String tableName}) {
     return '$tableName:$pageNumber';
   }
 
-  List<AyahByAyahEntity> getPageAyahs({
-    required int pageNumber,
-    required String tableName,
-  }) {
+  List<AyahByAyahEntity> getPageAyahs({required int pageNumber, required String tableName}) {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
     return _pagesCache[key] ?? const [];
   }
 
-  bool isPageLoaded({
-    required int pageNumber,
-    required String tableName,
-  }) {
+  bool isPageLoaded({required int pageNumber, required String tableName}) {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
     return _pagesCache.containsKey(key);
   }
 
-  bool isPageLoading({
-    required int pageNumber,
-    required String tableName,
-  }) {
+  bool isPageLoading({required int pageNumber, required String tableName}) {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
     return _loadingMap[key] ?? false;
   }
 
-  Object? getPageError({
-    required int pageNumber,
-    required String tableName,
-  }) {
+  Object? getPageError({required int pageNumber, required String tableName}) {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
     return _errorMap[key];
   }
 
-  Future<void> loadPageAyahs({
-    required int pageNumber,
-    required String tableName,
-  }) async {
+  Future<void> loadPageAyahs({required int pageNumber, required String tableName}) async {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
 
     if (_pagesCache.containsKey(key)) return;
@@ -93,9 +75,7 @@ class AyahByAyahState extends ChangeNotifier {
   void clearCacheByTable(String tableName) {
     final prefix = '$tableName:';
 
-    final keys = _pagesCache.keys
-        .where((key) => key.startsWith(prefix))
-        .toList();
+    final keys = _pagesCache.keys.where((key) => key.startsWith(prefix)).toList();
 
     for (final key in keys) {
       _pagesCache.remove(key);

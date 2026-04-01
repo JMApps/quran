@@ -38,6 +38,7 @@ class AppStrings {
   static const String fontGilroyMedium = 'Gilroy Medium';
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
+  static const String fontNastaleeq = 'Nastaleeq';
 
   static const int totalPages = 604;
 

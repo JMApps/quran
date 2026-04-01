@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../state/app_settings_state.dart';
-import '../widgets/setting_list_tile_item.dart';
+import '../items/setting_list_tile_item.dart';
 import '../widgets/theme_color_picker.dart';
 import '../widgets/theme_mode_drop_down.dart';
 

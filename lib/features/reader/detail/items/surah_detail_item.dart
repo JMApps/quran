@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/services/mushaf_font_loader.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../../library/domain/entities/layout_entity.dart';
@@ -25,16 +26,19 @@ class SurahDetailItem extends StatefulWidget {
 
 class _SurahDetailItemState extends State<SurahDetailItem> {
   late final int _pageNumber;
-  final String tableName = 'Table_of_translation_adel';
+  final String tableName = 'Table_of_translation_kuliev';
 
   @override
   void initState() {
     super.initState();
     _pageNumber = widget.index + 1;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PageLayoutState>().loadPageLines(_pageNumber);
-      context.read<AyahByAyahState>().loadPageAyahs(
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await MushafFontLoader.instance.loadPageFont(_pageNumber);
+      if (!mounted) return;
+      await context.read<PageLayoutState>().loadPageLines(_pageNumber);
+      if (!mounted) return;
+      await context.read<AyahByAyahState>().loadPageAyahs(
         pageNumber: _pageNumber,
         tableName: tableName,
       );
@@ -106,30 +110,50 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
           child: CircularProgressIndicator.adaptive(),
         );
       } else {
-        content = ListView.builder(
-          itemCount: lines.length,
-          padding: EdgeInsets.zero,
-          itemBuilder: (context, index) {
-            final line = lines[index];
+        content = content = LayoutBuilder(
+          builder: (context, constraints) {
+            final double pageHeight = constraints.maxHeight;
+            final double lineSlotHeight = pageHeight / lines.length;
 
-            String text;
-            switch (line.lineType) {
-              case LineType.surahName:
-                text = 'surah_name';
-                break;
-              case LineType.basmallah:
-                text = 'basmallah';
-                break;
-              case LineType.ayah:
-                text = 'ayah';
-                break;
-            }
+            return Column(
+              children: List.generate(lines.length, (index) {
+                final line = lines[index];
 
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(text),
-              ),
+                final String text = switch (line.lineType) {
+                  LineType.surahName => line.surahNameText,
+                  LineType.basmallah => line.lineText,
+                  LineType.ayah => line.lineText,
+                };
+
+                return SizedBox(
+                  height: lineSlotHeight,
+                  width: double.infinity,
+                  child: Align(
+                    alignment: line.isCentered ? Alignment.center : Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: line.isCentered ? Alignment.center : Alignment.center,
+                        child: Text(
+                          text,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.visible,
+                          textDirection: TextDirection.rtl,
+                          textAlign:
+                          line.isCentered ? TextAlign.center : TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: _fontFamilyForLine(line),
+                            fontSize: _fontSizeForLine(line),
+                            height: 1.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
             );
           },
         );
@@ -156,5 +180,27 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
         if (!translationState) Text('$_pageNumber'),
       ],
     );
+  }
+
+  String _fontFamilyForLine(LayoutEntity line) {
+    switch (line.lineType) {
+      case LineType.surahName:
+        return 'surah_name';
+      case LineType.basmallah:
+        return 'basmallah';
+      case LineType.ayah:
+        return MushafFontLoader.instance.familyForPage(_pageNumber);
+    }
+  }
+
+  double _fontSizeForLine(LayoutEntity line) {
+    switch (line.lineType) {
+      case LineType.surahName:
+        return 24;
+      case LineType.basmallah:
+        return 30;
+      case LineType.ayah:
+        return 32;
+    }
   }
 }

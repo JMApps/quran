@@ -20,7 +20,10 @@ class PageLayoutState extends ChangeNotifier {
   }
 
   Future<void> loadPageLines(int pageNumber) async {
-    if (_pagesCache.containsKey(pageNumber)) return;
+    if (_pagesCache.containsKey(pageNumber)) {
+      print('Page $pageNumber already cached: ${_pagesCache[pageNumber]!.length}');
+      return;
+    }
 
     _isLoading = true;
     _error = null;
@@ -28,9 +31,14 @@ class PageLayoutState extends ChangeNotifier {
 
     try {
       final result = await _pageLayoutUseCase.getLinesByPage(pageNumber: pageNumber);
+      print('Loaded page $pageNumber: ${result.length} lines');
+      for (final line in result.take(3)) {
+        print('STATE LINE => ${line.lineNumber} | "${line.lineText}" | "${line.surahNameText}"');
+      }
       _pagesCache[pageNumber] = result;
     } catch (e) {
       _error = e;
+      print('ERROR loadPageLines($pageNumber): $e');
     } finally {
       _isLoading = false;
       notifyListeners();

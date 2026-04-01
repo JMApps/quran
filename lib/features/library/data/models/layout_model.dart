@@ -9,6 +9,8 @@ class LayoutModel {
   final int? firstWordId;
   final int? lastWordId;
   final int? surahNumber;
+  final String lineText;
+  final String surahNameText;
 
   const LayoutModel({
     required this.pageNumber,
@@ -18,6 +20,8 @@ class LayoutModel {
     this.firstWordId,
     this.lastWordId,
     this.surahNumber,
+    required this.lineText,
+    required this.surahNameText,
   });
 
   static int _asInt(Object? v, String key) {
@@ -46,6 +50,11 @@ class LayoutModel {
     return false;
   }
 
+  static String _asString(Object? v) {
+    if (v == null) return '';
+    return v.toString();
+  }
+
   factory LayoutModel.fromMap(Map<String, Object?> map) {
     return LayoutModel(
       pageNumber: _asInt(map['page_number'], 'page_number'),
@@ -55,6 +64,8 @@ class LayoutModel {
       firstWordId: _asIntOrNull(map['first_word_id'], 'first_word_id'),
       lastWordId: _asIntOrNull(map['last_word_id'], 'last_word_id'),
       surahNumber: _asIntOrNull(map['surah_number'], 'surah_number'),
+      lineText: _asString(map['line_text']),
+      surahNameText: _asString(map['surah_name_text']),
     );
   }
 }
