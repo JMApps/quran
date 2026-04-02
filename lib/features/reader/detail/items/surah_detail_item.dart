@@ -52,7 +52,6 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
   }
 
   Future<void> _loadCurrentPage() async {
-    await MushafFontLoader.instance.loadPageFont(_pageNumber);
     if (!mounted) return;
 
     await context.read<PageLayoutState>().loadPageLines(_pageNumber);
@@ -69,8 +68,6 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
   void _prefetchNextPage() {
     final nextPage = _pageNumber + 1;
-
-    MushafFontLoader.instance.loadPageFont(nextPage);
 
     context.read<PageLayoutState>().loadPageLines(
       nextPage,
