@@ -21,12 +21,13 @@ class AyahByAyahList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final toolbarHeight = AppBar().preferredSize.height;
     final rows = const AyahListRowBuilder().build(ayahsPage);
     final surahNamesMap = <int, String>{
       for (final surah in allSurahs) surah.surahNumber: surah.nameTranscription,
     };
     return ListView.builder(
-      padding: .zero,
+      padding: .only(top: toolbarHeight - 21, bottom: 14),
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];
