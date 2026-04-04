@@ -29,10 +29,7 @@ class PageLayoutState extends ChangeNotifier {
     return _errorMap[pageNumber];
   }
 
-  Future<void> loadPageLines(
-      int pageNumber, {
-        bool prefetchNext = true,
-      }) async {
+  Future<void> loadPageLines(int pageNumber, {bool prefetchNext = true}) async {
     if (_pagesCache.containsKey(pageNumber)) return;
     if (_inFlight.contains(pageNumber)) return;
 
@@ -81,11 +78,7 @@ class PageLayoutState extends ChangeNotifier {
     }
   }
 
-  void trimCache({
-    required int currentPage,
-    int keepBefore = 1,
-    int keepAfter = 2,
-  }) {
+  void trimCache({required int currentPage, int keepBefore = 1, int keepAfter = 2}) {
     final minPage = currentPage - keepBefore;
     final maxPage = currentPage + keepAfter;
 

@@ -41,7 +41,7 @@ class ToMushafPageButton extends StatelessWidget {
                         max: 604,
                         divisions: 604,
                         onChanged: (double value) {
-                          surahState.mushafCurrentPage = value.round();
+                          surahState.setMushafCurrentPage(value.round());
                           if (mushafPageController.hasClients) {
                             mushafPageController.jumpToPage(value.toInt() - 1);
                           }

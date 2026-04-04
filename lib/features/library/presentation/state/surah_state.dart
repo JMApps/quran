@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/usecases/surah_name_use_case.dart';
@@ -9,33 +9,28 @@ class SurahState extends ChangeNotifier {
   SurahState(this._surahNameUseCase);
 
   int _mushafPage = 1;
-
-  set mushafCurrentPage(int page) {
-    _mushafPage = page;
-    notifyListeners();
-  }
-
-  int get currentMushafPage => _mushafPage;
-
   bool _showAppBar = true;
-
-  bool get showAppBar => _showAppBar;
-
-  void toggleShowAppBar() {
-    _showAppBar = !_showAppBar;
-    notifyListeners();
-  }
-
   List<SurahNameEntity> _allSurahs = const [];
   bool _isLoading = false;
   bool _isLoaded = false;
   Object? _error;
 
+  int get currentMushafPage => _mushafPage;
+  bool get showAppBar => _showAppBar;
   List<SurahNameEntity> get allSurahs => List.unmodifiable(_allSurahs);
-
   bool get isLoading => _isLoading;
-
   Object? get error => _error;
+
+  void setMushafCurrentPage(int page) {
+    if (_mushafPage == page) return;
+    _mushafPage = page;
+    notifyListeners();
+  }
+
+  void toggleShowAppBar() {
+    _showAppBar = !_showAppBar;
+    notifyListeners();
+  }
 
   Future<void> loadAllSurahs() async {
     if (_isLoading || _isLoaded) return;
@@ -53,5 +48,10 @@ class SurahState extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> refreshAllSurahs() async {
+    _isLoaded = false;
+    await loadAllSurahs();
   }
 }

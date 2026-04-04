@@ -18,7 +18,7 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
 
     final List<Map<String, Object?>> allSurahs = await database.query(
       DbValueStrings.tableOfSurahs,
-      orderBy: 'surah_number ASC',
+      orderBy: '${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC}',
     );
 
     return allSurahs.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);

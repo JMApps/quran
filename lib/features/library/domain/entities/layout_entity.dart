@@ -6,8 +6,6 @@ class LayoutEntity {
   final LineType lineType;
   final bool isCentered;
   final int? surahNumber;
-  final String lineText;
-  final String surahNameText;
 
   const LayoutEntity({
     required this.pageNumber,
@@ -15,7 +13,5 @@ class LayoutEntity {
     required this.lineType,
     required this.isCentered,
     required this.surahNumber,
-    required this.lineText,
-    required this.surahNameText,
   });
 }

@@ -8,14 +8,12 @@ import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../settings/state/app_settings_state.dart';
 import '../../data/repositories/ayah_by_ayah_repository_impl.dart';
-import '../../data/repositories/ayah_word_repository_impl.dart';
 import '../../data/repositories/hizb_repository_impl.dart';
 import '../../data/repositories/juz_repository_impl.dart';
 import '../../data/repositories/layout_repository_impl.dart';
 import '../../data/repositories/mushaf_page_meta_repository_impl.dart';
 import '../../data/repositories/surah_name_repository_impl.dart';
 import '../../domain/usecases/ayah_by_ayah_use_case.dart';
-import '../../domain/usecases/ayah_word_use_case.dart';
 import '../../domain/usecases/hizb_use_case.dart';
 import '../../domain/usecases/juz_use_case.dart';
 import '../../domain/usecases/layout_use_case.dart';
@@ -57,9 +55,6 @@ class _RootPageState extends State<RootPage> {
         Provider<AyahByAyahRepositoryImpl>(
           create: (_) => AyahByAyahRepositoryImpl(_databaseService),
         ),
-        Provider<AyahWordRepositoryImpl>(
-          create: (_) => AyahWordRepositoryImpl(_databaseService),
-        ),
         Provider<JuzRepositoryImpl>(
           create: (_) => JuzRepositoryImpl(_databaseService),
         ),
@@ -79,11 +74,6 @@ class _RootPageState extends State<RootPage> {
         Provider<AyahByAyahUseCase>(
           create: (context) => AyahByAyahUseCase(
             context.read<AyahByAyahRepositoryImpl>(),
-          ),
-        ),
-        Provider<AyahWordUseCase>(
-          create: (context) => AyahWordUseCase(
-            context.read<AyahWordRepositoryImpl>(),
           ),
         ),
         Provider<JuzUseCase>(

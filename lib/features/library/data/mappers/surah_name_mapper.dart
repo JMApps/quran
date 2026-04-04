@@ -14,17 +14,3 @@ extension SurahNameModelX on SurahNameModel {
     startPageNumber: startPageNumber,
   );
 }
-
-extension SurahNameEntityX on SurahNameEntity {
-  SurahNameModel toModel() => SurahNameModel(
-    surahNumber: surahNumber,
-    nameArabic: nameArabic,
-    nameTranslation: nameTranslation,
-    nameTranscription: nameTranscription,
-    revelationOrder: revelationOrder,
-    revelationPlace: revelationPlace,
-    ayahsCount: ayahsCount,
-    basmallaPre: basmallaPre,
-    startPageNumber: startPageNumber,
-  );
-}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../library/presentation/state/mushaf_page_meta_state.dart';
@@ -38,7 +39,9 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       _mushafPageMetaState.addLastOpenedPage(_currentPage);
     }
   }
@@ -51,19 +54,22 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      reverse: true,
-      controller: widget.mushafPageController,
-      itemCount: AppStrings.totalPages,
-      onPageChanged: (int index) {
-        Provider.of<SurahState>(context, listen: false).mushafCurrentPage = index + 1;
-        _currentPage = index + 1;
-      },
-      itemBuilder: (context, index) {
-        return SurahDetailItem(
-          index: index,
-        );
-      },
+    return Padding(
+      padding: AppStyles.hrMiniPadding,
+      child: PageView.builder(
+        reverse: true,
+        controller: widget.mushafPageController,
+        itemCount: AppStrings.totalPages,
+        onPageChanged: (int index) {
+          Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(index + 1);
+          _currentPage = index + 1;
+        },
+        itemBuilder: (context, index) {
+          return SurahDetailItem(
+            index: index,
+          );
+        },
+      ),
     );
   }
 }

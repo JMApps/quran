@@ -9,12 +9,3 @@ extension MushafPageMetaMapperX on MushafPageMetaModel {
     hizbNumber: hizbNumber,
   );
 }
-
-extension MushafPageMetaEntityX on MushafPageMetaEntity {
-  MushafPageMetaModel toModel() => MushafPageMetaModel(
-    pageNumber: pageNumber,
-    nameTranscription: nameTranscription,
-    juzNumber: juzNumber,
-    hizbNumber: hizbNumber,
-  );
-}

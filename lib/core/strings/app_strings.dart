@@ -15,6 +15,7 @@ class AppStrings {
 
   static const String start = 'Начало: ';
   static const String end = 'Конец: ';
+  static const String loadingData = 'Загрузка данных...';
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
@@ -76,5 +77,12 @@ class AppStrings {
       default:
         throw StateError("Unknown line_type value: $value");
     }
+  }
+
+  static String surahNameByNumber(int surahNumber) {
+    if (surahNumber < 1 || surahNumber > 114) {
+      throw StateError('Invalid surah number: $surahNumber');
+    }
+    return 'surah${surahNumber.toString().padLeft(3, '0')}';
   }
 }

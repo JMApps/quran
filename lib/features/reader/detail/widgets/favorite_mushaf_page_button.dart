@@ -21,7 +21,6 @@ class FavoriteMushafPageButton extends StatelessWidget {
             } else {
               mushafPageMetaState.removeFavoritePage(pageNumber: mushafPage);
             }
-
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 1),

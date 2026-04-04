@@ -1,3 +1,5 @@
+import '../../../../core/strings/db_value_strings.dart';
+
 class SurahNameModel {
   final int surahNumber;
   final String nameArabic;
@@ -23,15 +25,15 @@ class SurahNameModel {
 
   factory SurahNameModel.fromMap(Map<String, Object?> map) {
     return SurahNameModel(
-      surahNumber: map['surah_number'] as int,
-      nameArabic: map['name_arabic'] as String,
-      nameTranslation: map['name_translation'] as String,
-      nameTranscription: map['name_transcription'] as String,
-      revelationOrder: map['revelation_order'] as int,
-      revelationPlace: map['revelation_place'] as String,
-      ayahsCount: map['ayahs_count'] as int,
-      basmallaPre: map['bismillah_pre'] as int,
-      startPageNumber: map['start_page_number'] as int,
+      surahNumber: map[DbValueStrings.dbSurahNumber] as int,
+      nameArabic: map[DbValueStrings.dbNameArabic] as String,
+      nameTranslation: map[DbValueStrings.dbNameTranslation] as String,
+      nameTranscription: map[DbValueStrings.dbNameTranscription] as String,
+      revelationOrder: map[DbValueStrings.dbRevelationOrder] as int,
+      revelationPlace: map[DbValueStrings.dbRevelationPlace] as String,
+      ayahsCount: map[DbValueStrings.dbAyahCount] as int,
+      basmallaPre: map[DbValueStrings.dbBismillahPre] as int,
+      startPageNumber: map[DbValueStrings.dbStartNumberPage] as int,
     );
   }
 }

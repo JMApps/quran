@@ -52,7 +52,7 @@ class FavoriteMushafPageItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPage = mushafPageMetaModel.pageNumber;
+        surahState.setMushafCurrentPage(mushafPageMetaModel.pageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

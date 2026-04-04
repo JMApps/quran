@@ -22,6 +22,7 @@ class SurahNameItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
+
     return ListTile(
       visualDensity: VisualDensity.comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
@@ -36,18 +37,19 @@ class SurahNameItem extends StatelessWidget {
       title: Consumer<AppSettingsState>(
         builder: (context, appSettingsState, _) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Visibility(
-                visible: appSettingsState.arabicNameSurah,
-                child: Text(
+              if (appSettingsState.arabicNameSurah)
+                Text(
                   surahModel.nameArabic,
                   style: TextStyle(
                     color: appColors.primary,
                     fontFamily: AppStrings.fontUthmanicHafs,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
               Row(
                 children: [
                   Text(
@@ -55,18 +57,18 @@ class SurahNameItem extends StatelessWidget {
                     style: const TextStyle(
                       fontFamily: AppStrings.fontGilroyMedium,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Visibility(
-                    visible: appSettingsState.translationNameSurah,
-                    child: Text(
+                  if (appSettingsState.translationNameSurah)
+                    Text(
                       ' (${surahModel.nameTranslation})',
                       style: const TextStyle(
                         fontFamily: AppStrings.fontGilroy,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
                 ],
               ),
             ],
@@ -75,9 +77,9 @@ class SurahNameItem extends StatelessWidget {
       ),
       subtitle: Text(
         '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)} – ${surahModel.revelationPlace}',
-        style: const TextStyle(
-          fontSize: 12.0,
-        ),
+        style: const TextStyle(fontSize: 12.0),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       trailing: Text(
         surahModel.startPageNumber.toString(),
@@ -87,7 +89,8 @@ class SurahNameItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPage = surahModel.startPageNumber;
+        surahState.setMushafCurrentPage(surahModel.startPageNumber);
+
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/quran_database_service.dart';
-import '../../../../core/strings/db_value_strings.dart';
 import '../../../../core/strings/app_strings.dart';
+import '../../../../core/strings/db_value_strings.dart';
 import '../../domain/entities/mushaf_page_meta_entity.dart';
 import '../../domain/repositories/mushaf_page_meta_repository.dart';
 import '../mappers/mushaf_page_meta_mapper.dart';
@@ -16,60 +16,49 @@ class MushafPageMetaRepositoryImpl implements MushafPageMetaRepository {
   @override
   Future<List<MushafPageMetaEntity>> getAllPagesMeta() async {
     final Database database = await _quranDatabaseService.db;
-    final List<MushafPageMetaEntity> allPagesMeta = [];
 
-    for (int pageNumber = 1; pageNumber <= AppStrings.totalPages; pageNumber++) {
-      final result = await database.rawQuery(
-        '''
+    final List<Map<String, Object?>> result = await database.rawQuery(
+      '''
+      WITH RECURSIVE pages(${DbValueStrings.dbPageNumber}) AS (
+        SELECT 1
+        UNION ALL
+        SELECT ${DbValueStrings.dbPageNumber} + 1
+        FROM pages
+        WHERE ${DbValueStrings.dbPageNumber} < ?
+      )
       SELECT
-        ? AS page_number,
-        s.name_transcription,
-        j.juz_number,
-        h.hizb_number
-      FROM
+        p.page_number,
+
         (
-          SELECT name_transcription
-          FROM ${DbValueStrings.tableOfSurahs}
-          WHERE start_page_number <= ?
-          ORDER BY start_page_number DESC
+          SELECT s.${DbValueStrings.dbNameTranscription}
+          FROM ${DbValueStrings.tableOfSurahs} s
+          WHERE s.${DbValueStrings.dbStartNumberPage} <= p.${DbValueStrings.dbPageNumber}
+          ORDER BY s.${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderDESC}
           LIMIT 1
-        ) s,
+        ) AS ${DbValueStrings.dbNameTranscription},
+
         (
-          SELECT juz_number
-          FROM ${DbValueStrings.tableOfJuzs}
-          WHERE start_page_number <= ?
-          ORDER BY start_page_number DESC
+          SELECT j.${DbValueStrings.dbJuzNumber}
+          FROM ${DbValueStrings.tableOfJuzs} j
+          WHERE j.${DbValueStrings.dbStartNumberPage} <= p.${DbValueStrings.dbPageNumber}
+          ORDER BY j.${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderDESC}
           LIMIT 1
-        ) j
-        LEFT JOIN
+        ) AS ${DbValueStrings.dbJuzNumber},
+
         (
-          SELECT hizb_number
-          FROM ${DbValueStrings.tableOfHizbs}
-          WHERE start_page_number = ?
+          SELECT h.${DbValueStrings.dbHizbNumber}
+          FROM ${DbValueStrings.tableOfHizbs} h
+          WHERE h.${DbValueStrings.dbStartNumberPage} = p.${DbValueStrings.dbPageNumber}
           LIMIT 1
-        ) h
-        ON 1 = 1
+        ) AS ${DbValueStrings.dbHizbNumber}
+
+      FROM pages p
+      ORDER BY p.${DbValueStrings.dbPageNumber} ${DbValueStrings.dbOrderASC}
       ''',
-        [
-          pageNumber,
-          pageNumber,
-          pageNumber,
-          pageNumber,
-        ],
-      );
+      [AppStrings.totalPages],
+    );
 
-      if (result.isEmpty) continue;
-
-      final row = result.first;
-
-      if (row['name_transcription'] == null || row['juz_number'] == null) {
-        continue;
-      }
-
-      final model = MushafPageMetaModel.fromMap(row);
-      allPagesMeta.add(model.toEntity());
-    }
-
-    return allPagesMeta;
+    return result.where((row) => row[DbValueStrings.dbNameTranscription] != null && row[DbValueStrings.dbJuzNumber] != null,
+    ).map((row) => MushafPageMetaModel.fromMap(row).toEntity()).toList();
   }
 }

@@ -1,3 +1,5 @@
+import '../../../../core/strings/db_value_strings.dart';
+
 class MushafPageMetaModel {
   final int pageNumber;
   final String nameTranscription;
@@ -13,10 +15,10 @@ class MushafPageMetaModel {
 
   factory MushafPageMetaModel.fromMap(Map<String, Object?> map) {
     return MushafPageMetaModel(
-      pageNumber: map['page_number'] as int,
-      nameTranscription: map['name_transcription'] as String,
-      juzNumber: map['juz_number'] as int,
-      hizbNumber: map['hizb_number'] as int?,
+      pageNumber: map[DbValueStrings.dbPageNumber] as int,
+      nameTranscription: map[DbValueStrings.dbNameTranscription] as String,
+      juzNumber: map[DbValueStrings.dbJuzNumber] as int,
+      hizbNumber: map[DbValueStrings.dbHizbNumber] as int?,
     );
   }
 }

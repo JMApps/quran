@@ -18,7 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -77,10 +77,10 @@ class _MainPageState extends State<MainPage> {
               end: Alignment.bottomCenter,
               colors: [
                 appColors.primary.withAlpha(0),
-                appColors.primary.withAlpha(5),
                 appColors.primary.withAlpha(15),
-                appColors.primary.withAlpha(25),
-                appColors.primary.withAlpha(55),
+                appColors.primary.withAlpha(30),
+                appColors.primary.withAlpha(45),
+                appColors.primary.withAlpha(60),
               ],
             ),
           ),

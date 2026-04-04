@@ -1,4 +1,5 @@
 import '../../../../core/strings/app_strings.dart';
+import '../../../../core/strings/db_value_strings.dart';
 import '../../domain/entities/line_type.dart';
 
 class LayoutModel {
@@ -9,8 +10,6 @@ class LayoutModel {
   final int? firstWordId;
   final int? lastWordId;
   final int? surahNumber;
-  final String lineText;
-  final String surahNameText;
 
   const LayoutModel({
     required this.pageNumber,
@@ -20,27 +19,7 @@ class LayoutModel {
     this.firstWordId,
     this.lastWordId,
     this.surahNumber,
-    required this.lineText,
-    required this.surahNameText,
   });
-
-  static int _asInt(Object? v, String key) {
-    if (v is int) return v;
-    if (v is num) return v.toInt();
-    if (v is String) {
-      final parsed = int.tryParse(v);
-      if (parsed != null) return parsed;
-    }
-    throw StateError("LayoutModel: '$key' expected int, got $v (${v.runtimeType})");
-  }
-
-  static int? _asIntOrNull(Object? v, String key) {
-    if (v == null) return null;
-    if (v is int) return v;
-    if (v is num) return v.toInt();
-    if (v is String) return int.tryParse(v);
-    throw StateError("LayoutModel: '$key' expected int?, got $v (${v.runtimeType})");
-  }
 
   static bool _asBool01(Object? v) {
     if (v is bool) return v;
@@ -50,22 +29,15 @@ class LayoutModel {
     return false;
   }
 
-  static String _asString(Object? v) {
-    if (v == null) return '';
-    return v.toString();
-  }
-
   factory LayoutModel.fromMap(Map<String, Object?> map) {
     return LayoutModel(
-      pageNumber: _asInt(map['page_number'], 'page_number'),
-      lineNumber: _asInt(map['line_number'], 'line_number'),
-      lineType: AppStrings.lineTypeFromDb((map['line_type'] ?? '').toString()),
-      isCentered: _asBool01(map['is_centered']),
-      firstWordId: _asIntOrNull(map['first_word_id'], 'first_word_id'),
-      lastWordId: _asIntOrNull(map['last_word_id'], 'last_word_id'),
-      surahNumber: _asIntOrNull(map['surah_number'], 'surah_number'),
-      lineText: _asString(map['line_text']),
-      surahNameText: _asString(map['surah_name_text']),
+      pageNumber: map[DbValueStrings.dbPageNumber] as int,
+      lineNumber: map[DbValueStrings.dbLineNumber] as int,
+      lineType: AppStrings.lineTypeFromDb((map[DbValueStrings.dbLineType]).toString()),
+      isCentered: _asBool01(map[DbValueStrings.dbIsCentered]),
+      firstWordId: map[DbValueStrings.dbFirstWordId] as int?,
+      lastWordId: map[DbValueStrings.dbLastWordId] as int?,
+      surahNumber: map[DbValueStrings.dbSurahNumber] as int,
     );
   }
 }

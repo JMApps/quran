@@ -32,31 +32,33 @@ class SurahNamePage extends StatelessWidget {
       ),
       body: Consumer<SurahState>(
         builder: (context, surahState, _) {
-          return Builder(
-            builder: (context) {
-              if (surahState.isLoading && surahState.allSurahs.isEmpty) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+          if (surahState.isLoading && surahState.allSurahs.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisSize: .min,
+                children: [
+                  Text(AppStrings.loadingData),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            );
+          }
 
-              if (surahState.error != null && surahState.allSurahs.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: AppStyles.mainPadding,
-                    child: Text(
-                      '${AppStrings.errorLoadSurahsList}\n${surahState.error}',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              }
+          if (surahState.error != null && surahState.allSurahs.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: AppStyles.mainPadding,
+                child: Text(
+                  '${AppStrings.errorLoadSurahsList}\n${surahState.error}',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
 
-              return SurahsNameList(
-                scrollController: scrollController,
-                surahsList: surahState.allSurahs,
-              );
-            },
+          return SurahsNameList(
+            scrollController: scrollController,
+            surahsList: surahState.allSurahs,
           );
         },
       ),
