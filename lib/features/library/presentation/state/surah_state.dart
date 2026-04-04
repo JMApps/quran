@@ -11,6 +11,7 @@ class SurahState extends ChangeNotifier {
   int _mushafPage = 1;
   bool _showAppBar = true;
   List<SurahNameEntity> _allSurahs = const [];
+  final Map<int, SurahNameEntity> _surahMap = {};
   bool _isLoading = false;
   bool _isLoaded = false;
   Object? _error;
@@ -20,6 +21,10 @@ class SurahState extends ChangeNotifier {
   List<SurahNameEntity> get allSurahs => List.unmodifiable(_allSurahs);
   bool get isLoading => _isLoading;
   Object? get error => _error;
+
+  SurahNameEntity? getSurahById(int surahNumber) {
+    return _surahMap[surahNumber];
+  }
 
   void setMushafCurrentPage(int page) {
     if (_mushafPage == page) return;
@@ -40,7 +45,15 @@ class SurahState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _allSurahs = await _surahNameUseCase.getAllSurahs();
+      final surahs = await _surahNameUseCase.getAllSurahs();
+
+      _allSurahs = surahs;
+      _surahMap
+        ..clear()
+        ..addEntries(
+          surahs.map((surah) => MapEntry(surah.surahNumber, surah)),
+        );
+
       _isLoaded = true;
     } catch (e) {
       _error = e;
@@ -52,6 +65,9 @@ class SurahState extends ChangeNotifier {
 
   Future<void> refreshAllSurahs() async {
     _isLoaded = false;
+    _error = null;
+    _surahMap.clear();
+    _allSurahs = const [];
     await loadAllSurahs();
   }
 }

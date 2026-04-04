@@ -16,7 +16,7 @@ class SurahHeaderItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     return Container(
       padding: AppStyles.mainPadding,
-      margin: AppStyles.vrMainHrMiniPadding,
+      margin: AppStyles.vrBigHrMiniPadding,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: appColors.secondaryContainer.withAlpha(120),

@@ -5,7 +5,6 @@ import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../domain/entities/juz_entity.dart';
 import '../../state/surah_state.dart';
-import '../widgets/juz_verse_key_row.dart';
 
 class JuzItem extends StatelessWidget {
   const JuzItem({
@@ -22,71 +21,53 @@ class JuzItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
+    final surahState = context.read<SurahState>();
+
+    final parts = juzModel.firstVerseKey.split(':');
+    final surahNumber = int.tryParse(parts[0]);
+    final ayahNumber = int.tryParse(parts[1]);
+
+    final surahName =  surahState.getSurahById(surahNumber!);
+
     return ListTile(
       visualDensity: .comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
       leading: CircleAvatar(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: Text(
-            juzModel.juzNumber.toString(),
-            style: TextStyle(
-              color: appColors.secondary,
-              fontSize: 15.0,
-              fontWeight: .bold,
-            ),
-          ),
+        backgroundColor: Colors.transparent,
+        child: Text(
+          juzModel.juzNumber.toString(),
         ),
       ),
-      subtitle: Row(
-        mainAxisAlignment: .center,
+      title: Row(
         children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .stretch,
-              children: [
-                JuzVerseKeyRow(
-                  title: AppStrings.start,
-                  color: appColors.secondaryContainer.withAlpha(105),
-                  verseKey: juzModel.firstVerseKey,
-                ),
-                const SizedBox(height: 3.5),
-                JuzVerseKeyRow(
-                  title: AppStrings.end,
-                  color: appColors.tertiaryContainer.withAlpha(105),
-                  verseKey: juzModel.lastVerseKey,
-                ),
-              ],
+          Text(
+            '${AppStrings.surah} ${surahName!.nameTranscription}',
+            style: const TextStyle(
+              fontFamily: AppStrings.fontGilroyMedium,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          Expanded(
-            child: Text(
-              '${juzModel.versesCount}\n${AppStrings.ayahWord(juzModel.versesCount)}',
-              style: TextStyle(
-                color: appColors.tertiary,
-              ),
-              textAlign: .center,
+          const SizedBox(width: 7),
+          Text(
+            '${AppStrings.ayah} $ayahNumber',
+            style: const TextStyle(
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
-      trailing: Column(
-        mainAxisAlignment: .center,
-        children: [
-          const Text(AppStrings.pageShort),
-          Text(
-            juzModel.startPageNumber.toString(),
-            style: TextStyle(
-              color: appColors.secondary,
-              fontSize: 13.0,
-              fontWeight: .bold,
-            ),
-          ),
-        ],
+      subtitle: Text(
+        '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
+        style: const TextStyle(fontSize: 12.0),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Text(
+        juzModel.startPageNumber.toString(),
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);

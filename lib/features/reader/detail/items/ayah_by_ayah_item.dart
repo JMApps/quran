@@ -18,7 +18,7 @@ class AyahByAyahItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     return Container(
-      padding: AppStyles.vrMainHrMiniPadding,
+      padding: AppStyles.vrBigHrMiniPadding,
       decoration: const BoxDecoration(
         border: Border.symmetric(
           horizontal: BorderSide(
@@ -50,7 +50,7 @@ class AyahByAyahItem extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 19.0,
                   fontFamily: AppStrings.fontUthmanicHafs,
-                  height: 1.75,
+                  height: 2.0,
                   letterSpacing: 0,
                 ),
               ),

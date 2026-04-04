@@ -11,6 +11,7 @@ class AppStrings {
   static const String page = 'Страница';
   static const String pageShort = 'Стр.';
   static const String surah = 'Сура';
+  static const String ayah = 'аят';
   static const String settings = 'Настройки';
 
   static const String start = 'Начало: ';

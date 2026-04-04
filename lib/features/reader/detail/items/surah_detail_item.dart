@@ -46,16 +46,18 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     if (!mounted) return;
     await Provider.of<PageLayoutState>(context, listen: false).loadPageLines(_pageNumber);
     if (!mounted) return;
-    await Provider.of<AyahByAyahState>(context, listen: false)
-        .loadPageAyahs(pageNumber: _pageNumber, tableName: tableName);
+    await Provider.of<AyahByAyahState>(context, listen: false
+    ).loadPageAyahs(pageNumber: _pageNumber, tableName: tableName);
     if (!mounted) return;
     Provider.of<PageLayoutState>(context, listen: false).trimCache(currentPage: _pageNumber);
   }
 
   void _prefetchNextPage() {
     final nextPage = _pageNumber + 1;
-    Provider.of<PageLayoutState>(context, listen: false)
-        .loadPageLines(nextPage, prefetchNext: false);
+    Provider.of<PageLayoutState>(
+      context,
+      listen: false,
+    ).loadPageLines(nextPage, prefetchNext: false);
     Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(
       pageNumber: nextPage,
       tableName: tableName,
@@ -66,25 +68,28 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
   @override
   Widget build(BuildContext context) {
     final lines = context.select<PageLayoutState, List<LayoutEntity>>(
-          (s) => s.getPageLines(_pageNumber),
+      (s) => s.getPageLines(_pageNumber),
     );
 
     final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
-          (s) => s.getPageAyahs(pageNumber: _pageNumber, tableName: tableName),
+      (s) => s.getPageAyahs(pageNumber: _pageNumber, tableName: tableName),
     );
 
     final allSurahs = context.select<SurahState, List<SurahNameEntity>>(
-          (s) => s.allSurahs,
+      (s) => s.allSurahs,
     );
 
     return Consumer<MushafPageMetaState>(
       builder: (context, mushafPageMetaState, _) {
         return mushafPageMetaState.translationState
             ? AyahByAyahList(
-          ayahsPage: ayahs,
-          allSurahs: allSurahs,
-        )
-            : const SizedBox();
+                ayahsPage: ayahs,
+                allSurahs: allSurahs,
+              )
+            : AyahByAyahList(
+                ayahsPage: ayahs,
+                allSurahs: allSurahs,
+              );
       },
     );
   }
