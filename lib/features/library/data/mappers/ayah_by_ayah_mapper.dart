@@ -11,14 +11,3 @@ extension AyahByAyahModelX on AyahByAyahModel {
     ayahTranslation: ayahTranslation,
   );
 }
-
-extension AyahByAyahEntityX on AyahByAyahEntity {
-  AyahByAyahModel toModel() => AyahByAyahModel(
-    ayahId: ayahId,
-    verseKey: verseKey,
-    surahNumber: surahNumber,
-    ayahNumber: ayahNumber,
-    ayahArabic: ayahArabic,
-    ayahTranslation: ayahTranslation,
-  );
-}

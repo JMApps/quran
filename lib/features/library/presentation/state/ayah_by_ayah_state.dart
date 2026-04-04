@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/strings/app_strings.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/usecases/ayah_by_ayah_use_case.dart';
 
@@ -13,7 +14,10 @@ class AyahByAyahState extends ChangeNotifier {
   final Map<String, Object?> _errorMap = {};
   final Set<String> _inFlight = {};
 
-  String _makeKey({required int pageNumber, required String tableName}) {
+  String _makeKey({
+    required int pageNumber,
+    required String tableName,
+  }) {
     return '$tableName:$pageNumber';
   }
 
@@ -79,7 +83,7 @@ class AyahByAyahState extends ChangeNotifier {
       notifyListeners();
     }
 
-    if (prefetchNext) {
+    if (prefetchNext && pageNumber < AppStrings.totalPages) {
       _prefetchPage(
         pageNumber: pageNumber + 1,
         tableName: tableName,
@@ -93,10 +97,12 @@ class AyahByAyahState extends ChangeNotifier {
   }) async {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
 
+    if (pageNumber > AppStrings.totalPages) return;
     if (_pagesCache.containsKey(key)) return;
     if (_inFlight.contains(key)) return;
 
     _inFlight.add(key);
+    _errorMap.remove(key);
 
     try {
       final result = await _useCase.getAyahsByPage(
@@ -106,7 +112,7 @@ class AyahByAyahState extends ChangeNotifier {
 
       _pagesCache[key] = result;
     } catch (_) {
-      // Ошибку prefetch обычно не показывают пользователю.
+      //
     } finally {
       _inFlight.remove(key);
     }
@@ -125,7 +131,7 @@ class AyahByAyahState extends ChangeNotifier {
 
     final keys = _pagesCache.keys
         .where((key) => key.startsWith(prefix))
-        .toList();
+        .toList(growable: false);
 
     for (final key in keys) {
       _pagesCache.remove(key);

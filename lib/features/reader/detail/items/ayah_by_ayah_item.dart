@@ -17,19 +17,19 @@ class AyahByAyahItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    return Container(
+    return Padding(
       padding: AppStyles.miniPadding,
       child: Column(
         crossAxisAlignment: .start,
         children: [
           Container(
-            width: 50,
+            width: 65,
             padding: AppStyles.microPadding,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               color: appColors.secondaryContainer.withAlpha(155),
               borderRadius: AppStyles.miniBorder,
             ),
-            alignment: Alignment.center,
             child: Text(ayahByAyahModel.verseKey),
           ),
           const SizedBox(height: 16),

@@ -13,10 +13,11 @@ class AyahByAyahList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final toolbarHeight = AppBar().preferredSize.height;
     return ListView.separated(
       itemCount: ayahsPage.length,
-      padding: const EdgeInsets.only(top: kToolbarHeight, bottom: 8),
-      itemBuilder: (context, index) {
+        padding: .only(top: toolbarHeight - 14, bottom: 7),
+        itemBuilder: (context, index) {
         final ayahByAyahModel = ayahsPage[index];
         return AyahByAyahItem(
           ayahByAyahModel: ayahByAyahModel,

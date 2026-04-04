@@ -1,3 +1,5 @@
+import '../../../../core/strings/db_value_strings.dart';
+
 class AyahByAyahModel {
   final int ayahId;
   final String verseKey;
@@ -17,12 +19,12 @@ class AyahByAyahModel {
 
   factory AyahByAyahModel.fromMap(Map<String, Object?> map) {
     return AyahByAyahModel(
-      ayahId: map['ayah_id'] as int,
-      verseKey: map['verse_key'] as String,
-      surahNumber: map['surah_number'] as int,
-      ayahNumber: map['ayah_number'] as int,
-      ayahArabic: map['ayah_arabic'] as String,
-      ayahTranslation: map['ayah_translation'] as String,
+      ayahId: map[DbValueStrings.dbAyahId] as int,
+      verseKey: map[DbValueStrings.dbVerseKey] as String,
+      surahNumber: map[DbValueStrings.dbSurahNumber] as int,
+      ayahNumber: map[DbValueStrings.dbAyahNumber] as int,
+      ayahArabic: map[DbValueStrings.dbAyahArabic] as String,
+      ayahTranslation: map[DbValueStrings.dbAyahTranslation] as String,
     );
   }
 }
