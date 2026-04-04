@@ -16,7 +16,7 @@ class JuzRepositoryImpl implements JuzRepository {
 
     final List<Map<String, Object?>> rows = await database.query(
       DbValueStrings.tableOfJuzs,
-      orderBy: 'juz_number ASC',
+      orderBy: '${DbValueStrings.dbJuzNumber} ${DbValueStrings.dbOrderASC}',
     );
 
     return rows.map((row) => JuzModel.fromMap(row).toEntity()).toList(growable: false);

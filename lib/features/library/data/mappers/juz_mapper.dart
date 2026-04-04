@@ -11,14 +11,3 @@ extension JuzModelX on JuzModel {
     startPageNumber: startPageNumber,
   );
 }
-
-extension JuzEntityX on JuzEntity {
-  JuzModel toModel() => JuzModel(
-    juzNumber: juzNumber,
-    versesCount: versesCount,
-    firstVerseKey: firstVerseKey,
-    lastVerseKey: lastVerseKey,
-    verseMapping: verseMapping,
-    startPageNumber: startPageNumber,
-  );
-}

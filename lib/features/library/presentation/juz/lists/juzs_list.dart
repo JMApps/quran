@@ -21,7 +21,8 @@ class JuzsList extends StatelessWidget {
       child: ListView.separated(
         controller: scrollController,
         itemCount: juzsList.length,
-        padding: EdgeInsets.only(bottom: bottomHeight),
+        primary: false,
+        padding: .only(bottom: bottomHeight),
         separatorBuilder: (context, index) => const Divider(height: 0.75),
         itemBuilder: (context, index) {
           final JuzEntity juzModel = juzsList[index];
