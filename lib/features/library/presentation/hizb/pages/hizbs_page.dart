@@ -18,30 +18,26 @@ class HizbsPage extends StatelessWidget {
       ),
       body: Consumer<HizbState>(
         builder: (BuildContext context, hizbState, _) {
-          return Builder(
-            builder: (context) {
-              if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+          if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-              if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: AppStyles.mainPadding,
-                    child: Text(
-                      '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              }
+          if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: AppStyles.mainPadding,
+                child: Text(
+                  '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
+                  textAlign: .center,
+                ),
+              ),
+            );
+          }
 
-              return HizbsList(
-                hizbsList: hizbState.allHizbs,
-              );
-            },
+          return HizbsList(
+            hizbsList: hizbState.allHizbs,
           );
         },
       ),

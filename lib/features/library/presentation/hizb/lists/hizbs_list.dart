@@ -16,7 +16,8 @@ class HizbsList extends StatelessWidget {
     return Scrollbar(
       child: ListView.separated(
         itemCount: hizbsList.length,
-        padding: EdgeInsets.zero,
+        padding: .zero,
+        primary: false,
         separatorBuilder: (context, index) => const Divider(height: 0.75),
         itemBuilder: (context, index) {
           final HizbEntity hizbModel = hizbsList[index];

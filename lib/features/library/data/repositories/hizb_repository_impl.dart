@@ -16,7 +16,7 @@ class HizbRepositoryImpl implements HizbRepository {
 
     final List<Map<String, Object?>> rows = await database.query(
       DbValueStrings.tableOfHizbs,
-      orderBy: 'hizb_number ASC',
+      orderBy: '${DbValueStrings.dbHizbNumber} ${DbValueStrings.dbOrderASC}',
     );
 
     return rows.map((row) => HizbModel.fromMap(row).toEntity()).toList(growable: false);

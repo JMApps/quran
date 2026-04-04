@@ -23,7 +23,7 @@ class HizbItem extends StatelessWidget {
     final itemOddColor = appColors.secondary.withAlpha(15);
     final itemEvenColor = appColors.secondary.withAlpha(0);
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .comfortable,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
       splashColor: appColors.primaryContainer,
       focusColor: appColors.primary.withAlpha(55),
@@ -90,7 +90,7 @@ class HizbItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
-        surahState.mushafCurrentPage = hizbModel.startPageNumber;
+        surahState.setMushafCurrentPage(hizbModel.startPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

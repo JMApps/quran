@@ -14,28 +14,45 @@ class HizbState extends ChangeNotifier {
   Object? _error;
 
   List<HizbEntity> get allHizbs => List.unmodifiable(_allHizbs);
-
   bool get isLoading => _isLoading;
-
   bool get isLoaded => _isLoaded;
-
   Object? get error => _error;
 
   Future<void> loadAllHizbs() async {
     if (_isLoading || _isLoaded) return;
+    await _load(force: false);
+  }
+
+  Future<void> reloadAllHizbs() async {
+    if (_isLoading) return;
+    await _load(force: true);
+  }
+
+  Future<void> _load({required bool force}) async {
+    if (!force && _isLoaded) return;
 
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _allHizbs = await _hizbUseCase.getAllHizbs();
+      final result = await _hizbUseCase.getAllHizbs();
+      _allHizbs = result;
       _isLoaded = true;
     } catch (e) {
       _error = e;
+      _isLoaded = false;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void clear() {
+    _allHizbs = const [];
+    _isLoading = false;
+    _isLoaded = false;
+    _error = null;
+    notifyListeners();
   }
 }

@@ -1,3 +1,5 @@
+import '../../../../core/strings/db_value_strings.dart';
+
 class HizbModel {
   final int hizbNumber;
   final int versesCount;
@@ -17,12 +19,12 @@ class HizbModel {
 
   factory HizbModel.fromMap(Map<String, dynamic> map) {
     return HizbModel(
-      hizbNumber: map['hizb_number'] as int,
-      versesCount: map['verses_count'] as int,
-      firstVerseKey: map['first_verse_key'] as String,
-      lastVerseKey: map['last_verse_key'] as String,
-      verseMapping: map['verse_mapping'] as String,
-      startPageNumber: map['start_page_number'] as int,
+      hizbNumber: map[DbValueStrings.dbHizbNumber] as int,
+      versesCount: map[DbValueStrings.dbVersesCount] as int,
+      firstVerseKey: map[DbValueStrings.dbFirstVerseKey] as String,
+      lastVerseKey: map[DbValueStrings.dbLastVerseKey] as String,
+      verseMapping: map[DbValueStrings.dbVerseMapping] as String,
+      startPageNumber: map[DbValueStrings.dbStartNumberPage] as int,
     );
   }
 }
