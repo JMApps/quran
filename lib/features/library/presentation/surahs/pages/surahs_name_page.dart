@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/search/pages/search_ayahs_delegate.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
@@ -23,7 +24,13 @@ class SurahNamePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // Открыть showSearch(context: context, delegate: delegate)
+              showSearch(
+                context: context,
+                delegate: SearchAyahsDelegate(
+                  searchField: AppStrings.searchByAyahs,
+                  tableName: 'Table_of_translation_kuliev',
+                ),
+              );
             },
             tooltip: AppStrings.searchByAyahs,
             icon: const Icon(Icons.search_rounded),

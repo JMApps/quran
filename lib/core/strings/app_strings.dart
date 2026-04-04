@@ -50,20 +50,18 @@ class AppStrings {
     'Тёмная',
   ];
 
-  static String ayahWord(int count) {
-    if (count % 100 >= 11 && count % 100 <= 14) {
-      return 'аятов';
-    }
+  static String plural(int count, String one, String few, String many) {
+    if (count % 100 >= 11 && count % 100 <= 14) return many;
 
     switch (count % 10) {
       case 1:
-        return 'аят';
+        return one;
       case 2:
       case 3:
       case 4:
-        return 'аята';
+        return few;
       default:
-        return 'аятов';
+        return many;
     }
   }
 

@@ -55,7 +55,102 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
   }
 
   @override
-  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String tableName}) {
-    throw UnimplementedError();
+  Future<List<AyahByAyahEntity>> getSearchAyah({
+    required String query,
+    required String tableName,
+  }) async {
+    final db = await _quranDatabaseService.db;
+
+    final String trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) {
+      return const <AyahByAyahEntity>[];
+    }
+
+    final bool isArabicQuery = _containsArabic(trimmedQuery);
+
+    final String dataTable = tableName;
+    final String ftsTable = isArabicQuery
+        ? 'ayahs_fts'
+        : _getTranslationFtsTable(tableName);
+
+    final String matchQuery = isArabicQuery
+        ? _buildArabicMatchQuery(trimmedQuery)
+        : _buildTextMatchQuery(trimmedQuery);
+
+    if (matchQuery.isEmpty) {
+      return const <AyahByAyahEntity>[];
+    }
+
+    final String sql = '''
+    WITH ranked_hits AS (
+      SELECT
+        rowid AS ayah_id,
+        bm25($ftsTable) AS best_rank
+      FROM $ftsTable
+      WHERE $ftsTable MATCH ?
+    )
+    SELECT
+      m.${DbValueStrings.dbAyahId},
+      m.${DbValueStrings.dbVerseKey},
+      m.${DbValueStrings.dbSurahNumber},
+      m.${DbValueStrings.dbAyahNumber},
+      m.${DbValueStrings.dbAyahArabic},
+      tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
+    FROM ranked_hits h
+    JOIN ${DbValueStrings.tableOfAyahs} m
+      ON m.${DbValueStrings.dbAyahId} = h.ayah_id
+    JOIN $dataTable tr
+      ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
+    ORDER BY
+      h.best_rank ASC,
+      m.${DbValueStrings.dbSurahNumber} ASC,
+      m.${DbValueStrings.dbAyahNumber} ASC
+  ''';
+
+    final List<Map<String, Object?>> result = await db.rawQuery(sql, [matchQuery]);
+
+    return result
+        .map((map) => AyahByAyahModel.fromMap(map).toEntity())
+        .toList(growable: false);
+  }
+
+  String _getTranslationFtsTable(String tableName) {
+    switch (tableName) {
+      case 'Table_of_translation_kuliev':
+        return 'Translation_kuliev_fts';
+      case 'Table_of_translation_adel':
+        return 'Translation_adel_fts';
+      default:
+        throw ArgumentError('FTS table is not configured for $tableName');
+    }
+  }
+
+
+  bool _containsArabic(String value) {
+    return RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]').hasMatch(value);
+  }
+
+  String _buildArabicMatchQuery(String value) {
+    final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    final List<String> tokens = cleaned.split(' ').where((e) => e.isNotEmpty).toList(growable: false);
+
+    if (tokens.isEmpty) {
+      return '';
+    }
+
+    return tokens.map((token) => '$token*').join(' ');
+  }
+
+  String _buildTextMatchQuery(String value) {
+    final String cleaned = value.replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    final List<String> tokens = cleaned.split(' ').where((e) => e.isNotEmpty).toList(growable: false);
+
+    if (tokens.isEmpty) {
+      return '';
+    }
+
+    return tokens.map((token) => '$token*').join(' ');
   }
 }

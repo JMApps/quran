@@ -61,7 +61,7 @@ class JuzItem extends StatelessWidget {
         ],
       ),
       subtitle: Text(
-        '${juzModel.versesCount} ${AppStrings.ayahWord(juzModel.versesCount)}',
+        '${juzModel.versesCount} ${AppStrings.plural(juzModel.versesCount, 'аят', 'аята', 'аятов')}',
         style: const TextStyle(fontSize: 12.0),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

@@ -76,7 +76,7 @@ class SurahNameItem extends StatelessWidget {
         },
       ),
       subtitle: Text(
-        '${surahModel.ayahsCount} ${AppStrings.ayahWord(surahModel.ayahsCount)} – ${surahModel.revelationPlace}',
+        '${surahModel.ayahsCount} ${AppStrings.plural(surahModel.ayahsCount, 'аят', 'аята', 'аятов')} – ${surahModel.revelationPlace}',
         style: const TextStyle(fontSize: 12.0),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

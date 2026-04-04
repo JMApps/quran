@@ -60,7 +60,7 @@ class HizbItem extends StatelessWidget {
         ],
       ),
       subtitle: Text(
-        '${hizbModel.versesCount} ${AppStrings.ayahWord(hizbModel.versesCount)}',
+        '${hizbModel.versesCount} ${AppStrings.plural(hizbModel.versesCount, 'аят', 'аята', 'аятов')}',
         style: const TextStyle(fontSize: 12.0),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

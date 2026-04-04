@@ -118,6 +118,16 @@ class AyahByAyahState extends ChangeNotifier {
     }
   }
 
+  Future<List<AyahByAyahEntity>> searchAyahs({
+    required String query,
+    required String tableName,
+  }) {
+    return _useCase.getSearchAyah(
+      query: query,
+      tableName: tableName,
+    );
+  }
+
   void clearCache() {
     _pagesCache.clear();
     _loadingMap.clear();
