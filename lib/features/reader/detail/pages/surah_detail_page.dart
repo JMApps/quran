@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../library/domain/entities/mushaf_page_meta_entity.dart';
