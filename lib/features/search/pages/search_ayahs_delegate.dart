@@ -102,7 +102,12 @@ class _SearchAyahsBody extends StatelessWidget {
 
     if (trimmedQuery.isEmpty) {
       return const Center(
-        child: Text('Введите слово для поиска'),
+        child: Text(
+          AppStrings.enterSearchQueryMessage,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
       );
     }
 
@@ -122,7 +127,7 @@ class _SearchAyahsBody extends StatelessWidget {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Text('Ошибка поиска: ${snapshot.error}'),
+              child: Text('${AppStrings.errorSearch}${snapshot.error}'),
             ),
           );
         }
@@ -131,7 +136,12 @@ class _SearchAyahsBody extends StatelessWidget {
 
         if (result.isEmpty) {
           return const Center(
-            child: Text('Ничего не найдено'),
+            child: Text(
+              AppStrings.searchNoResults,
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
           );
         }
 

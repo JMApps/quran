@@ -24,12 +24,12 @@ class FavoriteMushafPageButton extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 1),
-                backgroundColor: appColors.inversePrimary,
+                backgroundColor: appColors.primary,
                 content: Text(
                   mushafPageMetaState.isFavoritePage(mushafPage) ? AppStrings.addedToFavorite : AppStrings.removedFromFavorite,
                   style: TextStyle(
                     fontSize: 18.0,
-                    color: appColors.primary,
+                    color: appColors.inversePrimary,
                   ),
                 ),
               ),

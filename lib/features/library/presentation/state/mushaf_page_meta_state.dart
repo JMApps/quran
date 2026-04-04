@@ -55,25 +55,19 @@ class MushafPageMetaState extends ChangeNotifier {
       defaultValue: <int>[293],
     );
 
-    final List<int> parsedLastOpened = _parsePageList(savedLastOpenedRaw)
-        .take(_maxLastOpenedPages)
-        .toList(growable: false);
+    final List<int> parsedLastOpened = _parsePageList(savedLastOpenedRaw).take(_maxLastOpenedPages).toList();
 
-    final List<int> parsedFavorite = _parsePageList(savedFavoriteRaw)
-        .toSet()
-        .toList(growable: false);
+    final List<int> parsedFavorite =
+    _parsePageList(savedFavoriteRaw).toSet().toList();
 
     _lastMushafPageIds = parsedLastOpened.isNotEmpty ? parsedLastOpened : <int>[1];
     _favoriteMushafPageIds = parsedFavorite;
   }
 
   List<int> _parsePageList(dynamic raw) {
-    if (raw is! List) return const [];
+    if (raw is! List) return [];
 
-    return raw
-        .whereType<int>()
-        .where(_isValidPage)
-        .toList(growable: false);
+    return raw.whereType<int>().where(_isValidPage).toList();
   }
 
   Future<void> _saveFavoritePages() async {
@@ -170,9 +164,8 @@ class MushafPageMetaState extends ChangeNotifier {
     _lastMushafPageIds.remove(pageNumber);
     _lastMushafPageIds.insert(0, pageNumber);
 
-    if (_lastMushafPageIds.length > _maxLastOpenedPages) {
-      _lastMushafPageIds =
-          _lastMushafPageIds.take(_maxLastOpenedPages).toList(growable: false);
+    while (_lastMushafPageIds.length > _maxLastOpenedPages) {
+      _lastMushafPageIds.removeLast();
     }
 
     await _saveLastOpenedPages();
@@ -196,7 +189,7 @@ class MushafPageMetaState extends ChangeNotifier {
     if (!_favoriteMushafPageIds.contains(pageNumber)) return;
 
     _favoriteMushafPageIds =
-        _favoriteMushafPageIds.where((id) => id != pageNumber).toList(growable: false);
+        _favoriteMushafPageIds.where((id) => id != pageNumber).toList();
 
     await _saveFavoritePages();
     notifyListeners();

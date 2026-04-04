@@ -23,6 +23,9 @@ class AppStrings {
   static const String errorMushafFavoritesList = 'Ошибка загрузки избранного: ';
   static const String errorMushafLastFavoritesList = 'Ошибка загрузки недавних страниц: ';
   static const String errorLoad = 'Ошибка загрузки: ';
+  static const String errorSearch = 'Ошибка поиска: ';
+  static const String searchNoResults = 'Ничего не найдено';
+  static const String enterSearchQueryMessage = 'Введите слово для поиска';
   static const String addedToFavorite = 'Добавлено в избранное';
   static const String addToFavorite = 'Добавить в избранное';
   static const String removedFromFavorite = 'Удалено из избранного';

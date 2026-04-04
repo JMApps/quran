@@ -81,31 +81,43 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       return const <AyahByAyahEntity>[];
     }
 
-    final String sql = '''
-    WITH ranked_hits AS (
-      SELECT
-        rowid AS ayah_id,
-        bm25($ftsTable) AS best_rank
-      FROM $ftsTable
-      WHERE $ftsTable MATCH ?
-    )
-    SELECT
-      m.${DbValueStrings.dbAyahId},
-      m.${DbValueStrings.dbVerseKey},
-      m.${DbValueStrings.dbSurahNumber},
-      m.${DbValueStrings.dbAyahNumber},
-      m.${DbValueStrings.dbAyahArabic},
-      tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
-    FROM ranked_hits h
-    JOIN ${DbValueStrings.tableOfAyahs} m
-      ON m.${DbValueStrings.dbAyahId} = h.ayah_id
-    JOIN $dataTable tr
-      ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
-    ORDER BY
-      h.best_rank ASC,
-      m.${DbValueStrings.dbSurahNumber} ASC,
-      m.${DbValueStrings.dbAyahNumber} ASC
-  ''';
+    final String sql = isArabicQuery
+        ? '''
+        SELECT
+          m.ayah_id,
+          m.verse_key,
+          m.surah_number,
+          m.ayah_number,
+          m.ayah_arabic,
+          tr.ayah_translation AS ayah_translation
+        FROM $ftsTable f
+        JOIN Table_of_ayahs m
+          ON m.ayah_id = f.ayah_id
+        JOIN $dataTable tr
+          ON tr.ayah_id = m.ayah_id
+        WHERE f.ayah_arabic_normalized MATCH ?
+        ORDER BY
+          m.surah_number ASC,
+          m.ayah_number ASC
+        '''
+        : '''
+        SELECT
+          m.ayah_id,
+          m.verse_key,
+          m.surah_number,
+          m.ayah_number,
+          m.ayah_arabic,
+          tr.ayah_translation AS ayah_translation
+        FROM $ftsTable f
+        JOIN Table_of_ayahs m
+          ON m.ayah_id = f.ayah_id
+        JOIN $dataTable tr
+          ON tr.ayah_id = m.ayah_id
+        WHERE f.text MATCH ?
+        ORDER BY
+          m.surah_number ASC,
+          m.ayah_number ASC
+        ''';
 
     final List<Map<String, Object?>> result = await db.rawQuery(sql, [matchQuery]);
 
