@@ -3,169 +3,41 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/database/quran_database_service.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/services/mushaf_font_loader.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../settings/state/app_settings_state.dart';
-import '../../data/repositories/ayah_by_ayah_repository_impl.dart';
-import '../../data/repositories/hizb_repository_impl.dart';
-import '../../data/repositories/juz_repository_impl.dart';
-import '../../data/repositories/layout_repository_impl.dart';
-import '../../data/repositories/mushaf_page_meta_repository_impl.dart';
-import '../../data/repositories/surah_name_repository_impl.dart';
-import '../../domain/usecases/ayah_by_ayah_use_case.dart';
-import '../../domain/usecases/hizb_use_case.dart';
-import '../../domain/usecases/juz_use_case.dart';
-import '../../domain/usecases/layout_use_case.dart';
-import '../../domain/usecases/mushaf_page_meta_use_case.dart';
-import '../../domain/usecases/surah_name_use_case.dart';
-import '../state/ayah_by_ayah_state.dart';
-import '../state/hizb_state.dart';
-import '../state/juz_state.dart';
-import '../state/main_state.dart';
-import '../state/mushaf_page_meta_state.dart';
-import '../state/page_layout_state.dart';
-import '../state/surah_state.dart';
 import 'main_page.dart';
 
-class RootPage extends StatefulWidget {
+class RootPage extends StatelessWidget {
   const RootPage({super.key});
 
   @override
-  State<RootPage> createState() => _RootPageState();
-}
-
-class _RootPageState extends State<RootPage> {
-  final QuranDatabaseService _databaseService = QuranDatabaseService.instance;
-  @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppSettingsState>(
-          create: (_) => AppSettingsState(),
-        ),
-        Provider<MushafFontLoader>(
-          create: (_) => MushafFontLoader.instance,
-        ),
+    return Consumer<AppSettingsState>(
+      builder: (context, appSettingsState, _) {
+        final appTheme = AppTheme(appSettingsState.themeColor);
 
-        ChangeNotifierProvider<MainState>(
-          create: (_) => MainState(),
-        ),
-
-        Provider<AyahByAyahRepositoryImpl>(
-          create: (_) => AyahByAyahRepositoryImpl(_databaseService),
-        ),
-        Provider<JuzRepositoryImpl>(
-          create: (_) => JuzRepositoryImpl(_databaseService),
-        ),
-        Provider<HizbRepositoryImpl>(
-          create: (_) => HizbRepositoryImpl(_databaseService),
-        ),
-        Provider<LayoutRepositoryImpl>(
-          create: (_) => LayoutRepositoryImpl(_databaseService),
-        ),
-        Provider<SurahNameRepositoryImpl>(
-          create: (_) => SurahNameRepositoryImpl(_databaseService),
-        ),
-        Provider<MushafPageMetaRepositoryImpl>(
-          create: (_) => MushafPageMetaRepositoryImpl(_databaseService),
-        ),
-
-        Provider<AyahByAyahUseCase>(
-          create: (context) => AyahByAyahUseCase(
-            context.read<AyahByAyahRepositoryImpl>(),
-          ),
-        ),
-        Provider<JuzUseCase>(
-          create: (context) => JuzUseCase(
-            context.read<JuzRepositoryImpl>(),
-          ),
-        ),
-        Provider<HizbUseCase>(
-          create: (context) => HizbUseCase(
-            context.read<HizbRepositoryImpl>(),
-          ),
-        ),
-        Provider<LayoutUseCase>(
-          create: (context) => LayoutUseCase(
-            context.read<LayoutRepositoryImpl>(),
-          ),
-        ),
-        Provider<SurahNameUseCase>(
-          create: (context) => SurahNameUseCase(
-            context.read<SurahNameRepositoryImpl>(),
-          ),
-        ),
-        Provider<MushafPageMetaUseCase>(
-          create: (context) => MushafPageMetaUseCase(
-            context.read<MushafPageMetaRepositoryImpl>(),
-          ),
-        ),
-
-        ChangeNotifierProvider<AyahByAyahState>(
-          lazy: false,
-          create: (context) => AyahByAyahState(
-            context.read<AyahByAyahUseCase>(),
-          ),
-        ),
-        ChangeNotifierProvider<SurahState>(
-          lazy: false,
-          create: (context) => SurahState(
-            context.read<SurahNameUseCase>(),
-          )..loadAllSurahs(),
-        ),
-        ChangeNotifierProvider<JuzState>(
-          lazy: false,
-          create: (context) => JuzState(
-            context.read<JuzUseCase>(),
-          )..loadAllJuzs(),
-        ),
-        ChangeNotifierProvider<HizbState>(
-          lazy: false,
-          create: (context) => HizbState(
-            context.read<HizbUseCase>(),
-          )..loadAllHizbs(),
-        ),
-        ChangeNotifierProvider<MushafPageMetaState>(
-          lazy: false,
-          create: (context) => MushafPageMetaState(
-            context.read<MushafPageMetaUseCase>(),
-          )..loadAllPagesMeta(),
-        ),
-        ChangeNotifierProvider<PageLayoutState>(
-          lazy: false,
-          create: (context) => PageLayoutState(
-            context.read<LayoutUseCase>(),
-          ),
-        ),
-      ],
-      child: Consumer<AppSettingsState>(
-        builder: (context, appSettingsState, _) {
-          final appTheme = AppTheme(appSettingsState.themeColor);
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: AppRouter.onRouteGenerator,
-            title: AppStrings.appName,
-            theme: appTheme.lightTheme,
-            darkTheme: appTheme.darkTheme,
-            themeMode: appSettingsState.appThemeMode,
-            builder: (context, child) {
-              final mediaQuery = MediaQuery.of(context);
-              final bottomInset = mediaQuery.viewPadding.bottom;
-              return SafeArea(
-                top: false,
-                right: false,
-                left: false,
-                bottom: Platform.isAndroid && bottomInset > 24.0,
-                child: child!,
-              );
-            },
-            home: const MainPage(),
-          );
-        },
-      ),
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: AppRouter.onRouteGenerator,
+          title: AppStrings.appName,
+          theme: appTheme.lightTheme,
+          darkTheme: appTheme.darkTheme,
+          themeMode: appSettingsState.appThemeMode,
+          builder: (context, child) {
+            return SafeArea(
+              top: false,
+              left: false,
+              right: false,
+              bottom: Platform.isAndroid,
+              maintainBottomViewPadding: true,
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
+          home: const MainPage(),
+        );
+      },
     );
   }
 }

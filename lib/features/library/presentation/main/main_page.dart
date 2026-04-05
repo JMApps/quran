@@ -18,6 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late final List<Widget> _mainPages;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -37,20 +38,10 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
-  late final List<Widget> _mainPages;
-
-  void _scrollToTop() {
-    _scrollController.animateTo(
-      0,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutQuart,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final navIndex = context.select<MainState, int>((s) => s.mainNavigatorIndex);
+    final currentNavigatorIndex = context.select<MainState, int>((s) => s.mainNavigatorIndex);
     return Scaffold(
       extendBody: true,
       body: AnimatedSwitcher(
@@ -62,8 +53,8 @@ class _MainPageState extends State<MainPage> {
           );
         },
         child: KeyedSubtree(
-          key: ValueKey(navIndex),
-          child: _mainPages[navIndex],
+          key: ValueKey(currentNavigatorIndex),
+          child: _mainPages[currentNavigatorIndex],
         ),
       ),
       bottomNavigationBar: MediaQuery.removePadding(
@@ -109,12 +100,16 @@ class _MainPageState extends State<MainPage> {
                   title: const Text(AppStrings.settings),
                 ),
               ],
-              currentIndex: navIndex,
+              currentIndex: currentNavigatorIndex,
               onTap: (int index) {
-                if (navIndex != index) {
-                  context.read<MainState>().mainNavigatorIndex = index;
+                if (currentNavigatorIndex != index) {
+                  Provider.of<MainState>(context, listen: false).mainNavigatorIndex = index;
                 } else {
-                  _scrollToTop();
+                  _scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeOutQuart,
+                  );
                 }
               },
             ),
