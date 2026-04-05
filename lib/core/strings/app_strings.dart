@@ -14,8 +14,6 @@ class AppStrings {
   static const String ayah = 'аят';
   static const String settings = 'Настройки';
 
-  static const String start = 'Начало: ';
-  static const String end = 'Конец: ';
   static const String loadingData = 'Загрузка данных...';
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
@@ -39,11 +37,31 @@ class AppStrings {
   static const String searchByAyahs = 'Поиск аятов';
   static const String translate = 'Перевод';
 
+
   static const String fontGilroy = 'Gilroy';
   static const String fontGilroyMedium = 'Gilroy Medium';
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
   static const String fontSurahName = 'Surah name';
+
+  static const String foundOne = 'найден';
+  static const String foundFew = 'найдено';
+  static const String foundMany = 'найдено';
+
+  static const String resultOne = 'результат';
+  static const String resultFew = 'результата';
+  static const String resultMany = 'результатов';
+
+  static const String searchByQuery = 'По запросу';
+
+  static const String arabicHighlightStart = '[[AR_HL]]';
+  static const String translationHighlightStart = '[[TR_HL]]';
+
+  static bool containsArabic(String value) {
+    return RegExp(
+      r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]',
+    ).hasMatch(value);
+  }
 
   static const int totalPages = 604;
 

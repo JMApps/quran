@@ -11,6 +11,7 @@ class AppStyles {
   static const vrBigHrMiniPadding = EdgeInsets.symmetric(vertical: 21, horizontal: 7);
   static const topMiniPadding = EdgeInsets.only(top: 7);
   static const bottomMainPadding = EdgeInsets.only(bottom: 14);
+  static const leftMainPadding = EdgeInsets.only(left: 14);
 
   static const withoutTopPadding = EdgeInsets.only(left: 14, bottom: 14, right: 14);
   static const withoutTopPaddingMini = EdgeInsets.only(left: 7, bottom: 7, right: 7);

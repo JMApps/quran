@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
+import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../items/search_ayah_item.dart';
 
