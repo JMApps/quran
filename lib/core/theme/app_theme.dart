@@ -27,6 +27,7 @@ class AppTheme {
         centerTitle: true,
       ),
       bottomSheetTheme: const BottomSheetThemeData(
+        dragHandleSize: Size(100, 4),
         showDragHandle: true,
       ),
       cardTheme: const CardThemeData(

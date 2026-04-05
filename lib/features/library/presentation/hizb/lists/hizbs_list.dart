@@ -20,7 +20,7 @@ class HizbsList extends StatelessWidget {
       children: [
         Container(
           padding: AppStyles.mainPadding,
-          margin: AppStyles.miniPadding,
+          margin: AppStyles.withoutTopPadding,
           alignment: .center,
           decoration: BoxDecoration(
             color: appColors.secondaryContainer,
