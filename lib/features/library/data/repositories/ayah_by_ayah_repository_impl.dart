@@ -10,6 +10,11 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
 
   const AyahByAyahRepositoryImpl(this._quranDatabaseService);
 
+  static const String _arabicHighlightStart = '[[AR_HL]]';
+  static const String _arabicHighlightEnd = '[[/AR_HL]]';
+  static const String _translationHighlightStart = '[[TR_HL]]';
+  static const String _translationHighlightEnd = '[[/TR_HL]]';
+
   @override
   Future<List<AyahByAyahEntity>> getAyahsByPage({
     required int pageNumber,
@@ -36,12 +41,14 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
           AND l.${DbValueStrings.dbLastWordId} IS NOT NULL
       )
       SELECT
-        m.${DbValueStrings.dbAyahId},
-        m.${DbValueStrings.dbVerseKey},
-        m.${DbValueStrings.dbSurahNumber},
-        m.${DbValueStrings.dbAyahNumber},
-        m.${DbValueStrings.dbAyahArabic},
-        t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
+        m.${DbValueStrings.dbAyahId} AS ayah_id,
+        m.${DbValueStrings.dbVerseKey} AS verse_key,
+        m.${DbValueStrings.dbSurahNumber} AS surah_number,
+        m.${DbValueStrings.dbAyahNumber} AS ayah_number,
+        m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
+        t.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
+        NULL AS highlighted_arabic,
+        NULL AS highlighted_translation
       FROM page_ayahs p
       JOIN ${DbValueStrings.tableOfAyahs} m
         ON m.${DbValueStrings.dbSurahNumber} = p.surah_number
@@ -66,18 +73,14 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     required String tableName,
   }) async {
     final db = await _quranDatabaseService.db;
-
     final String trimmedQuery = query.trim();
+
     if (trimmedQuery.isEmpty) {
       return const <AyahByAyahEntity>[];
     }
 
     final bool isArabicQuery = _containsArabic(trimmedQuery);
     final _TranslationTables tables = _resolveTranslationTables(tableName);
-
-    final String ftsTable = isArabicQuery ? 'ayahs_fts' : tables.ftsTable;
-    final String matchColumn =
-    isArabicQuery ? 'ayah_arabic_normalized' : 'text';
 
     final String matchQuery = isArabicQuery
         ? _buildArabicMatchQuery(trimmedQuery)
@@ -87,24 +90,59 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       return const <AyahByAyahEntity>[];
     }
 
-    final String sql = '''
-      SELECT
-        m.${DbValueStrings.dbAyahId},
-        m.${DbValueStrings.dbVerseKey},
-        m.${DbValueStrings.dbSurahNumber},
-        m.${DbValueStrings.dbAyahNumber},
-        m.${DbValueStrings.dbAyahArabic},
-        tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
-      FROM $ftsTable f
-      JOIN ${DbValueStrings.tableOfAyahs} m
-        ON m.${DbValueStrings.dbAyahId} = f.ayah_id
-      JOIN ${tables.dataTable} tr
-        ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
-      WHERE f.$matchColumn MATCH ?
-      ORDER BY
-        m.${DbValueStrings.dbSurahNumber} ASC,
-        m.${DbValueStrings.dbAyahNumber} ASC
-    ''';
+    final String sql = isArabicQuery
+        ? '''
+          SELECT
+            m.${DbValueStrings.dbAyahId} AS ayah_id,
+            m.${DbValueStrings.dbVerseKey} AS verse_key,
+            m.${DbValueStrings.dbSurahNumber} AS surah_number,
+            m.${DbValueStrings.dbAyahNumber} AS ayah_number,
+            m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
+            tr.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
+            highlight(
+              ayahs_fts,
+              0,
+              '$_arabicHighlightStart',
+              '$_arabicHighlightEnd'
+            ) AS highlighted_arabic,
+            NULL AS highlighted_translation
+          FROM ayahs_fts
+          JOIN ${DbValueStrings.tableOfAyahs} m
+            ON m.${DbValueStrings.dbAyahId} = ayahs_fts.rowid
+          JOIN ${tables.dataTable} tr
+            ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
+          WHERE ayahs_fts MATCH ?
+          ORDER BY
+            bm25(ayahs_fts),
+            m.${DbValueStrings.dbSurahNumber} ASC,
+            m.${DbValueStrings.dbAyahNumber} ASC
+        '''
+        : '''
+          SELECT
+            m.${DbValueStrings.dbAyahId} AS ayah_id,
+            m.${DbValueStrings.dbVerseKey} AS verse_key,
+            m.${DbValueStrings.dbSurahNumber} AS surah_number,
+            m.${DbValueStrings.dbAyahNumber} AS ayah_number,
+            m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
+            tr.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
+            NULL AS highlighted_arabic,
+            highlight(
+              ${tables.ftsTable},
+              0,
+              '$_translationHighlightStart',
+              '$_translationHighlightEnd'
+            ) AS highlighted_translation
+          FROM ${tables.ftsTable}
+          JOIN ${tables.dataTable} tr
+            ON tr.${DbValueStrings.dbAyahId} = ${tables.ftsTable}.rowid
+          JOIN ${DbValueStrings.tableOfAyahs} m
+            ON m.${DbValueStrings.dbAyahId} = tr.${DbValueStrings.dbAyahId}
+          WHERE ${tables.ftsTable} MATCH ?
+          ORDER BY
+            bm25(${tables.ftsTable}),
+            m.${DbValueStrings.dbSurahNumber} ASC,
+            m.${DbValueStrings.dbAyahNumber} ASC
+        ''';
 
     final List<Map<String, Object?>> result = await db.rawQuery(
       sql,
@@ -121,15 +159,13 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       case 'Table_of_translation_kuliev':
         return const _TranslationTables(
           dataTable: 'Table_of_translation_kuliev',
-          ftsTable: 'Translation_kuliev_fts',
+          ftsTable: 'translation_kuliev_fts',
         );
-
       case 'Table_of_translation_adel':
         return const _TranslationTables(
           dataTable: 'Table_of_translation_adel',
-          ftsTable: 'Translation_adel_fts',
+          ftsTable: 'translation_adel_fts',
         );
-
       default:
         throw ArgumentError('Unsupported translation table: $tableName');
     }

@@ -5,6 +5,8 @@ class AyahByAyahEntity {
   final int ayahNumber;
   final String ayahArabic;
   final String ayahTranslation;
+  final String? highlightedArabic;
+  final String? highlightedTranslation;
 
   const AyahByAyahEntity({
     required this.ayahId,
@@ -13,5 +15,7 @@ class AyahByAyahEntity {
     required this.ayahNumber,
     required this.ayahArabic,
     required this.ayahTranslation,
+    this.highlightedArabic,
+    this.highlightedTranslation,
   });
 }

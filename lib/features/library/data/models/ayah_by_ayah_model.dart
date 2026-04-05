@@ -1,5 +1,3 @@
-import '../../../../core/strings/db_value_strings.dart';
-
 class AyahByAyahModel {
   final int ayahId;
   final String verseKey;
@@ -7,6 +5,8 @@ class AyahByAyahModel {
   final int ayahNumber;
   final String ayahArabic;
   final String ayahTranslation;
+  final String? highlightedArabic;
+  final String? highlightedTranslation;
 
   const AyahByAyahModel({
     required this.ayahId,
@@ -15,16 +15,20 @@ class AyahByAyahModel {
     required this.ayahNumber,
     required this.ayahArabic,
     required this.ayahTranslation,
+    this.highlightedArabic,
+    this.highlightedTranslation,
   });
 
   factory AyahByAyahModel.fromMap(Map<String, Object?> map) {
     return AyahByAyahModel(
-      ayahId: map[DbValueStrings.dbAyahId] as int,
-      verseKey: map[DbValueStrings.dbVerseKey] as String,
-      surahNumber: map[DbValueStrings.dbSurahNumber] as int,
-      ayahNumber: map[DbValueStrings.dbAyahNumber] as int,
-      ayahArabic: map[DbValueStrings.dbAyahArabic] as String,
-      ayahTranslation: map[DbValueStrings.dbAyahTranslation] as String,
+      ayahId: (map['ayah_id'] as num).toInt(),
+      verseKey: (map['verse_key'] as String?) ?? '',
+      surahNumber: (map['surah_number'] as num).toInt(),
+      ayahNumber: (map['ayah_number'] as num).toInt(),
+      ayahArabic: (map['ayah_arabic'] as String?) ?? '',
+      ayahTranslation: (map['ayah_translation'] as String?) ?? '',
+      highlightedArabic: map['highlighted_arabic'] as String?,
+      highlightedTranslation: map['highlighted_translation'] as String?,
     );
   }
 }

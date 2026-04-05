@@ -16,6 +16,11 @@ class SearchAyahItem extends StatelessWidget {
   final int index;
   final String query;
 
+  static const String _arabicHighlightStart = '[[AR_HL]]';
+  static const String _arabicHighlightEnd = '[[/AR_HL]]';
+  static const String _translationHighlightStart = '[[TR_HL]]';
+  static const String _translationHighlightEnd = '[[/TR_HL]]';
+
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
@@ -32,14 +37,48 @@ class SearchAyahItem extends StatelessWidget {
       fontFamily: AppStrings.fontGilroy,
     );
 
-    final highlightStyleArabic = arabicStyle.copyWith(
+    final TextStyle highlightStyleArabic = arabicStyle.copyWith(
       backgroundColor: appColors.tertiaryContainer,
       fontWeight: FontWeight.w700,
     );
 
-    final highlightStyleTranslation = translationStyle.copyWith(
+    final TextStyle highlightStyleTranslation = translationStyle.copyWith(
       backgroundColor: appColors.tertiaryContainer,
       fontWeight: FontWeight.w700,
+    );
+
+    final TextSpan arabicSpan =
+    (ayahModel.highlightedArabic != null &&
+        ayahModel.highlightedArabic!.isNotEmpty)
+        ? _buildMarkedHighlightSpan(
+      markedText: ayahModel.highlightedArabic!,
+      normalStyle: arabicStyle,
+      highlightStyle: highlightStyleArabic,
+      startMarker: _arabicHighlightStart,
+      endMarker: _arabicHighlightEnd,
+    )
+        : _highlightOccurrences(
+      fullText: ayahModel.ayahArabic,
+      query: query,
+      normalStyle: arabicStyle,
+      highlightStyle: highlightStyleArabic,
+    );
+
+    final TextSpan translationSpan =
+    (ayahModel.highlightedTranslation != null &&
+        ayahModel.highlightedTranslation!.isNotEmpty)
+        ? _buildMarkedHighlightSpan(
+      markedText: ayahModel.highlightedTranslation!,
+      normalStyle: translationStyle,
+      highlightStyle: highlightStyleTranslation,
+      startMarker: _translationHighlightStart,
+      endMarker: _translationHighlightEnd,
+    )
+        : _highlightOccurrences(
+      fullText: ayahModel.ayahTranslation,
+      query: query,
+      normalStyle: translationStyle,
+      highlightStyle: highlightStyleTranslation,
     );
 
     return Container(
@@ -70,27 +109,76 @@ class SearchAyahItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text.rich(
-                _highlightOccurrences(
-                  fullText: ayahModel.ayahArabic,
-                  query: query,
-                  normalStyle: arabicStyle,
-                  highlightStyle: highlightStyleArabic,
-                ),
+                arabicSpan,
                 textDirection: TextDirection.rtl,
               ),
               const SizedBox(height: 16),
-              Text.rich(
-                _highlightOccurrences(
-                  fullText: ayahModel.ayahTranslation,
-                  query: query,
-                  normalStyle: translationStyle,
-                  highlightStyle: highlightStyleTranslation,
-                ),
-              ),
+              Text.rich(translationSpan),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  TextSpan _buildMarkedHighlightSpan({
+    required String markedText,
+    required TextStyle normalStyle,
+    required TextStyle highlightStyle,
+    required String startMarker,
+    required String endMarker,
+  }) {
+    final List<TextSpan> children = <TextSpan>[];
+    int cursor = 0;
+
+    while (cursor < markedText.length) {
+      final int startIndex = markedText.indexOf(startMarker, cursor);
+
+      if (startIndex == -1) {
+        children.add(
+          TextSpan(
+            text: markedText.substring(cursor),
+            style: normalStyle,
+          ),
+        );
+        break;
+      }
+
+      if (startIndex > cursor) {
+        children.add(
+          TextSpan(
+            text: markedText.substring(cursor, startIndex),
+            style: normalStyle,
+          ),
+        );
+      }
+
+      final int contentStart = startIndex + startMarker.length;
+      final int endIndex = markedText.indexOf(endMarker, contentStart);
+
+      if (endIndex == -1) {
+        children.add(
+          TextSpan(
+            text: markedText.substring(startIndex),
+            style: normalStyle,
+          ),
+        );
+        break;
+      }
+
+      children.add(
+        TextSpan(
+          text: markedText.substring(contentStart, endIndex),
+          style: highlightStyle,
+        ),
+      );
+
+      cursor = endIndex + endMarker.length;
+    }
+
+    return TextSpan(
+      style: normalStyle,
+      children: children,
     );
   }
 
@@ -100,7 +188,8 @@ class SearchAyahItem extends StatelessWidget {
     required TextStyle normalStyle,
     required TextStyle highlightStyle,
   }) {
-    final trimmedQuery = query.trim();
+    final String trimmedQuery = query.trim();
+
     if (trimmedQuery.isEmpty) {
       return TextSpan(
         text: fullText,
@@ -108,14 +197,16 @@ class SearchAyahItem extends StatelessWidget {
       );
     }
 
-    final escapedQuery = RegExp.escape(trimmedQuery);
-    final regExp = RegExp(
+    final String escapedQuery = RegExp.escape(trimmedQuery);
+    final RegExp regExp = RegExp(
       escapedQuery,
       caseSensitive: false,
       unicode: true,
     );
 
-    final matches = regExp.allMatches(fullText).toList(growable: false);
+    final List<RegExpMatch> matches = regExp
+        .allMatches(fullText)
+        .toList(growable: false);
 
     if (matches.isEmpty) {
       return TextSpan(
@@ -124,10 +215,10 @@ class SearchAyahItem extends StatelessWidget {
       );
     }
 
-    final List<TextSpan> children = [];
+    final List<TextSpan> children = <TextSpan>[];
     int start = 0;
 
-    for (final match in matches) {
+    for (final RegExpMatch match in matches) {
       if (match.start > start) {
         children.add(
           TextSpan(
