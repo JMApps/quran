@@ -14,8 +14,12 @@ class JuzState extends ChangeNotifier {
   Object? _error;
 
   List<JuzEntity> get allJuzs => List.unmodifiable(_allJuzs);
+
   bool get isLoading => _isLoading;
   bool get isLoaded => _isLoaded;
+  bool get hasError => _error != null;
+  bool get hasData => _allJuzs.isNotEmpty;
+
   Object? get error => _error;
 
   Future<void> loadAllJuzs() async {
@@ -23,12 +27,12 @@ class JuzState extends ChangeNotifier {
     await _load(force: false);
   }
 
-  Future<void> reloadAllJuzs() async {
-    if (_isLoading) return;
+  Future<void> refreshAllJuzs() async {
     await _load(force: true);
   }
 
   Future<void> _load({required bool force}) async {
+    if (_isLoading) return;
     if (!force && _isLoaded) return;
 
     _isLoading = true;
@@ -36,7 +40,7 @@ class JuzState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _juzUseCase.getAllJuzs();
+      final List<JuzEntity> result = await _juzUseCase.getAllJuzs();
       _allJuzs = result;
       _isLoaded = true;
     } catch (e) {

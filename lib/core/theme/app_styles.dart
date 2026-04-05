@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/core/strings/app_strings.dart';
 
 class AppStyles {
   static const mainPadding = EdgeInsets.all(14);
@@ -12,6 +13,13 @@ class AppStyles {
   static const topMiniPadding = EdgeInsets.only(top: 7);
   static const bottomMainPadding = EdgeInsets.only(bottom: 14);
   static const leftMainPadding = EdgeInsets.only(left: 14);
+
+  static const mainTextStyle18 = TextStyle(fontSize: 18.0, fontFamily: AppStrings.fontGilroy);
+  static const mediumTextStyle18 = TextStyle(fontSize: 18.0, fontFamily: AppStrings.fontGilroyMedium);
+  static const mainTextStyle16 = TextStyle(fontSize: 16.0, fontFamily: AppStrings.fontGilroy);
+  static const mediumTextStyle16 = TextStyle(fontSize: 16.0, fontFamily: AppStrings.fontGilroyMedium);
+  static const mainTextStyle12 = TextStyle(fontSize: 12.0, fontFamily: AppStrings.fontGilroy);
+  static const mediumTextStyle12 = TextStyle(fontSize: 12.0, fontFamily: AppStrings.fontGilroyMedium);
 
   static const withoutTopPadding = EdgeInsets.only(left: 14, bottom: 14, right: 14);
   static const withoutTopPaddingMini = EdgeInsets.only(left: 7, bottom: 7, right: 7);

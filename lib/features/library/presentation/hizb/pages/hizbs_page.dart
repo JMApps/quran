@@ -18,18 +18,19 @@ class HizbsPage extends StatelessWidget {
       ),
       body: Consumer<HizbState>(
         builder: (BuildContext context, hizbState, _) {
-          if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
+          if (hizbState.isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
+          if (hizbState.error != null) {
             return Center(
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
                   '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
+                  style: AppStyles.mainTextStyle18,
                   textAlign: .center,
                 ),
               ),

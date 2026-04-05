@@ -28,7 +28,7 @@ class SurahNamePage extends StatelessWidget {
                 context: context,
                 delegate: SearchAyahsDelegate(
                   searchField: AppStrings.searchByAyahs,
-                  tableName: 'Table_of_translation_kuliev',
+                  tableName: 'Table_of_translation_adel',
                 ),
               );
             },
@@ -39,24 +39,19 @@ class SurahNamePage extends StatelessWidget {
       ),
       body: Consumer<SurahState>(
         builder: (context, surahState, _) {
-          if (surahState.isLoading && surahState.allSurahs.isEmpty) {
+          if (surahState.isLoading) {
             return const Center(
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  Text(AppStrings.loadingData),
-                  CircularProgressIndicator(),
-                ],
-              ),
+              child: CircularProgressIndicator.adaptive(),
             );
           }
 
-          if (surahState.error != null && surahState.allSurahs.isEmpty) {
+          if (surahState.error != null) {
             return Center(
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
                   '${AppStrings.errorLoadSurahsList}\n${surahState.error}',
+                  style: AppStyles.mainTextStyle18,
                   textAlign: TextAlign.center,
                 ),
               ),

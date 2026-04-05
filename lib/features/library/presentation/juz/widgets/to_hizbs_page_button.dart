@@ -19,8 +19,8 @@ class ToHizbsPageButton extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              isScrollControlled: true,
               useSafeArea: true,
+              isScrollControlled: true,
               builder: (context) {
                 return HizbsList(hizbsList: hizbState.allHizbs);
               },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
@@ -20,14 +21,13 @@ class SurahNameItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final itemOddColor = appColors.secondary.withAlpha(15);
-    final itemEvenColor = appColors.secondary.withAlpha(0);
-
+    final itemOddColor = appColors.secondary.withAlpha(25);
+    final itemEvenColor = appColors.secondary.withAlpha(05);
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .adaptivePlatformDensity,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
-      splashColor: appColors.primaryContainer,
-      focusColor: appColors.primary.withAlpha(55),
+      splashColor: appColors.inversePrimary,
+      focusColor: appColors.inversePrimary.withAlpha(55),
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Text(
@@ -37,8 +37,7 @@ class SurahNameItem extends StatelessWidget {
       title: Consumer<AppSettingsState>(
         builder: (context, appSettingsState, _) {
           return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .stretch,
             children: [
               if (appSettingsState.arabicNameSurah)
                 Text(
@@ -48,26 +47,26 @@ class SurahNameItem extends StatelessWidget {
                     fontFamily: AppStrings.fontUthmanicHafs,
                   ),
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               Row(
                 children: [
-                  Text(
-                    surahModel.nameTranscription,
-                    style: const TextStyle(
-                      fontFamily: AppStrings.fontGilroyMedium,
+                  Flexible(
+                    child: Text(
+                      surahModel.nameTranscription,
+                      style: AppStyles.mediumTextStyle16,
+                      maxLines: 1,
+                      overflow: .ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   if (appSettingsState.translationNameSurah)
-                    Text(
-                      ' (${surahModel.nameTranslation})',
-                      style: const TextStyle(
-                        fontFamily: AppStrings.fontGilroy,
+                    Flexible(
+                      child: Text(
+                        ' (${surahModel.nameTranslation})',
+                        style: AppStyles.mainTextStyle16,
+                        maxLines: 1,
+                        overflow: .ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                 ],
               ),
@@ -76,10 +75,10 @@ class SurahNameItem extends StatelessWidget {
         },
       ),
       subtitle: Text(
-        '${surahModel.ayahsCount} ${AppStrings.plural(surahModel.ayahsCount, 'аят', 'аята', 'аятов')} – ${surahModel.revelationPlace}',
-        style: const TextStyle(fontSize: 12.0),
+        '${surahModel.ayahsCount} ${AppStrings.plural(surahModel.ayahsCount, AppStrings.ayahOne, AppStrings.ayahFew, AppStrings.ayahMany)} – ${surahModel.revelationPlace}',
+        style: AppStyles.mainTextStyle12,
         maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       trailing: Text(
         surahModel.startPageNumber.toString(),
@@ -90,7 +89,6 @@ class SurahNameItem extends StatelessWidget {
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
         surahState.setMushafCurrentPage(surahModel.startPageNumber);
-
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

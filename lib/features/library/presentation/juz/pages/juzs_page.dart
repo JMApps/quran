@@ -27,18 +27,19 @@ class JuzsPage extends StatelessWidget {
       ),
       body: Consumer<JuzState>(
         builder: (context, juzState, _) {
-          if (juzState.isLoading && juzState.allJuzs.isEmpty) {
+          if (juzState.isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (juzState.error != null && juzState.allJuzs.isEmpty) {
+          if (juzState.error != null) {
             return Center(
               child: Padding(
                 padding: AppStyles.mainPadding,
                 child: Text(
                   '${AppStrings.errorLoadJuzsList}\n${juzState.error}',
+                  style: AppStyles.mainTextStyle18,
                   textAlign: .center,
                 ),
               ),

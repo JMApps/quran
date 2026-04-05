@@ -1,7 +1,7 @@
 import '../../features/library/domain/entities/line_type.dart';
 
 class AppStrings {
-  static const String appName = 'Коран';
+  static const String appName = 'Мусхаф';
   static const String surahs = 'Суры';
   static const String bookmarks = 'Избранное';
   static const String juzs = 'Джузы';
@@ -51,6 +51,10 @@ class AppStrings {
   static const String resultOne = 'результат';
   static const String resultFew = 'результата';
   static const String resultMany = 'результатов';
+
+  static const String ayahOne = 'аят';
+  static const String ayahFew = 'аята';
+  static const String ayahMany = 'аятов';
 
   static const String searchByQuery = 'По запросу';
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/juz_entity.dart';
 import '../items/juz_item.dart';
-
 class JuzsList extends StatelessWidget {
   const JuzsList({
     super.key,
@@ -15,15 +14,14 @@ class JuzsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 20;
+    final bottomHeight = kBottomNavigationBarHeight + 14;
     return Scrollbar(
       controller: scrollController,
       child: ListView.separated(
-        controller: scrollController,
-        itemCount: juzsList.length,
         primary: false,
+        controller: scrollController,
         padding: .only(bottom: bottomHeight),
-        separatorBuilder: (context, index) => const Divider(height: 0.75),
+        itemCount: juzsList.length,
         itemBuilder: (context, index) {
           final JuzEntity juzModel = juzsList[index];
           return JuzItem(
@@ -31,6 +29,7 @@ class JuzsList extends StatelessWidget {
             index: index,
           );
         },
+        separatorBuilder: (_, _) => const Divider(height: 0.75),
       ),
     );
   }

@@ -15,16 +15,14 @@ class SurahsNameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double bottomHeight = kBottomNavigationBarHeight + 20;
-
+    final double bottomHeight = kBottomNavigationBarHeight + 14;
     return Scrollbar(
       controller: scrollController,
       child: ListView.separated(
-        controller: scrollController,
         primary: false,
-        itemCount: surahsList.length,
+        controller: scrollController,
         padding: EdgeInsets.only(bottom: bottomHeight),
-        separatorBuilder: (_, __) => const Divider(height: 0.75),
+        itemCount: surahsList.length,
         itemBuilder: (context, index) {
           final surahModel = surahsList[index];
           return SurahNameItem(
@@ -32,6 +30,7 @@ class SurahsNameList extends StatelessWidget {
             index: index,
           );
         },
+        separatorBuilder: (_, _) => const Divider(height: 0.75),
       ),
     );
   }
