@@ -16,11 +16,6 @@ class SearchAyahItem extends StatelessWidget {
   final int index;
   final String query;
 
-  static const String _arabicHighlightStart = '[[AR_HL]]';
-  static const String _arabicHighlightEnd = '[[/AR_HL]]';
-  static const String _translationHighlightStart = '[[TR_HL]]';
-  static const String _translationHighlightEnd = '[[/TR_HL]]';
-
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
@@ -47,38 +42,20 @@ class SearchAyahItem extends StatelessWidget {
       fontWeight: FontWeight.w700,
     );
 
-    final TextSpan arabicSpan =
-    (ayahModel.highlightedArabic != null &&
-        ayahModel.highlightedArabic!.isNotEmpty)
-        ? _buildMarkedHighlightSpan(
-      markedText: ayahModel.highlightedArabic!,
-      normalStyle: arabicStyle,
-      highlightStyle: highlightStyleArabic,
-      startMarker: _arabicHighlightStart,
-      endMarker: _arabicHighlightEnd,
-    )
-        : _highlightOccurrences(
+    final TextSpan arabicSpan = _highlightOccurrences(
       fullText: ayahModel.ayahArabic,
       query: query,
       normalStyle: arabicStyle,
       highlightStyle: highlightStyleArabic,
+      caseSensitive: true,
     );
 
-    final TextSpan translationSpan =
-    (ayahModel.highlightedTranslation != null &&
-        ayahModel.highlightedTranslation!.isNotEmpty)
-        ? _buildMarkedHighlightSpan(
-      markedText: ayahModel.highlightedTranslation!,
-      normalStyle: translationStyle,
-      highlightStyle: highlightStyleTranslation,
-      startMarker: _translationHighlightStart,
-      endMarker: _translationHighlightEnd,
-    )
-        : _highlightOccurrences(
+    final TextSpan translationSpan = _highlightOccurrences(
       fullText: ayahModel.ayahTranslation,
       query: query,
       normalStyle: translationStyle,
       highlightStyle: highlightStyleTranslation,
+      caseSensitive: false,
     );
 
     return Container(
@@ -121,92 +98,37 @@ class SearchAyahItem extends StatelessWidget {
     );
   }
 
-  TextSpan _buildMarkedHighlightSpan({
-    required String markedText,
-    required TextStyle normalStyle,
-    required TextStyle highlightStyle,
-    required String startMarker,
-    required String endMarker,
-  }) {
-    final List<TextSpan> children = <TextSpan>[];
-    int cursor = 0;
+  List<String> _extractTokens(String value) {
+    final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
 
-    while (cursor < markedText.length) {
-      final int startIndex = markedText.indexOf(startMarker, cursor);
-
-      if (startIndex == -1) {
-        children.add(
-          TextSpan(
-            text: markedText.substring(cursor),
-            style: normalStyle,
-          ),
-        );
-        break;
-      }
-
-      if (startIndex > cursor) {
-        children.add(
-          TextSpan(
-            text: markedText.substring(cursor, startIndex),
-            style: normalStyle,
-          ),
-        );
-      }
-
-      final int contentStart = startIndex + startMarker.length;
-      final int endIndex = markedText.indexOf(endMarker, contentStart);
-
-      if (endIndex == -1) {
-        children.add(
-          TextSpan(
-            text: markedText.substring(startIndex),
-            style: normalStyle,
-          ),
-        );
-        break;
-      }
-
-      children.add(
-        TextSpan(
-          text: markedText.substring(contentStart, endIndex),
-          style: highlightStyle,
-        ),
-      );
-
-      cursor = endIndex + endMarker.length;
+    if (cleaned.isEmpty) {
+      return const <String>[];
     }
 
-    return TextSpan(
-      style: normalStyle,
-      children: children,
-    );
+    final List<String> tokens = cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toSet().toList(growable: false);
+
+    tokens.sort((a, b) => b.length.compareTo(a.length));
+    return tokens;
   }
 
-  TextSpan _highlightOccurrences({
-    required String fullText,
-    required String query,
-    required TextStyle normalStyle,
-    required TextStyle highlightStyle,
-  }) {
-    final String trimmedQuery = query.trim();
+  TextSpan _highlightOccurrences({required String fullText, required String query, required TextStyle normalStyle, required TextStyle highlightStyle, required bool caseSensitive}) {
+    final List<String> tokens = _extractTokens(query);
 
-    if (trimmedQuery.isEmpty) {
+    if (fullText.isEmpty || tokens.isEmpty) {
       return TextSpan(
         text: fullText,
         style: normalStyle,
       );
     }
 
-    final String escapedQuery = RegExp.escape(trimmedQuery);
+    final String pattern = tokens.map(RegExp.escape).join('|');
     final RegExp regExp = RegExp(
-      escapedQuery,
-      caseSensitive: false,
+      pattern,
+      caseSensitive: caseSensitive,
       unicode: true,
     );
 
-    final List<RegExpMatch> matches = regExp
-        .allMatches(fullText)
-        .toList(growable: false);
+    final List<RegExpMatch> matches = regExp.allMatches(fullText).toList(growable: false);
 
     if (matches.isEmpty) {
       return TextSpan(

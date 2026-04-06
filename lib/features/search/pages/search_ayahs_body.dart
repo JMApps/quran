@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../lists/ayah_search_list.dart';
@@ -17,44 +18,47 @@ class SearchAyahsBody extends StatelessWidget {
   final String query;
   final String tableName;
 
-  int _countMarkerOccurrences({
-    required String? markedText,
-    required String startMarker,
-  }) {
-    if (markedText == null || markedText.isEmpty) {
-      return 0;
-    }
+  List<String> _extractTokens(String value) {
+    final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
 
-    return startMarker.allMatches(markedText).length;
+    if (cleaned.isEmpty) return const <String>[];
+
+    return cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false);
   }
 
-  int _countSearchMatches({
-    required List<AyahByAyahEntity> result,
-    required String query,
-  }) {
-    final String trimmedQuery = query.trim();
-    if (trimmedQuery.isEmpty) {
-      return 0;
+  int _countOccurrencesInText({required String text, required List<String> tokens, required bool caseSensitive}) {
+    if (text.isEmpty || tokens.isEmpty) return 0;
+
+    int total = 0;
+    for (final token in tokens) {
+      total += RegExp(
+        RegExp.escape(token),
+        caseSensitive: caseSensitive,
+        unicode: true,
+      ).allMatches(text).length;
     }
+    return total;
+  }
+
+  int _countSearchMatches({required List<AyahByAyahEntity> result, required String query}) {
+    final String trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return 0;
 
     final bool isArabicQuery = AppStrings.containsArabic(trimmedQuery);
 
+    final String effectiveQuery = isArabicQuery ? AyahByAyahRepositoryImpl.normalizeArabic(trimmedQuery) : trimmedQuery;
+
+    final List<String> tokens = _extractTokens(effectiveQuery);
+    if (tokens.isEmpty) return 0;
+
     int total = 0;
-
     for (final ayah in result) {
-      if (isArabicQuery) {
-        total += _countMarkerOccurrences(
-          markedText: ayah.highlightedArabic,
-          startMarker: AppStrings.arabicHighlightStart,
-        );
-      } else {
-        total += _countMarkerOccurrences(
-          markedText: ayah.highlightedTranslation,
-          startMarker: AppStrings.translationHighlightStart,
-        );
-      }
+      total += _countOccurrencesInText(
+        text: isArabicQuery ? ayah.ayahArabic : ayah.ayahTranslation,
+        tokens: tokens,
+        caseSensitive: isArabicQuery,
+      );
     }
-
     return total;
   }
 
@@ -67,9 +71,7 @@ class SearchAyahsBody extends StatelessWidget {
       return const Center(
         child: Text(
           AppStrings.enterSearchQueryMessage,
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
+          style: AppStyles.mainTextStyle18,
         ),
       );
     }
@@ -81,16 +83,17 @@ class SearchAyahsBody extends StatelessWidget {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
           return Center(
             child: Padding(
               padding: AppStyles.mainPadding,
-              child: Text('${AppStrings.errorSearch}${snapshot.error}'),
+              child: Text(
+                '${AppStrings.errorSearch}${snapshot.error}',
+                style: AppStyles.mainTextStyle18,
+              ),
             ),
           );
         }
@@ -101,17 +104,12 @@ class SearchAyahsBody extends StatelessWidget {
           return const Center(
             child: Text(
               AppStrings.searchNoResults,
-              style: TextStyle(
-                fontSize: 18.0,
-              ),
+              style: AppStyles.mainTextStyle18,
             ),
           );
         }
 
-        final int totalMatches = _countSearchMatches(
-          result: result,
-          query: trimmedQuery,
-        );
+        final int totalMatches = _countSearchMatches(result: result, query: trimmedQuery);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -120,14 +118,8 @@ class SearchAyahsBody extends StatelessWidget {
               padding: AppStyles.mainPadding,
               color: appColors.tertiaryContainer,
               child: Text(
-                '${AppStrings.searchByQuery} "$trimmedQuery" '
-                    '${AppStrings.plural(totalMatches, AppStrings.foundOne, AppStrings.foundFew, AppStrings.foundMany)} '
-                    '$totalMatches '
-                    '${AppStrings.plural(totalMatches, AppStrings.resultOne, AppStrings.resultFew, AppStrings.resultMany)}',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: AppStrings.fontGilroyMedium,
-                ),
+                '${AppStrings.searchByQuery} "$trimmedQuery" ${AppStrings.plural(totalMatches, AppStrings.foundOne, AppStrings.foundFew, AppStrings.foundMany)} $totalMatches ${AppStrings.plural(totalMatches, AppStrings.resultOne, AppStrings.resultFew, AppStrings.resultMany)}',
+                style: AppStyles.mediumTextStyle16,
                 textAlign: TextAlign.center,
               ),
             ),

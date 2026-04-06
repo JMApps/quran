@@ -10,16 +10,9 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
 
   const AyahByAyahRepositoryImpl(this._quranDatabaseService);
 
-  static const String _arabicHighlightStart = '[[AR_HL]]';
-  static const String _arabicHighlightEnd = '[[/AR_HL]]';
-  static const String _translationHighlightStart = '[[TR_HL]]';
-  static const String _translationHighlightEnd = '[[/TR_HL]]';
-
   @override
   Future<List<AyahByAyahEntity>> getAyahsByPage({
-    required int pageNumber,
-    required String tableName,
-  }) async {
+    required int pageNumber, required String tableName}) async {
     final db = await _quranDatabaseService.db;
     final tables = _resolveTranslationTables(tableName);
 
@@ -62,96 +55,64 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       <Object>[pageNumber],
     );
 
-    return result
-        .map((map) => AyahByAyahModel.fromMap(map).toEntity())
-        .toList(growable: false);
+    return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
   @override
-  Future<List<AyahByAyahEntity>> getSearchAyah({
-    required String query,
-    required String tableName,
-  }) async {
+  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String tableName}) async {
     final db = await _quranDatabaseService.db;
     final String trimmedQuery = query.trim();
 
-    if (trimmedQuery.isEmpty) {
-      return const <AyahByAyahEntity>[];
-    }
+    if (trimmedQuery.isEmpty) return const <AyahByAyahEntity>[];
 
     final bool isArabicQuery = _containsArabic(trimmedQuery);
     final _TranslationTables tables = _resolveTranslationTables(tableName);
 
-    final String matchQuery = isArabicQuery
-        ? _buildArabicMatchQuery(trimmedQuery)
-        : _buildTextMatchQuery(trimmedQuery);
+    final String matchQuery = isArabicQuery ? _buildArabicMatchQuery(trimmedQuery) : _buildTextMatchQuery(trimmedQuery);
 
-    if (matchQuery.isEmpty) {
-      return const <AyahByAyahEntity>[];
-    }
-
+    if (matchQuery.isEmpty) return const <AyahByAyahEntity>[];
     final String sql = isArabicQuery
         ? '''
-          SELECT
-            m.${DbValueStrings.dbAyahId} AS ayah_id,
-            m.${DbValueStrings.dbVerseKey} AS verse_key,
-            m.${DbValueStrings.dbSurahNumber} AS surah_number,
-            m.${DbValueStrings.dbAyahNumber} AS ayah_number,
-            m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
-            tr.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
-            highlight(
-              ayahs_fts,
-              0,
-              '$_arabicHighlightStart',
-              '$_arabicHighlightEnd'
-            ) AS highlighted_arabic,
-            NULL AS highlighted_translation
-          FROM ayahs_fts
-          JOIN ${DbValueStrings.tableOfAyahs} m
-            ON m.${DbValueStrings.dbAyahId} = ayahs_fts.rowid
-          JOIN ${tables.dataTable} tr
-            ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
-          WHERE ayahs_fts MATCH ?
-          ORDER BY
-            bm25(ayahs_fts),
-            m.${DbValueStrings.dbSurahNumber} ASC,
-            m.${DbValueStrings.dbAyahNumber} ASC
-        '''
+      SELECT
+        m.${DbValueStrings.dbAyahId}                    AS ayah_id,
+        m.${DbValueStrings.dbVerseKey}                   AS verse_key,
+        m.${DbValueStrings.dbSurahNumber}                AS surah_number,
+        m.${DbValueStrings.dbAyahNumber}                 AS ayah_number,
+        m.${DbValueStrings.dbAyahArabicNormalized}       AS ayah_arabic,
+        tr.${DbValueStrings.dbAyahTranslation}           AS ayah_translation,
+        NULL AS highlighted_arabic,
+        NULL AS highlighted_translation
+      FROM ayahs_fts
+      JOIN ${DbValueStrings.tableOfAyahs} m
+        ON m.${DbValueStrings.dbAyahId} = ayahs_fts.rowid
+      JOIN ${tables.dataTable} tr
+        ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
+      WHERE ayahs_fts MATCH ?
+      ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
+    '''
         : '''
-          SELECT
-            m.${DbValueStrings.dbAyahId} AS ayah_id,
-            m.${DbValueStrings.dbVerseKey} AS verse_key,
-            m.${DbValueStrings.dbSurahNumber} AS surah_number,
-            m.${DbValueStrings.dbAyahNumber} AS ayah_number,
-            m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
-            tr.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
-            NULL AS highlighted_arabic,
-            highlight(
-              ${tables.ftsTable},
-              0,
-              '$_translationHighlightStart',
-              '$_translationHighlightEnd'
-            ) AS highlighted_translation
-          FROM ${tables.ftsTable}
-          JOIN ${tables.dataTable} tr
-            ON tr.${DbValueStrings.dbAyahId} = ${tables.ftsTable}.rowid
-          JOIN ${DbValueStrings.tableOfAyahs} m
-            ON m.${DbValueStrings.dbAyahId} = tr.${DbValueStrings.dbAyahId}
-          WHERE ${tables.ftsTable} MATCH ?
-          ORDER BY
-            bm25(${tables.ftsTable}),
-            m.${DbValueStrings.dbSurahNumber} ASC,
-            m.${DbValueStrings.dbAyahNumber} ASC
-        ''';
+      SELECT
+        m.${DbValueStrings.dbAyahId}                    AS ayah_id,
+        m.${DbValueStrings.dbVerseKey}                   AS verse_key,
+        m.${DbValueStrings.dbSurahNumber}                AS surah_number,
+        m.${DbValueStrings.dbAyahNumber}                 AS ayah_number,
+        m.${DbValueStrings.dbAyahArabic}                 AS ayah_arabic,
+        tr.${DbValueStrings.dbAyahTranslation}           AS ayah_translation,
+        NULL AS highlighted_arabic,
+        NULL AS highlighted_translation
+      FROM ${tables.ftsTable}
+      JOIN ${tables.dataTable} tr
+        ON tr.${DbValueStrings.dbAyahId} = ${tables.ftsTable}.rowid
+      JOIN ${DbValueStrings.tableOfAyahs} m
+        ON m.${DbValueStrings.dbAyahId} = tr.${DbValueStrings.dbAyahId}
+      WHERE ${tables.ftsTable} MATCH ?
+      ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
+    ''';
 
-    final List<Map<String, Object?>> result = await db.rawQuery(
-      sql,
-      <Object>[matchQuery],
-    );
+    final List<Map<String, Object?>> result =
+    await db.rawQuery(sql, <Object>[matchQuery]);
 
-    return result
-        .map((map) => AyahByAyahModel.fromMap(map).toEntity())
-        .toList(growable: false);
+    return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
   _TranslationTables _resolveTranslationTables(String tableName) {
@@ -172,51 +133,28 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
   }
 
   bool _containsArabic(String value) {
-    return RegExp(
-      r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]',
-    ).hasMatch(value);
+    return RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]').hasMatch(value);
+  }
+
+  static String normalizeArabic(String value) {
+    return value.replaceAll('\u0671', '\u0627').replaceAll(RegExp(r'[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640\u06E1\u00A0]'), '');
   }
 
   String _buildArabicMatchQuery(String value) {
-    final String cleaned = value
-        .replaceAll('\u00A0', ' ')
-        .replaceAll('"', ' ')
-        .replaceAll("'", ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
+    final String cleaned = normalizeArabic(value).replaceAll('"', ' ').replaceAll("'", ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
 
-    final List<String> tokens = cleaned
-        .split(' ')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList(growable: false);
+    final List<String> tokens = cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false);
 
-    if (tokens.isEmpty) {
-      return '';
-    }
-
+    if (tokens.isEmpty) return '';
     return tokens.map((token) => '$token*').join(' ');
   }
 
   String _buildTextMatchQuery(String value) {
-    final String cleaned = value
-        .replaceAll(
-      RegExp(r'[^\p{L}\p{N}\s]', unicode: true),
-      ' ',
-    )
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
+    final String cleaned = value.replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
 
-    final List<String> tokens = cleaned
-        .split(' ')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList(growable: false);
+    final List<String> tokens = cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false);
 
-    if (tokens.isEmpty) {
-      return '';
-    }
-
+    if (tokens.isEmpty) return '';
     return tokens.map((token) => '$token*').join(' ');
   }
 }

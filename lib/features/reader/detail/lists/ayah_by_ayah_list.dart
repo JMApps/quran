@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/strings/app_strings.dart';
 
+import '../../../../core/strings/app_strings.dart';
+import '../../../../core/theme/app_styles.dart';
 import '../../../library/data/mappers/ayah_list_row_builder.dart';
 import '../../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../../library/domain/entities/ayah_list_row_type.dart';
@@ -21,13 +22,12 @@ class AyahByAyahList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final toolbarHeight = AppBar().preferredSize.height;
     final rows = const AyahListRowBuilder().build(ayahsPage);
     final surahNamesMap = <int, String>{
       for (final surah in allSurahs) surah.surahNumber: surah.nameTranscription,
     };
     return ListView.builder(
-      padding: .only(top: toolbarHeight - 21, bottom: 14),
+      padding: AppStyles.vrMainPadding,
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];

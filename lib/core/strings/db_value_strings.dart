@@ -20,6 +20,7 @@ class DbValueStrings {
   static const String dbAyahNumber = 'ayah_number';
   static const String dbAyahArabic = 'ayah_arabic';
   static const String dbAyahTranslation = 'ayah_translation';
+  static const String dbAyahArabicNormalized = 'ayah_arabic_normalized';
 
   static const String tableOfLayouts = 'Table_of_layouts';
   static const String dbPageNumber = 'page_number';
