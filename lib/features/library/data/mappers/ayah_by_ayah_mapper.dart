@@ -10,8 +10,6 @@ extension AyahByAyahMapper on AyahByAyahModel {
       ayahNumber: ayahNumber,
       ayahArabic: ayahArabic,
       ayahTranslation: ayahTranslation,
-      highlightedArabic: highlightedArabic,
-      highlightedTranslation: highlightedTranslation,
     );
   }
 }

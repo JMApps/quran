@@ -3,6 +3,7 @@ class AppKeys {
 
   static const String keyLastOpenedPages = 'key_last_opened_pages';
   static const String keyFavoritePages = 'key_favorite_pages';
+  static const String keyFavoriteAyahs = 'key_favorite_ayahs';
 
   static const String mainAppSettingsBox = 'main_app_settings_box';
   static const String keySurahArabicName = 'key_surah_arabic_name';

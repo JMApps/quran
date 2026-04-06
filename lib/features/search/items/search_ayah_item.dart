@@ -64,9 +64,7 @@ class SearchAyahItem extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: () {
-
-      },
+      onTap: () {},
       child: Container(
         padding: AppStyles.mainPadding,
         decoration: const BoxDecoration(
@@ -97,13 +95,7 @@ class SearchAyahItem extends StatelessWidget {
     );
   }
 
-  TextSpan _highlightOccurrences({
-    required String fullText,
-    required String query,
-    required TextStyle normalStyle,
-    required TextStyle highlightStyle,
-    required bool caseSensitive,
-  }) {
+  TextSpan _highlightOccurrences({required String fullText, required String query, required TextStyle normalStyle, required TextStyle highlightStyle, required bool caseSensitive}) {
     if (fullText.isEmpty || query.trim().isEmpty) {
       return TextSpan(text: fullText, style: normalStyle);
     }

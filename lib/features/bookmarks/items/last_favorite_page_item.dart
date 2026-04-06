@@ -4,11 +4,10 @@ import 'package:provider/provider.dart';
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/surah_state.dart';
 
-class FavoriteMushafPageItem extends StatelessWidget {
-  const FavoriteMushafPageItem({
+class LastFavoritePageItem extends StatelessWidget {
+  const LastFavoritePageItem({
     super.key,
     required this.mushafPageMetaModel,
     required this.index,
@@ -20,33 +19,20 @@ class FavoriteMushafPageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final itemOddColor = appColors.secondary.withAlpha(15);
-    final itemEvenColor = appColors.secondary.withAlpha(0);
+    final itemOddColor = appColors.secondary.withAlpha(25);
+    final itemEvenColor = appColors.secondary.withAlpha(05);
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .adaptivePlatformDensity,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
-      splashColor: appColors.primaryContainer,
-      focusColor: appColors.primary.withAlpha(55),
+      splashColor: appColors.inversePrimary,
+      focusColor: appColors.inversePrimary.withAlpha(55),
       leading: IconButton(
-        onPressed: () {
-          Provider.of<MushafPageMetaState>(context, listen: false).removeFavoritePage(pageNumber: mushafPageMetaModel.pageNumber);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: const Duration(milliseconds: 1350),
-              backgroundColor: appColors.primary,
-              content: const Text(
-                AppStrings.removedFromFavorite,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-          );
-        },
-        padding: EdgeInsets.zero,
-        visualDensity: VisualDensity.compact,
+        onPressed: null,
+        padding: .zero,
+        visualDensity: .compact,
+        color: appColors.secondary,
         icon: Icon(
-          Icons.bookmark_rounded,
+          Icons.access_time_filled_rounded,
           color: appColors.secondary,
         ),
       ),

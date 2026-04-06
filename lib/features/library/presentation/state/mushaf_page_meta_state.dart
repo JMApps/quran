@@ -2,41 +2,49 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive.dart';
 
 import '../../../../core/strings/app_keys.dart';
-import '../../../../core/strings/app_strings.dart';
+import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/entities/mushaf_page_meta_entity.dart';
+import '../../domain/usecases/ayah_by_ayah_use_case.dart';
 import '../../domain/usecases/mushaf_page_meta_use_case.dart';
 
 class MushafPageMetaState extends ChangeNotifier {
-  MushafPageMetaState(this._mushafPageMetaUseCase) {
+  MushafPageMetaState(this._mushafPageMetaUseCase, this._ayahByAyahUseCase) {
     _loadPersistedSettings();
   }
 
-  static const int _maxLastOpenedPages = 3;
+  static const int _maxLastOpenedPages = 5;
 
   final MushafPageMetaUseCase _mushafPageMetaUseCase;
-  final Box<dynamic> _favoriteSettingsBox =
-  Hive.box(AppKeys.mushafFavoriteSettingsBox);
+  final AyahByAyahUseCase _ayahByAyahUseCase;
+  final Box<dynamic> _favoriteSettingsBox = Hive.box(AppKeys.mushafFavoriteSettingsBox);
 
-  List<MushafPageMetaEntity> _allPagesMeta = const [];
   Map<int, MushafPageMetaEntity> _pagesMetaByPage = const {};
 
-  List<int> _lastMushafPageIds = [];
-  List<int> _favoriteMushafPageIds = [];
+  Map<int, AyahByAyahEntity> _ayahMetaById = const {};
+
+  List<int> _lastPageIds = [];
+  List<int> _favoritePageIds = [];
+  List<int> _favoriteAyahIds = [];
 
   bool _isLoading = false;
   bool _isLoaded = false;
   Object? _error;
+
+  bool _isLoadingAyahs = false;
+  bool _isLoadedAyahs = false;
+  Object? _errorAyahsList;
 
   bool _translationState = false;
 
   bool get isLoading => _isLoading;
   bool get isLoaded => _isLoaded;
   Object? get error => _error;
-  bool get translationState => _translationState;
 
-  List<MushafPageMetaEntity> get allPagesMeta => List.unmodifiable(_allPagesMeta);
-  List<int> get lastMushafPageIds => List.unmodifiable(_lastMushafPageIds);
-  List<int> get favoriteMushafPageIds => List.unmodifiable(_favoriteMushafPageIds);
+  bool get isLoadingAyahs => _isLoadingAyahs;
+  bool get isLoadedAyahs => _isLoadedAyahs;
+  Object? get errorAyahsList => _errorAyahsList;
+
+  bool get translationState => _translationState;
 
   set translationState(bool value) {
     if (_translationState == value) return;
@@ -45,42 +53,48 @@ class MushafPageMetaState extends ChangeNotifier {
   }
 
   void _loadPersistedSettings() {
-    final dynamic savedLastOpenedRaw = _favoriteSettingsBox.get(
+    final dynamic savedLastOpenedPageRaw = _favoriteSettingsBox.get(
       AppKeys.keyLastOpenedPages,
       defaultValue: <int>[1],
     );
 
-    final dynamic savedFavoriteRaw = _favoriteSettingsBox.get(
+    final dynamic savedFavoritePageRaw = _favoriteSettingsBox.get(
       AppKeys.keyFavoritePages,
       defaultValue: <int>[293],
     );
 
-    final List<int> parsedLastOpened = _parsePageList(savedLastOpenedRaw).take(_maxLastOpenedPages).toList();
-
-    final List<int> parsedFavorite =
-    _parsePageList(savedFavoriteRaw).toSet().toList();
-
-    _lastMushafPageIds = parsedLastOpened.isNotEmpty ? parsedLastOpened : <int>[1];
-    _favoriteMushafPageIds = parsedFavorite;
-  }
-
-  List<int> _parsePageList(dynamic raw) {
-    if (raw is! List) return [];
-
-    return raw.whereType<int>().where(_isValidPage).toList();
-  }
-
-  Future<void> _saveFavoritePages() async {
-    await _favoriteSettingsBox.put(
-      AppKeys.keyFavoritePages,
-      _favoriteMushafPageIds,
+    final dynamic savedFavoriteAyahRaw = _favoriteSettingsBox.get(
+      AppKeys.keyFavoriteAyahs,
+      defaultValue: <int>[262],
     );
+
+    final List<int> parsedLastOpenedPages = savedLastOpenedPageRaw.take(_maxLastOpenedPages).toList();
+    final List<int> parsedFavoritePages = savedFavoritePageRaw.toSet().toList();
+    final List<int> parsedFavoriteAyahs = savedFavoriteAyahRaw.toSet().toList();
+
+    _lastPageIds = parsedLastOpenedPages;
+    _favoritePageIds = parsedFavoritePages;
+    _favoriteAyahIds = parsedFavoriteAyahs;
   }
 
   Future<void> _saveLastOpenedPages() async {
     await _favoriteSettingsBox.put(
       AppKeys.keyLastOpenedPages,
-      _lastMushafPageIds,
+      _lastPageIds,
+    );
+  }
+
+  Future<void> _saveFavoritePages() async {
+    await _favoriteSettingsBox.put(
+      AppKeys.keyFavoritePages,
+      _favoritePageIds,
+    );
+  }
+
+  Future<void> _saveFavoriteAyahs() async {
+    await _favoriteSettingsBox.put(
+      AppKeys.keyFavoriteAyahs,
+      _favoriteAyahIds,
     );
   }
 
@@ -92,10 +106,8 @@ class MushafPageMetaState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final List<MushafPageMetaEntity> result =
-      await _mushafPageMetaUseCase.getAllPagesMeta();
+      final List<MushafPageMetaEntity> result = await _mushafPageMetaUseCase.getAllPagesMeta();
 
-      _allPagesMeta = List.unmodifiable(result);
       _pagesMetaByPage = {
         for (final item in result) item.pageNumber: item,
       };
@@ -109,39 +121,39 @@ class MushafPageMetaState extends ChangeNotifier {
     }
   }
 
-  Future<void> reloadAllPagesMeta() async {
-    if (_isLoading) return;
+  Future<void> loadFavoriteAyahsMeta({required String tableName}) async {
+    if (_isLoadingAyahs || _isLoadedAyahs) return;
 
-    _isLoading = true;
-    _error = null;
+    _isLoadingAyahs = true;
+    _errorAyahsList = null;
     notifyListeners();
 
     try {
-      final List<MushafPageMetaEntity> result =
-      await _mushafPageMetaUseCase.getAllPagesMeta();
+      final List<AyahByAyahEntity> result = await _ayahByAyahUseCase.getAyahsByIds(tableName: tableName, ayahIds: _favoriteAyahIds);
 
-      _allPagesMeta = List.unmodifiable(result);
-      _pagesMetaByPage = {
-        for (final item in result) item.pageNumber: item,
+      _ayahMetaById = {
+        for (final item in result) item.ayahId: item,
       };
-      _isLoaded = true;
+      _isLoadedAyahs = true;
     } catch (e) {
-      _error = e;
-      _isLoaded = false;
+      _errorAyahsList = e;
+      _isLoadedAyahs = false;
     } finally {
-      _isLoading = false;
+      _isLoadingAyahs = false;
       notifyListeners();
     }
   }
 
   MushafPageMetaEntity? getPageMetaByPage(int pageNumber) {
-    if (!_isValidPage(pageNumber)) return null;
     return _pagesMetaByPage[pageNumber];
+  }
+
+  List<MushafPageMetaEntity> lastOpenedPages() {
+    return _loadPagesMeta(_lastPageIds);
   }
 
   List<MushafPageMetaEntity> _loadPagesMeta(List<int> pageIds) {
     if (_pagesMetaByPage.isEmpty || pageIds.isEmpty) return const [];
-
     final List<MushafPageMetaEntity> result = [];
 
     for (final pageNumber in pageIds) {
@@ -154,18 +166,25 @@ class MushafPageMetaState extends ChangeNotifier {
     return List.unmodifiable(result);
   }
 
-  List<MushafPageMetaEntity> lastOpenedPages() {
-    return _loadPagesMeta(_lastMushafPageIds);
+  List<AyahByAyahEntity> _loadAyahsMeta(List<int> ayahsIds) {
+    if (_ayahMetaById.isEmpty || ayahsIds.isEmpty) return const [];
+    final List<AyahByAyahEntity> result = [];
+
+    for (final ayahId in ayahsIds) {
+      final ayahMeta = _ayahMetaById[ayahId];
+      if (ayahMeta != null) {
+        result.add(ayahMeta);
+      }
+    }
+
+    return List.unmodifiable(result);
   }
 
   Future<void> addLastOpenedPage(int pageNumber) async {
-    if (!_isValidPage(pageNumber)) return;
-
-    _lastMushafPageIds.remove(pageNumber);
-    _lastMushafPageIds.insert(0, pageNumber);
-
-    while (_lastMushafPageIds.length > _maxLastOpenedPages) {
-      _lastMushafPageIds.removeLast();
+    _lastPageIds.remove(pageNumber);
+    _lastPageIds.insert(0, pageNumber);
+    while (_lastPageIds.length > _maxLastOpenedPages) {
+      _lastPageIds.removeLast();
     }
 
     await _saveLastOpenedPages();
@@ -173,42 +192,72 @@ class MushafPageMetaState extends ChangeNotifier {
   }
 
   List<MushafPageMetaEntity> favoritePages() {
-    return _loadPagesMeta(_favoriteMushafPageIds);
+    return _loadPagesMeta(_favoritePageIds);
   }
 
-  Future<void> addFavoritePage({required int pageNumber}) async {
-    if (!_isValidPage(pageNumber)) return;
-    if (_favoriteMushafPageIds.contains(pageNumber)) return;
-
-    _favoriteMushafPageIds = [..._favoriteMushafPageIds, pageNumber];
-    await _saveFavoritePages();
-    notifyListeners();
-  }
-
-  Future<void> removeFavoritePage({required int pageNumber}) async {
-    if (!_favoriteMushafPageIds.contains(pageNumber)) return;
-
-    _favoriteMushafPageIds =
-        _favoriteMushafPageIds.where((id) => id != pageNumber).toList();
-
-    await _saveFavoritePages();
-    notifyListeners();
+  List<AyahByAyahEntity> favoriteAyahs() {
+    return _loadAyahsMeta(_favoriteAyahIds);
   }
 
   bool isFavoritePage(int pageNumber) {
-    return _favoriteMushafPageIds.contains(pageNumber);
+    return _favoritePageIds.contains(pageNumber);
   }
 
-  void clearMetaCache() {
-    _allPagesMeta = const [];
-    _pagesMetaByPage = const {};
-    _isLoading = false;
-    _isLoaded = false;
-    _error = null;
+  bool isFavoriteAyah(int ayahId) {
+    return _favoriteAyahIds.contains(ayahId);
+  }
+
+  Future<void> clearAllSettings() async {
+    await _favoriteSettingsBox.clear();
+
+    _lastPageIds = [];
+    _favoritePageIds = [];
+    _favoriteAyahIds = [];
+
     notifyListeners();
   }
 
-  bool _isValidPage(int pageNumber) {
-    return pageNumber >= 1 && pageNumber <= AppStrings.totalPages;
+  Future<void> toggleFavoritePage({required int pageNumber}) async {
+    if (isFavoritePage(pageNumber)) {
+      await _removeFavoritePage(pageNumber: pageNumber);
+    } else {
+      await _addFavoritePage(pageNumber: pageNumber);
+    }
+  }
+
+  Future<void> toggleFavoriteAyah({required int ayahId}) async {
+    if (isFavoriteAyah(ayahId)) {
+      await _removeFavoriteAyah(ayahId: ayahId);
+    } else {
+      await _addFavoriteAyah(ayahId: ayahId);
+    }
+  }
+
+  Future<void> _addFavoritePage({required int pageNumber}) async {
+    if (_favoritePageIds.contains(pageNumber)) return;
+    _favoritePageIds = [..._favoritePageIds, pageNumber];
+    await _saveFavoritePages();
+    notifyListeners();
+  }
+
+  Future<void> _addFavoriteAyah({required int ayahId}) async {
+    if (_favoriteAyahIds.contains(ayahId)) return;
+    _favoriteAyahIds = [..._favoriteAyahIds, ayahId];
+    await _saveFavoriteAyahs();
+    notifyListeners();
+  }
+
+  Future<void> _removeFavoritePage({required int pageNumber}) async {
+    if (!_favoritePageIds.contains(pageNumber)) return;
+    _favoritePageIds = _favoritePageIds.where((id) => id != pageNumber).toList();
+    await _saveFavoritePages();
+    notifyListeners();
+  }
+
+  Future<void> _removeFavoriteAyah({required int ayahId}) async {
+    if (!_favoriteAyahIds.contains(ayahId)) return;
+    _favoriteAyahIds = _favoriteAyahIds.where((id) => id != ayahId).toList();
+    await _saveFavoriteAyahs();
+    notifyListeners();
   }
 }

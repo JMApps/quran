@@ -13,4 +13,8 @@ class AyahByAyahUseCase {
   Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String dataTable, required String ftsTable}) {
     return _ayahByAyahRepository.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
   }
+
+  Future<List<AyahByAyahEntity>> getAyahsByIds({required String tableName, required List<int> ayahIds}) {
+    return _ayahByAyahRepository.getAyahsByIds(tableName: tableName, ayahIds: ayahIds);
+  }
 }

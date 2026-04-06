@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
+import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/surah_state.dart';
 
-class LastFavoriteMushafPageItem extends StatelessWidget {
-  const LastFavoriteMushafPageItem({
+class FavoritePageItem extends StatelessWidget {
+  const FavoritePageItem({
     super.key,
     required this.mushafPageMetaModel,
     required this.index,
@@ -19,21 +21,32 @@ class LastFavoriteMushafPageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final itemOddColor = appColors.secondary.withAlpha(15);
-    final itemEvenColor = appColors.secondary.withAlpha(0);
+    final itemOddColor = appColors.secondary.withAlpha(25);
+    final itemEvenColor = appColors.secondary.withAlpha(05);
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .adaptivePlatformDensity,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
-      splashColor: appColors.primaryContainer,
-      focusColor: appColors.primary.withAlpha(55),
+      splashColor: appColors.inversePrimary,
+      focusColor: appColors.inversePrimary.withAlpha(55),
       leading: IconButton(
-        onPressed: null,
+        onPressed: () {
+          Provider.of<MushafPageMetaState>(context, listen: false).toggleFavoritePage(pageNumber: mushafPageMetaModel.pageNumber);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 1),
+              backgroundColor: appColors.inversePrimary,
+              content: Text(
+                AppStrings.removedFromFavorite,
+                style: AppStyles.mainTextStyle16.copyWith(color: appColors.onSurface),
+              ),
+            ),
+          );
+        },
         padding: EdgeInsets.zero,
-        visualDensity: VisualDensity.compact,
-        color: appColors.secondary,
+        visualDensity: .compact,
         icon: Icon(
-          Icons.access_time_filled_rounded,
-          color: appColors.secondary,
+          Icons.bookmark_rounded,
+          color: appColors.primary,
         ),
       ),
       onTap: () {

@@ -9,9 +9,11 @@ class AppStrings {
   static const String hizbs = 'Хизбы';
   static const String hizb = 'Хизб';
   static const String page = 'Страница';
+  static const String pages = 'Страницы';
   static const String pageShort = 'Стр.';
   static const String surah = 'Сура';
   static const String ayah = 'аят';
+  static const String ayahs = 'Аяты';
   static const String settings = 'Настройки';
 
   static const String loadingData = 'Загрузка данных...';
@@ -19,6 +21,7 @@ class AppStrings {
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
   static const String errorMushafFavoritesList = 'Ошибка загрузки избранного: ';
+  static const String errorAyahFavoritesList = 'Ошибка загрузки избранных аятов: ';
   static const String errorMushafLastFavoritesList = 'Ошибка загрузки недавних страниц: ';
   static const String errorLoad = 'Ошибка загрузки: ';
   static const String errorSearch = 'Ошибка поиска: ';
@@ -32,10 +35,12 @@ class AppStrings {
   static const String lastMushafPages = 'Недавние страницы: ';
   static const String lastMushafPagesEmpty = 'Недавних страниц нет';
   static const String favoriteMushafPages = 'Избранные страницы';
-  static const String favoriteMushafPagesEmpty = 'Избранных страниц нет';
+  static const String favoritePagesEmpty = 'Избранных страниц нет';
+  static const String favoriteAyahsEmpty = 'Избранных аятов нет';
   static const String goTo = 'Перейти к...';
   static const String searchByAyahs = 'Поиск аятов';
   static const String translate = 'Перевод';
+  static const String recent = 'Недавнее';
 
 
   static const String fontGilroy = 'Gilroy';

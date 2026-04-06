@@ -113,6 +113,49 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
+
+  @override
+  Future<List<AyahByAyahEntity>> getAyahsByIds({
+    required String tableName,
+    required List<int> ayahIds,
+  }) async {
+    if (ayahIds.isEmpty) return const [];
+
+    final db = await _quranDatabaseService.db;
+    final placeholders = List.filled(ayahIds.length, '?').join(',');
+
+    final List<Map<String, Object?>> result = await db.rawQuery(
+      '''
+    SELECT
+      a.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
+      a.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
+      a.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
+      a.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
+      a.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
+      t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
+    FROM ${DbValueStrings.tableOfAyahs} a
+    LEFT JOIN $tableName t
+      ON t.${DbValueStrings.dbAyahId} = a.${DbValueStrings.dbAyahId}
+    WHERE a.${DbValueStrings.dbAyahId} IN ($placeholders)
+    ''',
+      ayahIds,
+    );
+
+    final ayahs = result.map((json) => AyahByAyahModel.fromMap(json).toEntity()).toList(growable: false);
+
+    final orderMap = <int, int>{
+      for (int i = 0; i < ayahIds.length; i++) ayahIds[i]: i,
+    };
+
+    ayahs.sort((a, b) {
+      final aIndex = orderMap[a.ayahId] ?? 1 << 30;
+      final bIndex = orderMap[b.ayahId] ?? 1 << 30;
+      return aIndex.compareTo(bIndex);
+    });
+
+    return List.unmodifiable(ayahs);
+  }
+
   bool _containsArabic(String value) {
     return RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]').hasMatch(value);
   }

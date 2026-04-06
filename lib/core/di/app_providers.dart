@@ -129,6 +129,7 @@ class AppProviders {
       lazy: false,
       create: (context) => MushafPageMetaState(
         context.read<MushafPageMetaUseCase>(),
+        context.read<AyahByAyahUseCase>(),
       )..loadAllPagesMeta(),
     ),
     ChangeNotifierProvider<PageLayoutState>(

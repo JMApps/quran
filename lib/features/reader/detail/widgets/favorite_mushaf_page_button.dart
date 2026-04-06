@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
+import '../../../../core/theme/app_styles.dart';
 import '../../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../../library/presentation/state/surah_state.dart';
 
@@ -16,21 +17,14 @@ class FavoriteMushafPageButton extends StatelessWidget {
       builder: (context, mushafPageMetaState, _) {
         return IconButton(
           onPressed: () {
-            if (!mushafPageMetaState.isFavoritePage(mushafPage)) {
-              mushafPageMetaState.addFavoritePage(pageNumber: mushafPage);
-            } else {
-              mushafPageMetaState.removeFavoritePage(pageNumber: mushafPage);
-            }
+            mushafPageMetaState.toggleFavoritePage(pageNumber: mushafPage);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 1),
-                backgroundColor: appColors.primary,
+                backgroundColor: appColors.inversePrimary,
                 content: Text(
                   mushafPageMetaState.isFavoritePage(mushafPage) ? AppStrings.addedToFavorite : AppStrings.removedFromFavorite,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: appColors.inversePrimary,
-                  ),
+                  style: AppStyles.mainTextStyle18.copyWith(color: appColors.onSurface),
                 ),
               ),
             );
