@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/search/pages/search_ayahs_delegate.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../../search/pages/search_ayahs_delegate.dart';
 import '../../state/surah_state.dart';
 import '../lists/surahs_name_list.dart';
 

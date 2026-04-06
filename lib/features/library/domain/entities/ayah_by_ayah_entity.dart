@@ -5,6 +5,9 @@ class AyahByAyahEntity {
   final int ayahNumber;
   final String ayahArabic;
   final String ayahTranslation;
+  final int? pageNumber;
+  final int? ayahPositionOnPage;
+  final int? ayahsCountOnPage;
 
   const AyahByAyahEntity({
     required this.ayahId,
@@ -13,5 +16,8 @@ class AyahByAyahEntity {
     required this.ayahNumber,
     required this.ayahArabic,
     required this.ayahTranslation,
+    required this.pageNumber,
+    required this.ayahPositionOnPage,
+    required this.ayahsCountOnPage,
   });
 }
