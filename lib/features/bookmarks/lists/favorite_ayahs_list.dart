@@ -20,11 +20,15 @@ class FavoriteAyahsList extends StatefulWidget {
 }
 
 class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<MushafPageMetaState>().loadFavoriteAyahsMeta(
+
+    Future.microtask(() async {
+      if (!mounted) return;
+
+      await context.read<MushafPageMetaState>().loadFavoriteAyahsMeta(
         tableName: widget.tableName,
       );
     });
