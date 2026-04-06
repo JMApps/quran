@@ -120,11 +120,13 @@ class AyahByAyahState extends ChangeNotifier {
 
   Future<List<AyahByAyahEntity>> searchAyahs({
     required String query,
-    required String tableName,
+    required String dataTable,
+    required String ftsTable,
   }) {
     return _useCase.getSearchAyah(
       query: query,
-      tableName: tableName,
+      dataTable: dataTable,
+      ftsTable: ftsTable
     );
   }
 

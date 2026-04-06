@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/presentation/state/surah_state.dart';
 
 class SearchAyahItem extends StatelessWidget {
   const SearchAyahItem({
@@ -20,6 +22,9 @@ class SearchAyahItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
 
+    final surahState = Provider.of<SurahState>(context, listen: false);
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahModel.verseKey) ?? ayahModel.verseKey;
+
     const arabicStyle = TextStyle(
       fontSize: 19.0,
       fontFamily: AppStrings.fontUthmanicHafs,
@@ -33,13 +38,13 @@ class SearchAyahItem extends StatelessWidget {
     );
 
     final TextStyle highlightStyleArabic = arabicStyle.copyWith(
-      backgroundColor: appColors.tertiaryContainer,
-      fontWeight: FontWeight.w700,
+      fontWeight: .bold,
+      backgroundColor: appColors.inversePrimary,
     );
 
     final TextStyle highlightStyleTranslation = translationStyle.copyWith(
-      backgroundColor: appColors.tertiaryContainer,
-      fontWeight: FontWeight.w700,
+      fontWeight: .bold,
+      backgroundColor: appColors.inversePrimary,
     );
 
     final TextSpan arabicSpan = _highlightOccurrences(
@@ -58,93 +63,74 @@ class SearchAyahItem extends StatelessWidget {
       caseSensitive: false,
     );
 
-    return Container(
-      padding: AppStyles.vrBigHrMiniPadding,
-      decoration: const BoxDecoration(
-        border: Border.symmetric(
-          horizontal: BorderSide(
-            width: 0.25,
-            color: Colors.grey,
+    return InkWell(
+      onTap: () {
+
+      },
+      child: Container(
+        padding: AppStyles.mainPadding,
+        decoration: const BoxDecoration(
+          border: .symmetric(
+            horizontal: BorderSide(
+              width: 0.25,
+              color: Colors.grey,
+            ),
           ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 65,
-            padding: AppStyles.microPadding,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: appColors.secondaryContainer.withAlpha(155),
-              borderRadius: AppStyles.miniBorder,
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Text.rich(
+              arabicSpan,
+              textDirection: .rtl,
             ),
-            child: Text(ayahModel.verseKey),
-          ),
-          const SizedBox(height: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text.rich(
-                arabicSpan,
-                textDirection: TextDirection.rtl,
-              ),
-              const SizedBox(height: 16),
-              Text.rich(translationSpan),
-            ],
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text.rich(translationSpan),
+            const SizedBox(height: 16),
+            Text(
+              surahInfo,
+              style: AppStyles.mainTextStyle12.copyWith(color: appColors.onSurface.withAlpha(105)),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  List<String> _extractTokens(String value) {
-    final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-
-    if (cleaned.isEmpty) {
-      return const <String>[];
+  TextSpan _highlightOccurrences({
+    required String fullText,
+    required String query,
+    required TextStyle normalStyle,
+    required TextStyle highlightStyle,
+    required bool caseSensitive,
+  }) {
+    if (fullText.isEmpty || query.trim().isEmpty) {
+      return TextSpan(text: fullText, style: normalStyle);
     }
 
-    final List<String> tokens = cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toSet().toList(growable: false);
+    final String source = caseSensitive ? fullText : fullText.toLowerCase();
+    final String target = caseSensitive ? query.trim() : query.toLowerCase().trim();
 
-    tokens.sort((a, b) => b.length.compareTo(a.length));
-    return tokens;
-  }
-
-  TextSpan _highlightOccurrences({required String fullText, required String query, required TextStyle normalStyle, required TextStyle highlightStyle, required bool caseSensitive}) {
-    final List<String> tokens = _extractTokens(query);
-
-    if (fullText.isEmpty || tokens.isEmpty) {
-      return TextSpan(
-        text: fullText,
-        style: normalStyle,
-      );
-    }
-
-    final String pattern = tokens.map(RegExp.escape).join('|');
-    final RegExp regExp = RegExp(
-      pattern,
-      caseSensitive: caseSensitive,
-      unicode: true,
-    );
-
-    final List<RegExpMatch> matches = regExp.allMatches(fullText).toList(growable: false);
-
-    if (matches.isEmpty) {
-      return TextSpan(
-        text: fullText,
-        style: normalStyle,
-      );
-    }
-
-    final List<TextSpan> children = <TextSpan>[];
+    final List<TextSpan> children = [];
     int start = 0;
 
-    for (final RegExpMatch match in matches) {
-      if (match.start > start) {
+    while (true) {
+      final int index = source.indexOf(target, start);
+
+      if (index == -1) {
         children.add(
           TextSpan(
-            text: fullText.substring(start, match.start),
+            text: fullText.substring(start),
+            style: normalStyle,
+          ),
+        );
+        break;
+      }
+
+      if (index > start) {
+        children.add(
+          TextSpan(
+            text: fullText.substring(start, index),
             style: normalStyle,
           ),
         );
@@ -152,26 +138,14 @@ class SearchAyahItem extends StatelessWidget {
 
       children.add(
         TextSpan(
-          text: fullText.substring(match.start, match.end),
+          text: fullText.substring(index, index + target.length),
           style: highlightStyle,
         ),
       );
 
-      start = match.end;
+      start = index + target.length;
     }
 
-    if (start < fullText.length) {
-      children.add(
-        TextSpan(
-          text: fullText.substring(start),
-          style: normalStyle,
-        ),
-      );
-    }
-
-    return TextSpan(
-      style: normalStyle,
-      children: children,
-    );
+    return TextSpan(style: normalStyle, children: children);
   }
 }

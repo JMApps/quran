@@ -4,14 +4,15 @@ import '../../../core/theme/app_styles.dart';
 import 'search_ayahs_body.dart';
 
 class SearchAyahsDelegate extends SearchDelegate<void> {
-  SearchAyahsDelegate({required this.searchField, required this.tableName}) : super(
+  SearchAyahsDelegate({required this.searchField, required this.dataTable, required this.ftsTable}) : super(
     searchFieldLabel: searchField,
     keyboardType: TextInputType.text,
     textInputAction: TextInputAction.search,
   );
 
   final String searchField;
-  final String tableName;
+  final String dataTable;
+  final String ftsTable;
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -58,7 +59,8 @@ class SearchAyahsDelegate extends SearchDelegate<void> {
   Widget buildResults(BuildContext context) {
     return SearchAyahsBody(
       query: query,
-      tableName: tableName,
+      dataTable: dataTable,
+      ftsTable: ftsTable,
     );
   }
 
@@ -66,7 +68,8 @@ class SearchAyahsDelegate extends SearchDelegate<void> {
   Widget buildSuggestions(BuildContext context) {
     return SearchAyahsBody(
       query: query,
-      tableName: tableName,
+      dataTable: dataTable,
+      ftsTable: ftsTable,
     );
   }
 }

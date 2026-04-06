@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../items/search_ayah_item.dart';
 
@@ -18,7 +17,7 @@ class AyahSearchList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scrollbar(
       child: ListView.builder(
-        padding: AppStyles.miniPadding,
+        padding: .zero,
         itemCount: searchResultList.length,
         itemBuilder: (context, index) {
           final AyahByAyahEntity ayahModel = searchResultList[index];

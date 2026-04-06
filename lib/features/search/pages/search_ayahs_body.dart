@@ -12,11 +12,13 @@ class SearchAyahsBody extends StatelessWidget {
   const SearchAyahsBody({
     super.key,
     required this.query,
-    required this.tableName,
+    required this.dataTable,
+    required this.ftsTable,
   });
 
   final String query;
-  final String tableName;
+  final String dataTable;
+  final String ftsTable;
 
   List<String> _extractTokens(String value) {
     final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -79,7 +81,8 @@ class SearchAyahsBody extends StatelessWidget {
     return FutureBuilder<List<AyahByAyahEntity>>(
       future: Provider.of<AyahByAyahState>(context, listen: false).searchAyahs(
         query: trimmedQuery,
-        tableName: tableName,
+        dataTable: dataTable,
+        ftsTable: ftsTable,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -115,7 +118,7 @@ class SearchAyahsBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: AppStyles.mainPadding,
+              padding: AppStyles.miniPadding,
               color: appColors.tertiaryContainer,
               child: Text(
                 '${AppStrings.searchByQuery} "$trimmedQuery" ${AppStrings.plural(totalMatches, AppStrings.foundOne, AppStrings.foundFew, AppStrings.foundMany)} $totalMatches ${AppStrings.plural(totalMatches, AppStrings.resultOne, AppStrings.resultFew, AppStrings.resultMany)}',

@@ -10,7 +10,7 @@ class AyahByAyahUseCase {
     return _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
   }
 
-  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String tableName}) {
-    return _ayahByAyahRepository.getSearchAyah(query: query, tableName: tableName);
+  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String dataTable, required String ftsTable}) {
+    return _ayahByAyahRepository.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
   }
 }

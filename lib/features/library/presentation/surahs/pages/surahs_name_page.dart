@@ -28,7 +28,8 @@ class SurahNamePage extends StatelessWidget {
                 context: context,
                 delegate: SearchAyahsDelegate(
                   searchField: AppStrings.searchByAyahs,
-                  tableName: 'Table_of_translation_kuliev',
+                  dataTable: 'Table_of_translation_kuliev',
+                  ftsTable: 'translation_kuliev_fts'
                 ),
               );
             },
