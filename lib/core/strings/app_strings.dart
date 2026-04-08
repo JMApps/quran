@@ -42,6 +42,12 @@ class AppStrings {
   static const String translate = 'Перевод';
   static const String recent = 'Недавнее';
 
+  static const String themeColor = 'Цвет темы';
+  static const String selectThemeColor = 'Выберите цвет темы';
+  static const String arabicSurahName = 'Название сур на арабском';
+  static const String translationSurahName = 'Перевод названия сур';
+  static const String appTheme = 'Тема приложения';
+
 
   static const String fontGilroy = 'Gilroy';
   static const String fontGilroyMedium = 'Gilroy Medium';

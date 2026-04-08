@@ -72,10 +72,6 @@ class AyahByAyahState extends ChangeNotifier {
     }
   }
 
-  Future<AyahByAyahEntity> getAyahLocation({required int ayahId}) {
-    return _ayahByAyahUseCase.getAyahLocation(ayahId: ayahId);
-  }
-
   Future<void> _prefetchPage({
     required int pageNumber,
     required String tableName,

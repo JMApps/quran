@@ -17,7 +17,7 @@ class SettingListTileItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .comfortable,
       contentPadding: AppStyles.hrMainPadding,
       value: value,
       onChanged: onChanged,

@@ -11,4 +11,6 @@ class AppKeys {
   static const String keyAlwaysDisplayOn = 'key_always_display_on';
   static const String keyAppThemeModeIndex = 'key_app_theme_mode_index';
   static const String keyAppThemeColor = 'key_app_theme_color';
+  static const String keyAyahArabicTextSize = 'key_ayah_arabic_text_size';
+  static const String keyAyahTranslationTextSize = 'key_ayah_translation_text_size';
 }

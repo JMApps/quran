@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../state/app_settings_state.dart';
 
@@ -18,10 +19,10 @@ class ThemeColorPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .comfortable,
       contentPadding: AppStyles.hrMainPadding,
       title: const Text(
-        'Цвет темы',
+        AppStrings.themeColor,
       ),
       trailing: IconButton(
         onPressed: () {
@@ -30,11 +31,11 @@ class ThemeColorPicker extends StatelessWidget {
             builder: (context) => AlertDialog(
               alignment: Alignment.center,
               actionsPadding: AppStyles.mainPadding,
-              title: const Text('Выберите цвет темы'),
+              title: const Text(AppStrings.selectThemeColor),
               content: Material(
                 color: Colors.transparent,
                 child: MaterialColorPicker(
-                  alignment: WrapAlignment.center,
+                  alignment: .center,
                   iconSelected: Icons.check_circle,
                   elevation: 0.5,
                   allowShades: false,

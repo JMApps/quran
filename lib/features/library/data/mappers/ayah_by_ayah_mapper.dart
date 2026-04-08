@@ -10,9 +10,8 @@ extension AyahByAyahMapper on AyahByAyahModel {
       ayahNumber: ayahNumber,
       ayahArabic: ayahArabic,
       ayahTranslation: ayahTranslation,
-      pageNumber: pageNumber,
-      ayahPositionOnPage: ayahPositionOnPage,
-      ayahsCountOnPage: ayahsCountOnPage,
+      ayahPageNumber: ayahPageNumber,
+      ayahPosition: ayahPosition,
     );
   }
 }

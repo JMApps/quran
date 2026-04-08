@@ -78,6 +78,28 @@ class AppSettingsState extends ChangeNotifier {
     notifyListeners();
   }
 
+  double _ayahArabicTextSize = 19.0;
+
+  double get ayahArabicTextSize => _ayahArabicTextSize;
+
+  set ayahArabicTextSize(double size) {
+    if (_ayahArabicTextSize == size) return;
+    _ayahArabicTextSize = size;
+    _appSettingsBox.put(AppKeys.keyAyahArabicTextSize, size);
+    notifyListeners();
+  }
+
+  double _ayahTranslationTextSize = 17.0;
+
+  double get ayahTranslationTextSize => _ayahTranslationTextSize;
+
+  set ayahTranslationTextSize(double size) {
+    if (_ayahTranslationTextSize == size) return;
+    _ayahTranslationTextSize = size;
+    _appSettingsBox.put(AppKeys.keyAyahTranslationTextSize, size);
+    notifyListeners();
+  }
+
   void _loadSettings() {
     _arabicNameSurah = _appSettingsBox.get(
       AppKeys.keySurahArabicName,
@@ -107,5 +129,8 @@ class AppSettingsState extends ChangeNotifier {
       AppKeys.keyAppThemeModeIndex,
       defaultValue: 0,
     );
+
+    _ayahArabicTextSize = _appSettingsBox.get(AppKeys.keyAyahArabicTextSize, defaultValue: 19.0);
+    _ayahTranslationTextSize = _appSettingsBox.get(AppKeys.keyAyahTranslationTextSize, defaultValue: 17.0);
   }
 }

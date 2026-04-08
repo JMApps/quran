@@ -19,8 +19,10 @@ class DbValueStrings {
   static const String dbVerseKey = 'verse_key';
   static const String dbAyahNumber = 'ayah_number';
   static const String dbAyahArabic = 'ayah_arabic';
-  static const String dbAyahTranslation = 'ayah_translation';
   static const String dbAyahArabicNormalized = 'ayah_arabic_normalized';
+  static const String dbAyahTranslation = 'ayah_translation';
+  static const String dbAyahPageNumber = 'ayah_page_number';
+  static const String dbAyahPosition = 'ayah_position';
 
   static const String tableOfLayouts = 'Table_of_layouts';
   static const String dbPageNumber = 'page_number';
@@ -44,7 +46,4 @@ class DbValueStrings {
 
   static const String dbOrderASC = 'ASC';
   static const String dbOrderDESC = 'DESC';
-
-
-
 }

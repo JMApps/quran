@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/strings/app_keys.dart';
 
 import '../../../core/strings/app_strings.dart';
-import '../state/app_settings_state.dart';
 import '../items/setting_list_tile_item.dart';
+import '../state/app_settings_state.dart';
 import '../widgets/theme_color_picker.dart';
 import '../widgets/theme_mode_drop_down.dart';
 
@@ -25,14 +26,14 @@ class AppSettingsPage extends StatelessWidget {
                 const Divider(indent: 16, endIndent: 16),
                 SettingListTileItem(
                   value: appSettingsState.arabicNameSurah,
-                  title: 'Название сур на арабском',
+                  title: AppStrings.arabicSurahName,
                   onChanged: (bool onChanged) {
                     appSettingsState.arabicNameSurah = onChanged;
                   },
                 ),
                 SettingListTileItem(
                   value: appSettingsState.translationNameSurah,
-                  title: 'Перевод названия сур',
+                  title: AppStrings.translationSurahName,
                   onChanged: (bool onChanged) {
                     appSettingsState.translationNameSurah = onChanged;
                   },
@@ -40,7 +41,7 @@ class AppSettingsPage extends StatelessWidget {
                 const Divider(indent: 16, endIndent: 16),
                 SettingListTileItem(
                   value: appSettingsState.displayAlwaysOn,
-                  title: 'Дисплей всегда включен',
+                  title: AppKeys.keyAlwaysDisplayOn,
                   onChanged: (bool onChanged) {
                     appSettingsState.setDisplayAlwaysOn(onChanged);
                   },
@@ -48,7 +49,7 @@ class AppSettingsPage extends StatelessWidget {
                 const Divider(indent: 16, endIndent: 16),
                 ThemeModeDropDown(
                   value: appSettingsState.appThemeModeIndex,
-                  title: 'Тема приложения',
+                  title: AppStrings.appTheme,
                   onChanged: (int? index) {
                     appSettingsState.appThemeModeIndex = index!;
                   },

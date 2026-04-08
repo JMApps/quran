@@ -115,10 +115,7 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
 
 
   @override
-  Future<List<AyahByAyahEntity>> getAyahsByIds({
-    required String tableName,
-    required List<int> ayahIds,
-  }) async {
+  Future<List<AyahByAyahEntity>> getAyahsByIds({required String tableName, required List<int> ayahIds}) async {
     if (ayahIds.isEmpty) return const [];
 
     final db = await _quranDatabaseService.db;
@@ -154,72 +151,6 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     });
 
     return List.unmodifiable(ayahs);
-  }
-
-
-  @override
-  Future<AyahByAyahEntity> getAyahLocation({required int ayahId}) async {
-    final db = await _quranDatabaseService.db;
-
-    final List<Map<String, Object?>> result = await db.rawQuery(
-      '''
-    WITH page_ayahs AS (
-      SELECT
-        l.${DbValueStrings.dbPageNumber} AS page_number,
-        w.surah AS surah_number,
-        w.ayah AS ayah_number,
-        MIN(w.id) AS first_word_id
-      FROM ${DbValueStrings.tableOfLayouts} l
-      JOIN ${DbValueStrings.tableOfWordsGlyph} w
-        ON w.id BETWEEN
-           CAST(l.${DbValueStrings.dbFirstWordId} AS INTEGER)
-           AND
-           CAST(l.${DbValueStrings.dbLastWordId} AS INTEGER)
-      WHERE l.${DbValueStrings.dbLineType} = 'ayah'
-        AND l.${DbValueStrings.dbFirstWordId} IS NOT NULL
-        AND l.${DbValueStrings.dbLastWordId} IS NOT NULL
-      GROUP BY
-        l.${DbValueStrings.dbPageNumber},
-        w.surah,
-        w.ayah
-    ),
-    ranked_page_ayahs AS (
-      SELECT
-        page_number,
-        surah_number,
-        ayah_number,
-        ROW_NUMBER() OVER (
-          PARTITION BY page_number
-          ORDER BY first_word_id ASC
-        ) AS ayah_position_on_page,
-        COUNT(*) OVER (
-          PARTITION BY page_number
-        ) AS ayahs_count_on_page
-      FROM page_ayahs
-    )
-    SELECT
-      a.${DbValueStrings.dbAyahId} AS ayah_id,
-      a.${DbValueStrings.dbVerseKey} AS verse_key,
-      a.${DbValueStrings.dbSurahNumber} AS surah_number,
-      a.${DbValueStrings.dbAyahNumber} AS ayah_number,
-      a.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
-      '' AS ayah_translation,
-      NULL AS highlighted_arabic,
-      NULL AS highlighted_translation,
-      r.page_number AS page_number,
-      r.ayah_position_on_page AS ayah_position_on_page,
-      r.ayahs_count_on_page AS ayahs_count_on_page
-    FROM ${DbValueStrings.tableOfAyahs} a
-    JOIN ranked_page_ayahs r
-      ON r.surah_number = a.${DbValueStrings.dbSurahNumber}
-     AND r.ayah_number = a.${DbValueStrings.dbAyahNumber}
-    WHERE a.${DbValueStrings.dbAyahId} = ?
-    LIMIT 1
-    ''',
-      <Object>[ayahId],
-    );
-
-    return AyahByAyahModel.fromMap(result.first).toEntity();
   }
 
   bool _containsArabic(String value) {

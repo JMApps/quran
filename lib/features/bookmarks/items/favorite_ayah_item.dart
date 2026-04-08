@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/presentation/state/ayah_by_ayah_state.dart';
 
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
@@ -23,19 +22,10 @@ class FavoriteAyahItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
 
     final surahState = Provider.of<SurahState>(context, listen: false);
-    final ayahByAyahState = Provider.of<AyahByAyahState>(context, listen: false);
-
     final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahModel.verseKey) ?? ayahModel.verseKey;
 
     return InkWell(
       onTap: () async {
-        final location = await ayahByAyahState.getAyahLocation(ayahId: ayahModel.ayahId);
-
-        if (!context.mounted || location.pageNumber == null) {
-          return;
-        }
-
-        surahState.setMushafCurrentPage(location.pageNumber!);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

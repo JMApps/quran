@@ -5,7 +5,6 @@ import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/router/names_router.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/surah_state.dart';
 
 class SearchAyahItem extends StatelessWidget {
@@ -25,7 +24,6 @@ class SearchAyahItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
 
     final surahState = Provider.of<SurahState>(context, listen: false);
-    final ayahByAyahState = Provider.of<AyahByAyahState>(context, listen: false);
     final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahModel.verseKey) ?? ayahModel.verseKey;
 
     const arabicStyle = TextStyle(
@@ -68,13 +66,7 @@ class SearchAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        final location = await ayahByAyahState.getAyahLocation(ayahId: ayahModel.ayahId);
-
-        if (!context.mounted || location.pageNumber == null) {
-          return;
-        }
-
-        surahState.setMushafCurrentPage(location.pageNumber!);
+        surahState.setMushafCurrentPage(ayahModel.ayahPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,

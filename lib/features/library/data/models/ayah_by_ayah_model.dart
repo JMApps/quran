@@ -1,4 +1,4 @@
-import 'package:quran/core/strings/db_value_strings.dart';
+import '../../../../core/strings/db_value_strings.dart';
 
 class AyahByAyahModel {
   final int ayahId;
@@ -7,11 +7,9 @@ class AyahByAyahModel {
   final int ayahNumber;
   final String ayahArabic;
   final String ayahTranslation;
-  final int? pageNumber;
-  final int? ayahPositionOnPage;
-  final int? ayahsCountOnPage;
-
-
+  final int ayahPageNumber;
+  final int ayahPosition;
+  
   const AyahByAyahModel({
     required this.ayahId,
     required this.verseKey,
@@ -19,9 +17,8 @@ class AyahByAyahModel {
     required this.ayahNumber,
     required this.ayahArabic,
     required this.ayahTranslation,
-    required this.pageNumber,
-    required this.ayahPositionOnPage,
-    required this.ayahsCountOnPage,
+    required this.ayahPageNumber,
+    required this.ayahPosition,
   });
 
   factory AyahByAyahModel.fromMap(Map<String, Object?> map) {
@@ -32,9 +29,8 @@ class AyahByAyahModel {
       ayahNumber: map[DbValueStrings.dbAyahNumber] as int,
       ayahArabic: map[DbValueStrings.dbAyahArabic] as String,
       ayahTranslation: map[DbValueStrings.dbAyahTranslation] as String,
-      pageNumber: map[DbValueStrings.dbPageNumber] as int?,
-      ayahPositionOnPage: map['ayah_position_on_page'] as int?,
-      ayahsCountOnPage: map['ayahs_count_on_page'] as int?,
+      ayahPageNumber: map[DbValueStrings.dbAyahPageNumber] as int,
+      ayahPosition: map[DbValueStrings.dbAyahPosition] as int,
     );
   }
 }

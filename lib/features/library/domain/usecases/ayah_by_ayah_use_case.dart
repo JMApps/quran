@@ -17,8 +17,4 @@ class AyahByAyahUseCase {
   Future<List<AyahByAyahEntity>> getAyahsByIds({required String tableName, required List<int> ayahIds}) {
     return _ayahByAyahRepository.getAyahsByIds(tableName: tableName, ayahIds: ayahIds);
   }
-
-  Future<AyahByAyahEntity> getAyahLocation({required int ayahId}) {
-   return _ayahByAyahRepository.getAyahLocation(ayahId: ayahId);
-  }
 }

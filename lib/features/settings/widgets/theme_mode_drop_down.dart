@@ -18,7 +18,7 @@ class ThemeModeDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      visualDensity: VisualDensity.comfortable,
+      visualDensity: .comfortable,
       title: Text(
         title,
       ),
@@ -35,9 +35,9 @@ class ThemeModeDropDown extends StatelessWidget {
             child: Text(
               AppStrings.appThemeModeNames[index],
               style: TextStyle(
-                fontWeight: value == index ? FontWeight.bold : FontWeight.normal,
+                fontWeight: value == index ? .bold : .normal,
               ),
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
           ),
         ),

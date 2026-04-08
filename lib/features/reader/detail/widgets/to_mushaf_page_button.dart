@@ -34,13 +34,16 @@ class ToMushafPageButton extends StatelessWidget {
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: Slider(
-                        showValueIndicator: ShowValueIndicator.alwaysVisible,
+                        showValueIndicator: .alwaysVisible,
                         value: surahState.currentMushafPage.toDouble(),
                         label: '${surahState.currentMushafPage}',
                         min: 1,
                         max: 604,
                         divisions: 604,
                         onChanged: (double value) {
+                          surahState.setMushafCurrentPage(value.round());
+                        },
+                        onChangeEnd: (double value) {
                           surahState.setMushafCurrentPage(value.round());
                           if (mushafPageController.hasClients) {
                             mushafPageController.jumpToPage(value.toInt() - 1);
