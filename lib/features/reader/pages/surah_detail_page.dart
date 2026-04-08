@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../../library/domain/entities/mushaf_page_meta_entity.dart';
-import '../../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../../library/presentation/state/surah_state.dart';
+import '../../library/domain/entities/mushaf_page_meta_entity.dart';
+import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/surah_state.dart';
 import '../lists/surah_detail_list.dart';
 import '../widgets/favorite_mushaf_page_button.dart';
 import '../widgets/to_mushaf_page_button.dart';

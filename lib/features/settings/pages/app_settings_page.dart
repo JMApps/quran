@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/strings/app_keys.dart';
 
 import '../../../core/strings/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
 import '../items/setting_list_tile_item.dart';
 import '../state/app_settings_state.dart';
+import '../widgets/ayah_text_size_slider.dart';
 import '../widgets/theme_color_picker.dart';
 import '../widgets/theme_mode_drop_down.dart';
 
@@ -41,7 +42,7 @@ class AppSettingsPage extends StatelessWidget {
                 const Divider(indent: 16, endIndent: 16),
                 SettingListTileItem(
                   value: appSettingsState.displayAlwaysOn,
-                  title: AppKeys.keyAlwaysDisplayOn,
+                  title: AppStrings.alwaysDisplayOn,
                   onChanged: (bool onChanged) {
                     appSettingsState.setDisplayAlwaysOn(onChanged);
                   },
@@ -61,6 +62,25 @@ class AppSettingsPage extends StatelessWidget {
                     Navigator.pop(context);
                     appSettingsState.themeColor = color!;
                   },
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                const Padding(
+                  padding: AppStyles.mainPadding,
+                  child: Text(
+                    AppStrings.ayahsTextSize,
+                    style: AppStyles.mainTextStyle16,
+                  ),
+                ),
+                AyahTextSizeSlider(
+                  title: AppStrings.arabic,
+                  size: appSettingsState.ayahArabicTextSize,
+                  onChanged: (double value) => appSettingsState.ayahArabicTextSize = value,
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                AyahTextSizeSlider(
+                  title: AppStrings.translation,
+                  size: appSettingsState.ayahTranslationTextSize,
+                  onChanged: (double value) => appSettingsState.ayahTranslationTextSize = value,
                 ),
               ],
             );

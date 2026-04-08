@@ -29,7 +29,7 @@ class ThemeColorPicker extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              alignment: Alignment.center,
+              alignment: .center,
               actionsPadding: AppStyles.mainPadding,
               title: const Text(AppStrings.selectThemeColor),
               content: Material(

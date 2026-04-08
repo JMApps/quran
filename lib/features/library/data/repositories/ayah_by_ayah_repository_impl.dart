@@ -33,12 +33,14 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
           AND l.${DbValueStrings.dbLastWordId} IS NOT NULL
       )
       SELECT
-        m.${DbValueStrings.dbAyahId} AS ayah_id,
-        m.${DbValueStrings.dbVerseKey} AS verse_key,
-        m.${DbValueStrings.dbSurahNumber} AS surah_number,
-        m.${DbValueStrings.dbAyahNumber} AS ayah_number,
-        m.${DbValueStrings.dbAyahArabic} AS ayah_arabic,
-        t.${DbValueStrings.dbAyahTranslation} AS ayah_translation,
+        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
+        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
+        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
+        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
+        m.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
+        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
+        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
+        t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
         NULL AS highlighted_arabic,
         NULL AS highlighted_translation
       FROM page_ayahs p
@@ -72,12 +74,14 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     final String sql = isArabicQuery
         ? '''
       SELECT
-        m.${DbValueStrings.dbAyahId}                    AS ayah_id,
-        m.${DbValueStrings.dbVerseKey}                   AS verse_key,
-        m.${DbValueStrings.dbSurahNumber}                AS surah_number,
-        m.${DbValueStrings.dbAyahNumber}                 AS ayah_number,
-        m.${DbValueStrings.dbAyahArabicNormalized}       AS ayah_arabic,
-        tr.${DbValueStrings.dbAyahTranslation}           AS ayah_translation,
+        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
+        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
+        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
+        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
+        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
+        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
+        m.${DbValueStrings.dbAyahArabicNormalized} AS ${DbValueStrings.dbAyahArabicNormalized},
+        tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
         NULL AS highlighted_arabic,
         NULL AS highlighted_translation
       FROM ayahs_fts
@@ -129,6 +133,8 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       a.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
       a.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
       a.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
+      a.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
+      a.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
       t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
     FROM ${DbValueStrings.tableOfAyahs} a
     LEFT JOIN $tableName t

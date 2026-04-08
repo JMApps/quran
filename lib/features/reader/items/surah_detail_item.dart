@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../../library/domain/entities/layout_entity.dart';
-import '../../../library/domain/entities/surah_name_entity.dart';
-import '../../../library/presentation/state/ayah_by_ayah_state.dart';
-import '../../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../../library/presentation/state/page_layout_state.dart';
-import '../../../library/presentation/state/surah_state.dart';
+import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/domain/entities/layout_entity.dart';
+import '../../library/domain/entities/surah_name_entity.dart';
+import '../../library/presentation/state/ayah_by_ayah_state.dart';
+import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/page_layout_state.dart';
+import '../../library/presentation/state/surah_state.dart';
 import '../lists/ayah_by_ayah_list.dart';
 
 class SurahDetailItem extends StatefulWidget {

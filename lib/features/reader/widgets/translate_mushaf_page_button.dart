@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/mushaf_page_meta_state.dart';
 
 class TranslateMushafPageButton extends StatelessWidget {
   const TranslateMushafPageButton({

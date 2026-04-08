@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../../library/data/mappers/ayah_list_row_builder.dart';
-import '../../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../../library/domain/entities/ayah_list_row_type.dart';
-import '../../../library/domain/entities/surah_name_entity.dart';
+import '../../library/data/mappers/ayah_list_row_builder.dart';
+import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/domain/entities/ayah_list_row_type.dart';
+import '../../library/domain/entities/surah_name_entity.dart';
 import '../items/ayah_by_ayah_item.dart';
 import '../items/basmallah_item.dart';
 import '../items/surah_header_item.dart';

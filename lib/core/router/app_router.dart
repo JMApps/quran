@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/library/presentation/hizb/pages/hizbs_page.dart';
-import '../../features/reader/detail/pages/surah_detail_page.dart';
+import '../../features/reader/pages/surah_detail_page.dart';
 import 'names_router.dart';
 
 class AppRouter {

@@ -26,10 +26,11 @@ class FavoriteAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
+        surahState.setMushafCurrentPage(ayahModel.ayahPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: ayahModel.ayahPageNumber,
         );
       },
       child: Container(

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/surah_state.dart';
 
 class FavoriteMushafPageButton extends StatelessWidget {
   const FavoriteMushafPageButton({super.key});

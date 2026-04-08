@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran/features/settings/state/app_settings_state.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 
 class AyahByAyahItem extends StatelessWidget {
   const AyahByAyahItem({
@@ -41,28 +43,32 @@ class AyahByAyahItem extends StatelessWidget {
             child: Text(ayahByAyahModel.verseKey),
           ),
           const SizedBox(height: 16),
-          Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Text(
-                ayahByAyahModel.ayahArabic,
-                textDirection: TextDirection.rtl,
-                style: const TextStyle(
-                  fontSize: 19.0,
-                  fontFamily: AppStrings.fontUthmanicHafs,
-                  height: 2.0,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                ayahByAyahModel.ayahTranslation,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: AppStrings.fontGilroy,
-                ),
-              ),
-            ],
+          Consumer<AppSettingsState>(
+            builder: (context, appSettingsState, _) {
+              return Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  Text(
+                    ayahByAyahModel.ayahArabic,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      fontSize: appSettingsState.ayahArabicTextSize,
+                      fontFamily: AppStrings.fontUthmanicHafs,
+                      height: 2.25,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    ayahByAyahModel.ayahTranslation,
+                    style: TextStyle(
+                      fontSize: appSettingsState.ayahTranslationTextSize,
+                      fontFamily: AppStrings.fontGilroy,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
