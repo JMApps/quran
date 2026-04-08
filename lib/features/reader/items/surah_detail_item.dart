@@ -14,9 +14,11 @@ class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
     required this.index,
+    required this.ayahPosition,
   });
 
   final int index;
+  final int ayahPosition;
 
   @override
   State<SurahDetailItem> createState() => _SurahDetailItemState();
@@ -34,10 +36,9 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Provider.of<SurahState>(context, listen: false).loadAllSurahs();
       if (!mounted) return;
-
       await _loadCurrentPage();
-      if (!mounted) return;
 
+      if (!mounted) return;
       _prefetchNextPage();
     });
   }
@@ -54,15 +55,8 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
   void _prefetchNextPage() {
     final nextPage = _pageNumber + 1;
-    Provider.of<PageLayoutState>(
-      context,
-      listen: false,
-    ).loadPageLines(nextPage, prefetchNext: false);
-    Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(
-      pageNumber: nextPage,
-      tableName: tableName,
-      prefetchNext: false,
-    );
+    Provider.of<PageLayoutState>(context, listen: false).loadPageLines(nextPage, prefetchNext: false);
+    Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(pageNumber: nextPage, tableName: tableName, prefetchNext: false);
   }
 
   @override
@@ -82,14 +76,8 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     return Consumer<MushafPageMetaState>(
       builder: (context, mushafPageMetaState, _) {
         return mushafPageMetaState.translationState
-            ? AyahByAyahList(
-                ayahsPage: ayahs,
-                allSurahs: allSurahs,
-              )
-            : AyahByAyahList(
-                ayahsPage: ayahs,
-                allSurahs: allSurahs,
-              );
+            ? AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition)
+            : AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition);
       },
     );
   }

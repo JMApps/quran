@@ -50,10 +50,7 @@ class AyahByAyahState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _ayahByAyahUseCase.getAyahsByPage(
-        pageNumber: pageNumber,
-        tableName: tableName,
-      );
+      final result = await _ayahByAyahUseCase.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
 
       _pagesCache[key] = result;
     } catch (e) {
@@ -65,17 +62,11 @@ class AyahByAyahState extends ChangeNotifier {
     }
 
     if (prefetchNext && pageNumber < AppStrings.totalPages) {
-      _prefetchPage(
-        pageNumber: pageNumber + 1,
-        tableName: tableName,
-      );
+      _prefetchPage(pageNumber: pageNumber + 1, tableName: tableName);
     }
   }
 
-  Future<void> _prefetchPage({
-    required int pageNumber,
-    required String tableName,
-  }) async {
+  Future<void> _prefetchPage({required int pageNumber, required String tableName}) async {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
 
     if (pageNumber > AppStrings.totalPages) return;
@@ -86,10 +77,7 @@ class AyahByAyahState extends ChangeNotifier {
     _errorMap.remove(key);
 
     try {
-      final result = await _ayahByAyahUseCase.getAyahsByPage(
-        pageNumber: pageNumber,
-        tableName: tableName,
-      );
+      final result = await _ayahByAyahUseCase.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
 
       _pagesCache[key] = result;
     } catch (_) {
@@ -98,17 +86,9 @@ class AyahByAyahState extends ChangeNotifier {
       _inFlight.remove(key);
     }
   }
-
-  Future<List<AyahByAyahEntity>> searchAyahs({
-    required String query,
-    required String dataTable,
-    required String ftsTable,
-  }) {
-    return _ayahByAyahUseCase.getSearchAyah(
-      query: query,
-      dataTable: dataTable,
-      ftsTable: ftsTable
-    );
+  
+  Future<List<AyahByAyahEntity>> searchAyahs({required String query, required String dataTable, required String ftsTable}) {
+    return _ayahByAyahUseCase.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
   }
 
   void clearCache() {
@@ -122,9 +102,7 @@ class AyahByAyahState extends ChangeNotifier {
   void clearCacheByTable(String tableName) {
     final prefix = '$tableName:';
 
-    final keys = _pagesCache.keys
-        .where((key) => key.startsWith(prefix))
-        .toList(growable: false);
+    final keys = _pagesCache.keys.where((key) => key.startsWith(prefix)).toList(growable: false);
 
     for (final key in keys) {
       _pagesCache.remove(key);

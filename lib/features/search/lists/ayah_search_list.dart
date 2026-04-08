@@ -22,7 +22,7 @@ class AyahSearchList extends StatelessWidget {
         itemBuilder: (context, index) {
           final AyahByAyahEntity ayahModel = searchResultList[index];
           return SearchAyahItem(
-            ayahModel: ayahModel,
+            ayahByAyahModel: ayahModel,
             index: index,
             query: query,
           );

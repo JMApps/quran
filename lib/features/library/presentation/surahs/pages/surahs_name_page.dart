@@ -53,7 +53,7 @@ class SurahNamePage extends StatelessWidget {
                 child: Text(
                   '${AppStrings.errorLoadSurahsList}\n${surahState.error}',
                   style: AppStyles.mainTextStyle18,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
               ),
             );

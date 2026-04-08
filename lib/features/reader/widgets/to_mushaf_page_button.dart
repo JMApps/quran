@@ -32,7 +32,7 @@ class ToMushafPageButton extends StatelessWidget {
                       thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
                     child: Directionality(
-                      textDirection: TextDirection.rtl,
+                      textDirection: .rtl,
                       child: Slider(
                         showValueIndicator: .alwaysVisible,
                         value: surahState.currentMushafPage.toDouble(),

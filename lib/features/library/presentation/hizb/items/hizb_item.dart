@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/hizb_entity.dart';
 import '../../state/surah_state.dart';
 
@@ -22,10 +23,8 @@ class HizbItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(25);
     final itemEvenColor = appColors.secondary.withAlpha(05);
-
     final surahState = context.read<SurahState>();
     final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: hizbModel.firstVerseKey) ?? hizbModel.firstVerseKey;
-
     return ListTile(
       visualDensity: .adaptivePlatformDensity,
       tileColor: index.isOdd ? itemEvenColor : itemOddColor,
@@ -54,10 +53,13 @@ class HizbItem extends StatelessWidget {
       ),
       onTap: () {
         surahState.setMushafCurrentPage(hizbModel.startPageNumber);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: hizbModel.startPageNumber,
+        );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: arguments,
         );
       },
     );

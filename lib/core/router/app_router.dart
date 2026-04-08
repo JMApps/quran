@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../features/library/data/arguments/surah_detail_args.dart';
 import '../../features/library/presentation/hizb/pages/hizbs_page.dart';
 import '../../features/reader/pages/surah_detail_page.dart';
 import 'names_router.dart';
@@ -19,7 +20,12 @@ class AppRouter {
   }
 
   static Map<String, Widget Function(BuildContext, dynamic)> routes = {
-    NamesRouter.pageSurahDetail: (context, args) => SurahDetailPage(currentMushafPage: args as int),
-    NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
+    NamesRouter.pageSurahDetail: (context, args) {
+      final arguments = args as SurahDetailArgs;
+      return SurahDetailPage(
+        currentMushafPage: arguments.currentMushafPage,
+        ayahPosition: arguments.ayahPosition,
+      );
+    },    NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
   };
 }

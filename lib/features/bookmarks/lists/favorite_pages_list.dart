@@ -28,7 +28,7 @@ class FavoritePagesList extends StatelessWidget {
             child: Padding(
               padding: AppStyles.mainPadding,
               child: Text(
-                '${AppStrings.errorLoadSurahsList}\n${mushafPageMetaState.error}',
+                '${AppStrings.errorPageFavoritesList}\n${mushafPageMetaState.error}',
                 style: AppStyles.mainTextStyle18,
                 textAlign: .center,
               ),

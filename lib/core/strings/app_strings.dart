@@ -1,6 +1,7 @@
 import '../../features/library/domain/entities/line_type.dart';
 
 class AppStrings {
+  static const String basmaLlah = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيم';
   static const String appName = 'Мусхаф';
   static const String surahs = 'Суры';
   static const String bookmarks = 'Избранное';
@@ -20,8 +21,8 @@ class AppStrings {
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
-  static const String errorMushafFavoritesList = 'Ошибка загрузки избранного: ';
   static const String errorAyahFavoritesList = 'Ошибка загрузки избранных аятов: ';
+  static const String errorPageFavoritesList = 'Ошибка загрузки избранных страниц: ';
   static const String errorMushafLastFavoritesList = 'Ошибка загрузки недавних страниц: ';
   static const String errorLoad = 'Ошибка загрузки: ';
   static const String errorSearch = 'Ошибка поиска: ';
@@ -51,6 +52,9 @@ class AppStrings {
   static const String ayahsTextSize = 'Размер текста аятов';
   static const String arabic = 'Арабский';
   static const String translation = 'Перевод';
+
+  static const String copy = 'Скопировать';
+  static const String share = 'Поделиться';
 
 
   static const String fontGilroy = 'Gilroy';

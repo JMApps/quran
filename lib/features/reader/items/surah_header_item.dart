@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/strings/app_strings.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../../core/strings/app_strings.dart';
 
 class SurahHeaderItem extends StatelessWidget {
   const SurahHeaderItem({
@@ -17,16 +17,14 @@ class SurahHeaderItem extends StatelessWidget {
     return Container(
       padding: AppStyles.mainPadding,
       margin: AppStyles.vrBigHrMiniPadding,
-      alignment: Alignment.center,
+      alignment: .center,
       decoration: BoxDecoration(
         color: appColors.secondaryContainer.withAlpha(120),
         borderRadius: AppStyles.mainBorder,
       ),
       child: Text(
         '${AppStrings.surah} $surahName',
-        style: const TextStyle(
-          fontSize: 18.0,
-        ),
+        style: AppStyles.mainTextStyle18,
         textAlign: .center,
       ),
     );

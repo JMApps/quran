@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
+import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../library/presentation/state/surah_state.dart';
 
@@ -38,11 +39,14 @@ class LastFavoritePageItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: mushafPageMetaModel.pageNumber,
+        );
         surahState.setMushafCurrentPage(mushafPageMetaModel.pageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: arguments,
         );
       },
       title: Text('${AppStrings.surah} ${mushafPageMetaModel.nameTranscription}'),

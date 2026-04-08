@@ -21,7 +21,7 @@ class SurahsNameList extends StatelessWidget {
       child: ListView.separated(
         primary: false,
         controller: scrollController,
-        padding: EdgeInsets.only(bottom: bottomHeight),
+        padding: .only(bottom: bottomHeight),
         itemCount: surahsList.length,
         itemBuilder: (context, index) {
           final surahModel = surahsList[index];

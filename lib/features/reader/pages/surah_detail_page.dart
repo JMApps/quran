@@ -15,9 +15,11 @@ class SurahDetailPage extends StatefulWidget {
   const SurahDetailPage({
     super.key,
     required this.currentMushafPage,
+    required this.ayahPosition,
   });
 
   final int currentMushafPage;
+  final int ayahPosition;
 
   @override
   State<SurahDetailPage> createState() => _SurahDetailPageState();
@@ -43,7 +45,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     await Future<void>.delayed(const Duration(milliseconds: 125));
 
     await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
+      .manual,
       overlays: SystemUiOverlay.values,
     );
   }
@@ -77,7 +79,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
               return AnimatedSlide(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeInOut,
-                offset: surahState.showAppBar ? Offset.zero : const Offset(0, -1),
+                offset: surahState.showAppBar ? .zero : const Offset(0, -1),
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
                   opacity: surahState.showAppBar ? 1 : 0,
@@ -128,6 +130,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
           },
           child: SurahDetailList(
             mushafPageController: _mushafPageController,
+            ayahPosition: widget.ayahPosition,
           ),
         ),
       ),

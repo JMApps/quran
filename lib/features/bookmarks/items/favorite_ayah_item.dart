@@ -4,37 +4,52 @@ import 'package:provider/provider.dart';
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/surah_state.dart';
+import '../../settings/state/app_settings_state.dart';
+import '../widgets/ayah_item_params.dart';
 
 class FavoriteAyahItem extends StatelessWidget {
   const FavoriteAyahItem({
     super.key,
-    required this.ayahModel,
+    required this.ayahByAyahModel,
     required this.index,
   });
 
-  final AyahByAyahEntity ayahModel;
+  final AyahByAyahEntity ayahByAyahModel;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-
     final surahState = Provider.of<SurahState>(context, listen: false);
-    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahModel.verseKey) ?? ayahModel.verseKey;
-
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey) ?? ayahByAyahModel.verseKey;
     return InkWell(
       onTap: () async {
-        surahState.setMushafCurrentPage(ayahModel.ayahPageNumber);
+        surahState.setMushafCurrentPage(ayahByAyahModel.ayahPageNumber);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: ayahByAyahModel.ayahPageNumber,
+          ayahPosition: ayahByAyahModel.ayahPosition - 1,
+        );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: ayahModel.ayahPageNumber,
+          arguments: arguments,
+        );
+      },
+      onLongPress: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (ctx) {
+            return AyahItemParams(
+              ayahByAyahModel: ayahByAyahModel,
+            );
+          },
         );
       },
       child: Container(
-        padding: AppStyles.vrBigHrMiniPadding,
+        padding: AppStyles.mainPadding,
         decoration: const BoxDecoration(
           border: Border.symmetric(
             horizontal: BorderSide(
@@ -43,27 +58,26 @@ class FavoriteAyahItem extends StatelessWidget {
             ),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Consumer<AppSettingsState>(
+          builder: (context, appSettingsState, _) {
+            return Column(
+              crossAxisAlignment: .stretch,
               children: [
                 Text(
-                  ayahModel.ayahArabic,
+                  ayahByAyahModel.ayahArabic,
                   textDirection: TextDirection.rtl,
-                  style: const TextStyle(
-                    fontSize: 19.0,
+                  style: TextStyle(
+                    fontSize: appSettingsState.ayahArabicTextSize,
                     fontFamily: AppStrings.fontUthmanicHafs,
-                    height: 2.0,
+                    height: 2.5,
                     letterSpacing: 0,
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  ayahModel.ayahTranslation,
-                  style: const TextStyle(
-                    fontSize: 16.0,
+                  ayahByAyahModel.ayahTranslation,
+                  style: TextStyle(
+                    fontSize: appSettingsState.ayahTranslationTextSize,
                     fontFamily: AppStrings.fontGilroy,
                   ),
                 ),
@@ -75,8 +89,8 @@ class FavoriteAyahItem extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

@@ -1,6 +1,10 @@
 PODS:
+  - clipboard (3.0.9):
+    - Flutter
   - Flutter (1.0.0)
   - package_info_plus (0.4.5):
+    - Flutter
+  - share_plus (0.0.1):
     - Flutter
   - sqflite_darwin (0.0.4):
     - Flutter
@@ -9,26 +13,34 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - clipboard (from `.symlinks/plugins/clipboard/ios`)
   - Flutter (from `Flutter`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
 
 EXTERNAL SOURCES:
+  clipboard:
+    :path: ".symlinks/plugins/clipboard/ios"
   Flutter:
     :path: Flutter
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
   wakelock_plus:
     :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
+  clipboard: 1dfb1b37c0b722d20b0ca76a89bb2e7194e85811
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
+  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
+  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
+  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
+  wakelock_plus: 76957ab028e12bfa4e66813c99e46637f367fc7e
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 

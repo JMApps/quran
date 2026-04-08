@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/surah_state.dart';
@@ -42,7 +43,7 @@ class FavoritePageItem extends StatelessWidget {
             ),
           );
         },
-        padding: EdgeInsets.zero,
+        padding: .zero,
         visualDensity: .compact,
         icon: Icon(
           Icons.bookmark_rounded,
@@ -51,11 +52,14 @@ class FavoritePageItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: mushafPageMetaModel.pageNumber,
+        );
         surahState.setMushafCurrentPage(mushafPageMetaModel.pageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: arguments,
         );
       },
       title: Text('${AppStrings.surah} ${mushafPageMetaModel.nameTranscription}'),

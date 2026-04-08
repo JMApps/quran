@@ -11,9 +11,11 @@ class SurahDetailList extends StatefulWidget {
   const SurahDetailList({
     super.key,
     required this.mushafPageController,
+    required this.ayahPosition,
   });
 
   final PageController mushafPageController;
+  final int ayahPosition;
 
   @override
   State<SurahDetailList> createState() => _SurahDetailListState();
@@ -67,6 +69,7 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
         itemBuilder: (context, index) {
           return SurahDetailItem(
             index: index,
+            ayahPosition: widget.ayahPosition,
           );
         },
       ),

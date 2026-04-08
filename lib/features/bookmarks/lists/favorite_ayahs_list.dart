@@ -80,7 +80,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
             itemBuilder: (context, index) {
               final AyahByAyahEntity ayahByAyahModel = favoriteAyahsList[index];
               return FavoriteAyahItem(
-                ayahModel: ayahByAyahModel,
+                ayahByAyahModel: ayahByAyahModel,
                 index: index,
               );
             },

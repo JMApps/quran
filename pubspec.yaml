@@ -21,6 +21,9 @@ dependencies:
   path_provider: ^2.1.5
   wakelock_plus: ^1.5.1
   flutter_material_color_picker: ^1.2.0
+  scrollable_positioned_list: ^0.3.8
+  share_plus: ^12.0.2
+  clipboard: ^3.0.14
 
 dev_dependencies:
   flutter_test:

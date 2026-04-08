@@ -5,6 +5,7 @@ import 'package:quran/core/theme/app_styles.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../settings/state/app_settings_state.dart';
+import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/surah_state.dart';
 
@@ -88,11 +89,14 @@ class SurahNameItem extends StatelessWidget {
       ),
       onTap: () {
         final surahState = Provider.of<SurahState>(context, listen: false);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: surahModel.startPageNumber,
+        );
         surahState.setMushafCurrentPage(surahModel.startPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: arguments,
         );
       },
     );

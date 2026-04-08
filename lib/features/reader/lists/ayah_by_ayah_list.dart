@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -10,28 +11,60 @@ import '../items/ayah_by_ayah_item.dart';
 import '../items/basmallah_item.dart';
 import '../items/surah_header_item.dart';
 
-class AyahByAyahList extends StatelessWidget {
+class AyahByAyahList extends StatefulWidget {
   const AyahByAyahList({
     super.key,
     required this.ayahsPage,
     required this.allSurahs,
+    required this.ayahPosition,
   });
 
   final List<AyahByAyahEntity> ayahsPage;
   final List<SurahNameEntity> allSurahs;
+  final int ayahPosition;
+
+  @override
+  State<AyahByAyahList> createState() => _AyahByAyahListState();
+}
+
+class _AyahByAyahListState extends State<AyahByAyahList> {
+  late final ItemScrollController _itemScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemScrollController = ItemScrollController();
+
+    if (widget.ayahPosition >= 0) {
+      _scrollToIndex(widget.ayahPosition);
+    }
+  }
+
+  void _scrollToIndex(int index) {
+    if (_itemScrollController.isAttached) {
+      _itemScrollController.jumpTo(
+        index: index,
+        alignment: 0.0,
+      );
+    } else {
+      Future.delayed(const Duration(milliseconds: 50), () {
+        if (mounted) _scrollToIndex(index);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final rows = const AyahListRowBuilder().build(ayahsPage);
+    final rows = const AyahListRowBuilder().build(widget.ayahsPage);
     final surahNamesMap = <int, String>{
-      for (final surah in allSurahs) surah.surahNumber: surah.nameTranscription,
+      for (final surah in widget.allSurahs) surah.surahNumber: surah.nameTranscription,
     };
-    return ListView.builder(
+    return ScrollablePositionedList.builder(
+      itemScrollController: _itemScrollController,
       padding: AppStyles.vrMainPadding,
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];
-
         switch (row.type) {
           case AyahListRowType.surahHeader:
             return SurahHeaderItem(

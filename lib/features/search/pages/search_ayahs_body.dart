@@ -115,7 +115,7 @@ class SearchAyahsBody extends StatelessWidget {
         final int totalMatches = _countSearchMatches(result: result, query: trimmedQuery);
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Container(
               padding: AppStyles.miniPadding,
@@ -123,7 +123,7 @@ class SearchAyahsBody extends StatelessWidget {
               child: Text(
                 '${AppStrings.searchByQuery} "$trimmedQuery" ${AppStrings.plural(totalMatches, AppStrings.foundOne, AppStrings.foundFew, AppStrings.foundMany)} $totalMatches ${AppStrings.plural(totalMatches, AppStrings.resultOne, AppStrings.resultFew, AppStrings.resultMany)}',
                 style: AppStyles.mediumTextStyle16,
-                textAlign: TextAlign.center,
+                textAlign: .center,
               ),
             ),
             Expanded(

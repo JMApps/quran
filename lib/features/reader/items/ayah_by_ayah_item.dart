@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/settings/state/app_settings_state.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../bookmarks/widgets/ayah_item_params.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../settings/state/app_settings_state.dart';
 
 class AyahByAyahItem extends StatelessWidget {
   const AyahByAyahItem({
@@ -24,34 +25,8 @@ class AyahByAyahItem extends StatelessWidget {
         showModalBottomSheet(
           context: context,
           builder: (ctx) {
-            return Padding(
-              padding: AppStyles.withoutTopPadding,
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    iconAlignment: .end,
-                    label: Text('Добавить в избранное', style: AppStyles.mainTextStyle16,),
-                    icon: const Icon(Icons.bookmark),
-                  ),
-                  const Divider(),
-                  TextButton.icon(
-                    onPressed: () {},
-                    iconAlignment: .end,
-                    label: Text('Скопировать', style: AppStyles.mainTextStyle16,),
-                    icon: const Icon(Icons.content_copy_rounded),
-                  ),
-                  const Divider(),
-                  TextButton.icon(
-                    onPressed: () {},
-                    iconAlignment: .end,
-                    label: Text('Поделиться', style: AppStyles.mainTextStyle16,),
-                    icon: const Icon(Icons.ios_share_rounded),
-                  ),
-                ],
-              ),
+            return AyahItemParams(
+              ayahByAyahModel: ayahByAyahModel,
             );
           },
         );
@@ -59,7 +34,7 @@ class AyahByAyahItem extends StatelessWidget {
       child: Container(
         padding: AppStyles.vrBigHrMiniPadding,
         decoration: const BoxDecoration(
-          border: Border.symmetric(
+          border: .symmetric(
             horizontal: BorderSide(
               width: 0.25,
               color: Colors.grey,
@@ -69,14 +44,13 @@ class AyahByAyahItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            const SizedBox(height: 14),
             Row(
               mainAxisAlignment: .start,
               children: [
                 Container(
                   width: 65,
                   padding: AppStyles.microPadding,
-                  alignment: Alignment.center,
+                  alignment: .center,
                   decoration: BoxDecoration(
                     color: appColors.secondaryContainer.withAlpha(155),
                     borderRadius: AppStyles.miniBorder,
@@ -90,6 +64,7 @@ class AyahByAyahItem extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: .stretch,
                   children: [
+                    const SizedBox(height: 14),
                     Text(
                       ayahByAyahModel.ayahArabic,
                       textDirection: .rtl,

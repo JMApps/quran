@@ -19,8 +19,8 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       '''
       WITH page_ayahs AS (
         SELECT DISTINCT
-          w.surah AS surah_number,
-          w.ayah AS ayah_number
+          w.surah AS ${DbValueStrings.dbSurahNumber},
+          w.ayah AS ${DbValueStrings.dbAyahNumber}
         FROM ${DbValueStrings.tableOfLayouts} l
         JOIN ${DbValueStrings.tableOfWordsGlyph} w
           ON w.id BETWEEN
@@ -45,13 +45,13 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
         NULL AS highlighted_translation
       FROM page_ayahs p
       JOIN ${DbValueStrings.tableOfAyahs} m
-        ON m.${DbValueStrings.dbSurahNumber} = p.surah_number
-       AND m.${DbValueStrings.dbAyahNumber} = p.ayah_number
+        ON m.${DbValueStrings.dbSurahNumber} = p.${DbValueStrings.dbSurahNumber}
+       AND m.${DbValueStrings.dbAyahNumber} = p.${DbValueStrings.dbAyahNumber}
       JOIN $tableName t
         ON t.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
       ORDER BY
-        m.${DbValueStrings.dbSurahNumber} ASC,
-        m.${DbValueStrings.dbAyahNumber} ASC
+        m.${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC},
+        m.${DbValueStrings.dbAyahNumber} ${DbValueStrings.dbOrderASC}
       ''',
       <Object>[pageNumber],
     );
@@ -94,12 +94,14 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     '''
         : '''
       SELECT
-        m.${DbValueStrings.dbAyahId}                    AS ayah_id,
-        m.${DbValueStrings.dbVerseKey}                   AS verse_key,
-        m.${DbValueStrings.dbSurahNumber}                AS surah_number,
-        m.${DbValueStrings.dbAyahNumber}                 AS ayah_number,
-        m.${DbValueStrings.dbAyahArabic}                 AS ayah_arabic,
-        tr.${DbValueStrings.dbAyahTranslation}           AS ayah_translation,
+        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
+        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
+        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
+        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
+        m.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
+        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
+        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
+        tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
         NULL AS highlighted_arabic,
         NULL AS highlighted_translation
       FROM $ftsTable

@@ -4,32 +4,32 @@ import 'package:provider/provider.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/router/names_router.dart';
+import '../../bookmarks/widgets/ayah_item_params.dart';
+import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/surah_state.dart';
 
 class SearchAyahItem extends StatelessWidget {
   const SearchAyahItem({
     super.key,
-    required this.ayahModel,
+    required this.ayahByAyahModel,
     required this.index,
     required this.query,
   });
 
-  final AyahByAyahEntity ayahModel;
+  final AyahByAyahEntity ayahByAyahModel;
   final int index;
   final String query;
 
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-
     final surahState = Provider.of<SurahState>(context, listen: false);
-    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahModel.verseKey) ?? ayahModel.verseKey;
-
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey) ?? ayahByAyahModel.verseKey;
     const arabicStyle = TextStyle(
       fontSize: 19.0,
       fontFamily: AppStrings.fontUthmanicHafs,
-      height: 2.0,
+      height: 2.5,
       letterSpacing: 0,
     );
 
@@ -49,7 +49,7 @@ class SearchAyahItem extends StatelessWidget {
     );
 
     final TextSpan arabicSpan = _highlightOccurrences(
-      fullText: ayahModel.ayahArabic,
+      fullText: ayahByAyahModel.ayahArabic,
       query: query,
       normalStyle: arabicStyle,
       highlightStyle: highlightStyleArabic,
@@ -57,7 +57,7 @@ class SearchAyahItem extends StatelessWidget {
     );
 
     final TextSpan translationSpan = _highlightOccurrences(
-      fullText: ayahModel.ayahTranslation,
+      fullText: ayahByAyahModel.ayahTranslation,
       query: query,
       normalStyle: translationStyle,
       highlightStyle: highlightStyleTranslation,
@@ -66,11 +66,25 @@ class SearchAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        surahState.setMushafCurrentPage(ayahModel.ayahPageNumber);
+        surahState.setMushafCurrentPage(ayahByAyahModel.ayahPageNumber);
+        final arguments = SurahDetailArgs(
+          currentMushafPage: ayahByAyahModel.ayahPageNumber,
+          ayahPosition: ayahByAyahModel.ayahPosition,
+        );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: surahState.currentMushafPage,
+          arguments: arguments,
+        );
+      },
+      onLongPress: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (ctx) {
+            return AyahItemParams(
+              ayahByAyahModel: ayahByAyahModel,
+            );
+          },
         );
       },
       child: Container(
@@ -90,12 +104,14 @@ class SearchAyahItem extends StatelessWidget {
               arabicSpan,
               textDirection: .rtl,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             Text.rich(translationSpan),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             Text(
               surahInfo,
-              style: AppStyles.mainTextStyle12.copyWith(color: appColors.onSurface.withAlpha(105)),
+              style: AppStyles.mainTextStyle16.copyWith(
+                color: appColors.onSurface.withAlpha(105),
+              ),
             ),
           ],
         ),

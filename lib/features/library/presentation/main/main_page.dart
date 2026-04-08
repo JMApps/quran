@@ -64,14 +64,14 @@ class _MainPageState extends State<MainPage> {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: .topCenter,
+              end: .bottomCenter,
               colors: [
                 appColors.primary.withAlpha(0),
                 appColors.primary.withAlpha(15),
-                appColors.primary.withAlpha(30),
-                appColors.primary.withAlpha(45),
-                appColors.primary.withAlpha(60),
+                appColors.primary.withAlpha(35),
+                appColors.primary.withAlpha(55),
+                appColors.primary.withAlpha(75),
               ],
             ),
           ),
