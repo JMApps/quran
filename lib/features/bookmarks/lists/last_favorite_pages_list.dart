@@ -17,18 +17,18 @@ class LastFavoritePagesList extends StatelessWidget {
       builder: (context, mushafPageMetaState, _) {
         final recentPagesList = mushafPageMetaState.lastOpenedPages();
 
-        if (mushafPageMetaState.isLoading) {
+        if (mushafPageMetaState.isLoadingPages) {
           return const Center(
             child: CircularProgressIndicator.adaptive(),
           );
         }
 
-        if (mushafPageMetaState.error != null) {
+        if (mushafPageMetaState.errorPages != null) {
           return Center(
             child: Padding(
               padding: AppStyles.mainPadding,
               child: Text(
-                '${AppStrings.errorMushafLastFavoritesList}\n${mushafPageMetaState.error}',
+                '${AppStrings.errorMushafLastFavoritesList}\n${mushafPageMetaState.errorPages}',
                 style: AppStyles.mainTextStyle18,
                 textAlign: .center,
               ),

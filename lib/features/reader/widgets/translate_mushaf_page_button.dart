@@ -18,11 +18,11 @@ class TranslateMushafPageButton extends StatelessWidget {
       builder: (context, mushafPageMetaState, _) {
         return IconButton(
           onPressed: () {
-            mushafPageMetaState.translationState = !mushafPageMetaState.translationState;
+            mushafPageMetaState.translationEnabled = !mushafPageMetaState.translationEnabled;
           },
           visualDensity: const VisualDensity(horizontal: -4),
           tooltip: AppStrings.translate,
-          icon: Icon(mushafPageMetaState.translationState ? Icons.menu_book_rounded : Icons.public_outlined),
+          icon: Icon(mushafPageMetaState.translationEnabled ? Icons.menu_book_rounded : Icons.public_outlined),
         );
       },
     );

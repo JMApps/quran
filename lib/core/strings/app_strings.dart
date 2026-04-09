@@ -54,6 +54,7 @@ class AppStrings {
   static const String translation = 'Перевод';
 
   static const String copy = 'Скопировать';
+  static const String copied = 'Скопировано';
   static const String share = 'Поделиться';
 
 

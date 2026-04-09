@@ -75,7 +75,7 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
     return Consumer<MushafPageMetaState>(
       builder: (context, mushafPageMetaState, _) {
-        return mushafPageMetaState.translationState
+        return mushafPageMetaState.translationEnabled
             ? AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition)
             : AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition);
       },

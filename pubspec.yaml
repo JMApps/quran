@@ -22,6 +22,8 @@ dependencies:
   wakelock_plus: ^1.5.1
   flutter_material_color_picker: ^1.2.0
   scrollable_positioned_list: ^0.3.8
+  share_plus: ^12.0.2
+  pasteboard: ^0.5.0
 
 dev_dependencies:
   flutter_test:

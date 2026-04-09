@@ -16,107 +16,93 @@ class MushafPageMetaState extends ChangeNotifier {
 
   final MushafPageMetaUseCase _mushafPageMetaUseCase;
   final AyahByAyahUseCase _ayahByAyahUseCase;
-  final Box<dynamic> _favoriteSettingsBox = Hive.box(AppKeys.mushafFavoriteSettingsBox);
+  final Box<dynamic> _settingsBox = Hive.box(AppKeys.mushafFavoriteSettingsBox);
 
   Map<int, MushafPageMetaEntity> _pagesMetaByPage = const {};
-
   Map<int, AyahByAyahEntity> _ayahMetaById = const {};
+  String? _ayahTableName;
 
   List<int> _lastPageIds = [];
   List<int> _favoritePageIds = [];
   List<int> _favoriteAyahIds = [];
 
-  bool _isLoading = false;
-  bool _isLoaded = false;
-  Object? _error;
+  bool _isLoadingPages = false;
+  bool _isLoadedPages = false;
+  Object? _errorPages;
 
   bool _isLoadingAyahs = false;
   bool _isLoadedAyahs = false;
-  Object? _errorAyahsList;
+  Object? _errorAyahs;
 
-  bool _translationState = false;
+  bool _translationEnabled = false;
 
-  bool get isLoading => _isLoading;
-  bool get isLoaded => _isLoaded;
-  Object? get error => _error;
+  bool get isLoadingPages => _isLoadingPages;
+  Object? get errorPages => _errorPages;
 
   bool get isLoadingAyahs => _isLoadingAyahs;
-  bool get isLoadedAyahs => _isLoadedAyahs;
-  Object? get errorAyahsList => _errorAyahsList;
+  Object? get errorAyahsList => _errorAyahs;
 
-  bool get translationState => _translationState;
+  bool get translationEnabled => _translationEnabled;
 
-  set translationState(bool value) {
-    if (_translationState == value) return;
-    _translationState = value;
+  set translationEnabled(bool value) {
+    if (_translationEnabled == value) return;
+    _translationEnabled = value;
     notifyListeners();
   }
 
   void _loadPersistedSettings() {
-    final dynamic savedLastOpenedPageRaw = _favoriteSettingsBox.get(
+    final dynamic rawLastPages = _settingsBox.get(
       AppKeys.keyLastOpenedPages,
       defaultValue: <int>[1],
     );
-
-    final dynamic savedFavoritePageRaw = _favoriteSettingsBox.get(
+    final dynamic rawFavPages = _settingsBox.get(
       AppKeys.keyFavoritePages,
       defaultValue: <int>[293],
     );
-
-    final dynamic savedFavoriteAyahRaw = _favoriteSettingsBox.get(
+    final dynamic rawFavAyahs = _settingsBox.get(
       AppKeys.keyFavoriteAyahs,
       defaultValue: <int>[262],
     );
 
-    final List<int> parsedLastOpenedPages = savedLastOpenedPageRaw.take(_maxLastOpenedPages).toList();
-    final List<int> parsedFavoritePages = savedFavoritePageRaw.toSet().toList();
-    final List<int> parsedFavoriteAyahs = savedFavoriteAyahRaw.toSet().toList();
-
-    _lastPageIds = parsedLastOpenedPages;
-    _favoritePageIds = parsedFavoritePages;
-    _favoriteAyahIds = parsedFavoriteAyahs;
+    _lastPageIds = (rawLastPages as List).cast<int>().take(_maxLastOpenedPages).toList();
+    _favoritePageIds = (rawFavPages as List).cast<int>().toSet().toList();
+    _favoriteAyahIds = (rawFavAyahs as List).cast<int>().toSet().toList();
   }
 
-  Future<void> _saveLastOpenedPages() async {
-    await _favoriteSettingsBox.put(
-      AppKeys.keyLastOpenedPages,
-      _lastPageIds,
-    );
-  }
+  Future<void> _persistLastPages() => _settingsBox.put(AppKeys.keyLastOpenedPages, _lastPageIds);
 
-  Future<void> _saveFavoritePages() async {
-    await _favoriteSettingsBox.put(
-      AppKeys.keyFavoritePages,
-      _favoritePageIds,
-    );
-  }
+  Future<void> _persistFavoritePages() => _settingsBox.put(AppKeys.keyFavoritePages, _favoritePageIds);
 
-  Future<void> _saveFavoriteAyahs() async {
-    await _favoriteSettingsBox.put(
-      AppKeys.keyFavoriteAyahs,
-      _favoriteAyahIds,
-    );
+  Future<void> _persistFavoriteAyahs() => _settingsBox.put(AppKeys.keyFavoriteAyahs, _favoriteAyahIds);
+
+  Future<void> clearAllSettings() async {
+    await _settingsBox.clear();
+    _lastPageIds = [];
+    _favoritePageIds = [];
+    _favoriteAyahIds = [];
+    notifyListeners();
   }
 
   Future<void> loadAllPagesMeta() async {
-    if (_isLoading || _isLoaded) return;
+    if (_isLoadingPages || _isLoadedPages) return;
 
-    _isLoading = true;
-    _error = null;
+    _isLoadingPages = true;
+    _errorPages = null;
     notifyListeners();
 
     try {
-      final List<MushafPageMetaEntity> result = await _mushafPageMetaUseCase.getAllPagesMeta();
+      final List<MushafPageMetaEntity> result =
+      await _mushafPageMetaUseCase.getAllPagesMeta();
 
       _pagesMetaByPage = {
         for (final item in result) item.pageNumber: item,
       };
-      _isLoaded = true;
+      _isLoadedPages = true;
     } catch (e) {
-      _error = e;
-      _isLoaded = false;
+      _errorPages = e;
+      _isLoadedPages = false;
     } finally {
-      _isLoading = false;
+      _isLoadingPages = false;
       notifyListeners();
     }
   }
@@ -124,19 +110,23 @@ class MushafPageMetaState extends ChangeNotifier {
   Future<void> loadFavoriteAyahsMeta({required String tableName}) async {
     if (_isLoadingAyahs || _isLoadedAyahs) return;
 
+    _ayahTableName = tableName;
     _isLoadingAyahs = true;
-    _errorAyahsList = null;
+    _errorAyahs = null;
     notifyListeners();
 
     try {
-      final List<AyahByAyahEntity> result = await _ayahByAyahUseCase.getAyahsByIds(tableName: tableName, ayahIds: _favoriteAyahIds);
+      final List<AyahByAyahEntity> result = await _ayahByAyahUseCase.getAyahsByIds(
+        tableName: tableName,
+        ayahIds: _favoriteAyahIds,
+      );
 
       _ayahMetaById = {
         for (final item in result) item.ayahId: item,
       };
       _isLoadedAyahs = true;
     } catch (e) {
-      _errorAyahsList = e;
+      _errorAyahs = e;
       _isLoadedAyahs = false;
     } finally {
       _isLoadingAyahs = false;
@@ -144,120 +134,119 @@ class MushafPageMetaState extends ChangeNotifier {
     }
   }
 
-  MushafPageMetaEntity? getPageMetaByPage(int pageNumber) {
-    return _pagesMetaByPage[pageNumber];
+  Future<void> _fetchAndCacheAyah(int ayahId) async {
+    if (_ayahTableName == null) return;
+
+    try {
+      final List<AyahByAyahEntity> result = await _ayahByAyahUseCase.getAyahsByIds(
+        tableName: _ayahTableName!,
+        ayahIds: [ayahId],
+      );
+
+      if (result.isEmpty) return;
+
+      _ayahMetaById = {
+        ..._ayahMetaById,
+        for (final item in result) item.ayahId: item,
+      };
+    } catch (_) {
+      // Аят не отобразится до следующей полной загрузки — допустимо.
+    }
   }
 
-  List<MushafPageMetaEntity> lastOpenedPages() {
-    return _loadPagesMeta(_lastPageIds);
-  }
+  MushafPageMetaEntity? getPageMetaByPage(int pageNumber) => _pagesMetaByPage[pageNumber];
 
-  List<MushafPageMetaEntity> _loadPagesMeta(List<int> pageIds) {
+  List<MushafPageMetaEntity> lastOpenedPages() => _resolvePagesMeta(_lastPageIds);
+
+  List<MushafPageMetaEntity> favoritePages() => _resolvePagesMeta(_favoritePageIds);
+
+  List<MushafPageMetaEntity> _resolvePagesMeta(List<int> pageIds) {
     if (_pagesMetaByPage.isEmpty || pageIds.isEmpty) return const [];
-    final List<MushafPageMetaEntity> result = [];
 
-    for (final pageNumber in pageIds) {
-      final pageMeta = _pagesMetaByPage[pageNumber];
-      if (pageMeta != null) {
-        result.add(pageMeta);
-      }
-    }
-
-    return List.unmodifiable(result);
+    return List.unmodifiable([
+      for (final id in pageIds)
+        if (_pagesMetaByPage.containsKey(id)) _pagesMetaByPage[id]!,
+    ]);
   }
 
-  List<AyahByAyahEntity> _loadAyahsMeta(List<int> ayahsIds) {
-    if (_ayahMetaById.isEmpty || ayahsIds.isEmpty) return const [];
-    final List<AyahByAyahEntity> result = [];
+  List<AyahByAyahEntity> favoriteAyahs() => _resolveAyahsMeta(_favoriteAyahIds);
 
-    for (final ayahId in ayahsIds) {
-      final ayahMeta = _ayahMetaById[ayahId];
-      if (ayahMeta != null) {
-        result.add(ayahMeta);
-      }
-    }
+  List<AyahByAyahEntity> _resolveAyahsMeta(List<int> ayahIds) {
+    if (_ayahMetaById.isEmpty || ayahIds.isEmpty) return const [];
 
-    return List.unmodifiable(result);
+    return List.unmodifiable([
+      for (final id in ayahIds)
+        if (_ayahMetaById.containsKey(id)) _ayahMetaById[id]!,
+    ]);
   }
+  bool isFavoritePage(int pageNumber) => _favoritePageIds.contains(pageNumber);
 
-  Future<void> addLastOpenedPage(int pageNumber) async {
-    _lastPageIds.remove(pageNumber);
-    _lastPageIds.insert(0, pageNumber);
-    while (_lastPageIds.length > _maxLastOpenedPages) {
-      _lastPageIds.removeLast();
-    }
-
-    await _saveLastOpenedPages();
-    notifyListeners();
-  }
-
-  List<MushafPageMetaEntity> favoritePages() {
-    return _loadPagesMeta(_favoritePageIds);
-  }
-
-  List<AyahByAyahEntity> favoriteAyahs() {
-    return _loadAyahsMeta(_favoriteAyahIds);
-  }
-
-  bool isFavoritePage(int pageNumber) {
-    return _favoritePageIds.contains(pageNumber);
-  }
-
-  bool isFavoriteAyah(int ayahId) {
-    return _favoriteAyahIds.contains(ayahId);
-  }
-
-  Future<void> clearAllSettings() async {
-    await _favoriteSettingsBox.clear();
-
-    _lastPageIds = [];
-    _favoritePageIds = [];
-    _favoriteAyahIds = [];
-
-    notifyListeners();
-  }
+  bool isFavoriteAyah(int ayahId) => _favoriteAyahIds.contains(ayahId);
 
   Future<void> toggleFavoritePage({required int pageNumber}) async {
     if (isFavoritePage(pageNumber)) {
-      await _removeFavoritePage(pageNumber: pageNumber);
+      await _removeFavoritePage(pageNumber);
     } else {
-      await _addFavoritePage(pageNumber: pageNumber);
+      await _addFavoritePage(pageNumber);
     }
   }
 
   Future<void> toggleFavoriteAyah({required int ayahId}) async {
     if (isFavoriteAyah(ayahId)) {
-      await _removeFavoriteAyah(ayahId: ayahId);
+      await _removeFavoriteAyah(ayahId);
     } else {
-      await _addFavoriteAyah(ayahId: ayahId);
+      await _addFavoriteAyah(ayahId);
     }
   }
 
-  Future<void> _addFavoritePage({required int pageNumber}) async {
+  Future<void> _addFavoritePage(int pageNumber) async {
     if (_favoritePageIds.contains(pageNumber)) return;
-    _favoritePageIds = [..._favoritePageIds, pageNumber];
-    await _saveFavoritePages();
+
+    _favoritePageIds = [pageNumber, ..._favoritePageIds];
+    await _persistFavoritePages();
     notifyListeners();
   }
 
-  Future<void> _addFavoriteAyah({required int ayahId}) async {
+  Future<void> _addFavoriteAyah(int ayahId) async {
     if (_favoriteAyahIds.contains(ayahId)) return;
-    _favoriteAyahIds = [..._favoriteAyahIds, ayahId];
-    await _saveFavoriteAyahs();
+
+    _favoriteAyahIds = [ayahId, ..._favoriteAyahIds];
+    await _persistFavoriteAyahs();
+
+    if (_isLoadedAyahs && !_ayahMetaById.containsKey(ayahId)) {
+      await _fetchAndCacheAyah(ayahId);
+    }
+
     notifyListeners();
   }
 
-  Future<void> _removeFavoritePage({required int pageNumber}) async {
+  Future<void> _removeFavoritePage(int pageNumber) async {
     if (!_favoritePageIds.contains(pageNumber)) return;
+
     _favoritePageIds = _favoritePageIds.where((id) => id != pageNumber).toList();
-    await _saveFavoritePages();
+    await _persistFavoritePages();
     notifyListeners();
   }
 
-  Future<void> _removeFavoriteAyah({required int ayahId}) async {
+  Future<void> _removeFavoriteAyah(int ayahId) async {
     if (!_favoriteAyahIds.contains(ayahId)) return;
+
     _favoriteAyahIds = _favoriteAyahIds.where((id) => id != ayahId).toList();
-    await _saveFavoriteAyahs();
+    _ayahMetaById = Map.unmodifiable(
+      Map.from(_ayahMetaById)..remove(ayahId),
+    );
+    await _persistFavoriteAyahs();
+    notifyListeners();
+  }
+
+  Future<void> addLastOpenedPage(int pageNumber) async {
+    _lastPageIds..remove(pageNumber)..insert(0, pageNumber);
+
+    while (_lastPageIds.length > _maxLastOpenedPages) {
+      _lastPageIds.removeLast();
+    }
+
+    await _persistLastPages();
     notifyListeners();
   }
 }

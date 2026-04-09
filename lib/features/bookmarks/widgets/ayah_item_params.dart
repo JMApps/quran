@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pasteboard/pasteboard.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
@@ -66,19 +68,18 @@ class AyahItemParams extends StatelessWidget {
           TextButton.icon(
             onPressed: () async {
               Navigator.pop(context);
-              // await FlutterClipboard.copy('${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo').whenComplete(() {
-              //   if (!context.mounted) return;
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       duration: const Duration(seconds: 1),
-              //       backgroundColor: appColors.inversePrimary,
-              //       content: Text(
-              //         AppStrings.removedFromFavorite,
-              //         style: AppStyles.mainTextStyle16.copyWith(color: appColors.onSurface),
-              //       ),
-              //     ),
-              //   );
-              // });
+              Pasteboard.writeText('${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo');
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: appColors.inversePrimary,
+                  content: Text(
+                    AppStrings.copied,
+                    style: AppStyles.mainTextStyle16.copyWith(color: appColors.onSurface),
+                  ),
+                ),
+              );
             },
             iconAlignment: .end,
             label: const Text(
@@ -91,12 +92,12 @@ class AyahItemParams extends StatelessWidget {
           TextButton.icon(
             onPressed: () async {
               Navigator.pop(context);
-              // await SharePlus.instance.share(
-              //   ShareParams(
-              //     text: '${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo',
-              //     sharePositionOrigin: const Rect.fromLTWH(0, 0, 1, 1),
-              //   ),
-              // );
+              await SharePlus.instance.share(
+                ShareParams(
+                  text: '${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo',
+                  sharePositionOrigin: const Rect.fromLTWH(0, 0, 1, 1),
+                ),
+              );
             },
             iconAlignment: .end,
             label: const Text(
