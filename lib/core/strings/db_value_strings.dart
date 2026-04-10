@@ -39,6 +39,7 @@ class DbValueStrings {
   static const String dbAyah = 'ayah';
   static const String dbWord = 'word';
   static const String dbText = 'text';
+  static const String dbCharType = 'char_type';
 
   static const String dbStartNumberPage = 'start_page_number';
   static const String dbVersesCount = 'verses_count';

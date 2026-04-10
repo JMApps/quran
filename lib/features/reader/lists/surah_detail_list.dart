@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/translation_type.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
@@ -64,26 +63,23 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
     final tableName = AppStrings.resolveTranslation(
       locale: Localizations.localeOf(context).languageCode,
       userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType).table;
-    return Padding(
-      padding: AppStyles.hrMiniPadding,
-      child: PageView.builder(
-        reverse: true,
-        controller: widget.mushafPageController,
-        itemCount: AppStrings.totalPages,
-        onPageChanged: (int index) {
-          _currentPage = index + 1;
-          Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(_currentPage);
-          fontLoaderState.preloadRange(_currentPage - 1, _currentPage + 1);
-          fontLoaderState.onPageChanged(_currentPage);
-        },
-        itemBuilder: (context, index) {
-          return SurahDetailItem(
-            index: index,
-            ayahPosition: widget.ayahPosition,
-            tableName: tableName,
-          );
-        },
-      ),
+    return PageView.builder(
+      reverse: true,
+      controller: widget.mushafPageController,
+      itemCount: AppStrings.totalPages,
+      onPageChanged: (int index) {
+        _currentPage = index + 1;
+        Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(_currentPage);
+        fontLoaderState.preloadRange(_currentPage - 1, _currentPage + 1);
+        fontLoaderState.onPageChanged(_currentPage);
+      },
+      itemBuilder: (context, index) {
+        return SurahDetailItem(
+          index: index,
+          ayahPosition: widget.ayahPosition,
+          tableName: tableName,
+        );
+      },
     );
   }
 }

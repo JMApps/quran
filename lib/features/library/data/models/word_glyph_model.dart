@@ -7,6 +7,7 @@ class WordGlyphModel {
   final int ayah;
   final int word;
   final String text;
+  final int? charType;
 
   const WordGlyphModel({
     required this.id,
@@ -15,6 +16,7 @@ class WordGlyphModel {
     required this.ayah,
     required this.word,
     required this.text,
+    required this.charType,
   });
 
   factory WordGlyphModel.fromMap(Map<String, dynamic> map) {
@@ -25,6 +27,7 @@ class WordGlyphModel {
       ayah: map[DbValueStrings.dbAyah] as int,
       word: map[DbValueStrings.dbWord] as int,
       text: map[DbValueStrings.dbText] as String,
+      charType: map[DbValueStrings.dbCharType] as int?,
     );
   }
 }

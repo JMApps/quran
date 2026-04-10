@@ -17,11 +17,11 @@ class MushafFontLoader {
   static const String _fontAssetBase = 'assets/fontpages';
 
   String fontFamilyForPage(int pageNumber) {
-    return 'QCF4001_$pageNumber';
+    return 'p$pageNumber.ttf';
   }
 
   String _fontAssetPath(int pageNumber) {
-    return '$_fontAssetBase/QCF${4000 + pageNumber}_X-Regular.woff';
+    return '$_fontAssetBase/p$pageNumber.ttf';
   }
 
   Future<void> loadPageFont(int pageNumber) async {

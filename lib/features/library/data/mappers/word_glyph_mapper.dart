@@ -9,5 +9,6 @@ extension WordGlyphModelX on WordGlyphModel {
     ayah: ayah,
     word: word,
     text: text,
+    charType: charType,
   );
 }

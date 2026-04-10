@@ -1,7 +1,8 @@
+import 'package:arabic_justified_text/arabic_justified_text.dart';
 import 'package:flutter/material.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/strings/app_strings.dart';
-import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/line_type.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
@@ -15,6 +16,8 @@ class MushafLineWidget extends StatelessWidget {
     required this.fontFamily,
     required this.allSurahs,
     required this.pageNumber,
+    required this.textColor,
+    required this.endAyahColor,
   });
 
   final LayoutEntity line;
@@ -22,38 +25,26 @@ class MushafLineWidget extends StatelessWidget {
   final String fontFamily;
   final List<SurahNameEntity> allSurahs;
   final int pageNumber;
+  final Color textColor;
+  final Color endAyahColor;
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isTablet = screenWidth >= 768;
-    final fontSize = isTablet ? 28.0 : _calculateFontSize(screenWidth, pageNumber);
-
-    return SizedBox(
-      width: .infinity,
-      child: Padding(
-        padding: .symmetric(vertical: isTablet ? 4.0 : 2.0),
-        child: _buildLineContent(context, fontSize, pageNumber),
-      ),
-    );
+    return _buildLineContent(textColor);
   }
 
-  double _calculateFontSize(double screenWidth, int pageNumber) {
-    return (screenWidth / 15).clamp(18.0, 23.0);
-  }
-
-  Widget _buildLineContent(BuildContext context, double fontSize, int pageNumber) {
+  Widget _buildLineContent(Color textColor) {
     switch (line.lineType) {
       case LineType.surahName:
-        return _buildSurahNameLine(context, fontSize, pageNumber);
+        return _buildSurahNameLine();
       case LineType.basmallah:
-        return _buildBasmallahLine(context, fontSize);
+        return _buildBasmallahLine();
       case LineType.ayah:
-        return _buildAyahLine(context, fontSize);
+        return _buildAyahLine( textColor, endAyahColor);
     }
   }
 
-  Widget _buildSurahNameLine(BuildContext context, double fontSize, int pageNumber) {
+  Widget _buildSurahNameLine() {
     if (pageNumber == 1 || pageNumber == 2) {
       return const SizedBox.shrink();
     }
@@ -66,60 +57,76 @@ class MushafLineWidget extends StatelessWidget {
       surahLabel = AppStrings.surahNameByNumber(surah.surahNumber);
     }
 
-    return Container(
-      alignment: .center,
-      padding: .zero,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withValues(alpha: 1.0),
-        ),
-        borderRadius: AppStyles.mainBorder,
-      ),
+    return Center(
       child: Text(
         surahLabel,
-        textAlign: .center,
-        textDirection: .rtl,
-        style: TextStyle(
+        textDirection: TextDirection.rtl,
+        style: const TextStyle(
           fontFamily: AppStrings.fontSurahName,
-          fontSize: fontSize * 1.5,
-          height: 1.75,
         ),
       ),
     );
   }
 
-  Widget _buildBasmallahLine(BuildContext context, double fontSize) {
+  Widget _buildBasmallahLine() {
     return Center(
       child: Text(
-        AppStrings.basmaLlah,
-        textAlign: .center,
+        '﷽',
         textDirection: .rtl,
         style: TextStyle(
           fontFamily: fontFamily,
-          fontSize: fontSize * 1.2,
-          height: 1.75,
+          fontSize: 26.0,
         ),
       ),
     );
   }
 
-  Widget _buildAyahLine(BuildContext context, double fontSize) {
-    return SizedBox(
-      width: double.infinity,
-      child: Wrap(
-        alignment: line.isCentered ? WrapAlignment.center : WrapAlignment.spaceBetween,
-        textDirection: TextDirection.rtl,
-        children: words.map((word) {
-          return Text(
-            word.text,
-            style: TextStyle(
-              fontFamily: fontFamily,
-              fontSize: fontSize,
-              height: 2.0,
+  Widget _buildAyahLine(Color textColor, Color endAyahColor) {
+    final shouldCenter = line.isCentered;
+    return Row(
+      textDirection: .rtl,
+      mainAxisAlignment: shouldCenter ? .center : .spaceBetween,
+      children: words.map((w) {
+        final text = ArabicJustifiedText(
+          w.text,
+          enableKashida: true,
+          textDirection: TextDirection.rtl,
+          style: TextStyle(
+            fontFamily: fontFamily,
+            fontSize: shouldCenter ? 26.0 : 200.0,
+          ),
+        );
+
+        if (w.isAyahEnd) {
+          final ayahNumber = _toArabicDigits(w.ayah);
+          final baseFontSize = shouldCenter ? 26.0 : 200.0;
+
+          return Padding(
+            padding: AppStyles.leftMainPadding,
+            child: Text(
+              ayahNumber,
+              style: TextStyle(
+                fontFamily: AppStrings.fontUthmanicHafs,
+                fontSize: baseFontSize * 1.15,
+                color: endAyahColor,
+              ),
             ),
           );
-        }).toList(),
-      ),
+        }
+
+        return ColorFiltered(
+          colorFilter: .mode(
+            textColor,
+            BlendMode.srcIn,
+          ),
+          child: text,
+        );
+      }).toList(),
     );
+  }
+
+  String _toArabicDigits(int number) {
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return number.toString().split('').map((d) => arabicDigits[int.parse(d)]).join();
   }
 }

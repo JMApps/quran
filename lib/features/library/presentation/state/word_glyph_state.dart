@@ -9,24 +9,10 @@ class WordGlyphState extends ChangeNotifier {
   WordGlyphState(this._wordGlyphUseCase);
 
   final Map<int, List<WordGlyphEntity>> _pageWordsCache = {};
-  final Map<int, bool> _loadingMap = {};
   final Set<int> _inFlight = {};
 
   List<WordGlyphEntity> getPageWords(int pageNumber) {
     return _pageWordsCache[pageNumber] ?? const [];
-  }
-
-  Map<int, List<WordGlyphEntity>> getPageWordsByLine(int pageNumber) {
-    final words = getPageWords(pageNumber);
-    final Map<int, List<WordGlyphEntity>> wordsByLine = {};
-
-    for (final word in words) {
-      final lineNumber = word.lineNumber;
-      wordsByLine.putIfAbsent(lineNumber, () => []);
-      wordsByLine[lineNumber]!.add(word);
-    }
-
-    return wordsByLine;
   }
 
   bool isPageLoaded(int pageNumber) {
@@ -38,7 +24,6 @@ class WordGlyphState extends ChangeNotifier {
     if (_inFlight.contains(pageNumber)) return;
 
     _inFlight.add(pageNumber);
-    _loadingMap[pageNumber] = true;
     notifyListeners();
 
     try {
@@ -48,7 +33,6 @@ class WordGlyphState extends ChangeNotifier {
       debugPrint('ERROR loadPageWords($pageNumber): $e');
     } finally {
       _inFlight.remove(pageNumber);
-      _loadingMap[pageNumber] = false;
       notifyListeners();
     }
 
@@ -76,11 +60,12 @@ class WordGlyphState extends ChangeNotifier {
     final minPage = currentPage - keepBefore;
     final maxPage = currentPage + keepAfter;
 
-    final keysToRemove = _pageWordsCache.keys.where((page) => page < minPage || page > maxPage).toList();
+    final keysToRemove = _pageWordsCache.keys
+        .where((page) => page < minPage || page > maxPage)
+        .toList();
 
     for (final page in keysToRemove) {
       _pageWordsCache.remove(page);
-      _loadingMap.remove(page);
       _inFlight.remove(page);
     }
 
@@ -89,7 +74,6 @@ class WordGlyphState extends ChangeNotifier {
 
   void clearCache() {
     _pageWordsCache.clear();
-    _loadingMap.clear();
     _inFlight.clear();
     notifyListeners();
   }

@@ -5,6 +5,7 @@ class WordGlyphEntity {
   final int ayah;
   final int word;
   final String text;
+  final int? charType;
 
   const WordGlyphEntity({
     required this.id,
@@ -13,9 +14,8 @@ class WordGlyphEntity {
     required this.ayah,
     required this.word,
     required this.text,
+    required this.charType,
   });
 
-  int get pageNumber => int.parse(location.split(':')[0]);
-  int get lineNumber => int.parse(location.split(':')[1]);
-  int get wordNumber => int.parse(location.split(':')[2]);
+  bool get isAyahEnd => charType == 1;
 }

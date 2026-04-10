@@ -10,7 +10,10 @@ class AppStyles {
   static const vrMainPadding = EdgeInsets.symmetric(vertical: 14);
   static const vrMiniPadding = EdgeInsets.symmetric(vertical: 7);
   static const vrBigHrMiniPadding = EdgeInsets.symmetric(vertical: 21, horizontal: 7);
+  static const hrMainVrMiniPadding = EdgeInsets.symmetric(horizontal: 14, vertical: 7);
+  static const hrMiniVrMainPadding = EdgeInsets.symmetric(horizontal: 7, vertical: 14);
   static const topMiniPadding = EdgeInsets.only(top: 7);
+  static const bottomMiniPadding = EdgeInsets.only(bottom: 7);
   static const bottomMainPadding = EdgeInsets.only(bottom: 14);
   static const leftMainPadding = EdgeInsets.only(left: 14);
 
@@ -22,6 +25,7 @@ class AppStyles {
   static const mediumTextStyle12 = TextStyle(fontSize: 12.0, fontFamily: AppStrings.fontGilroyMedium);
 
   static const withoutTopPadding = EdgeInsets.only(left: 14, bottom: 14, right: 14);
+  static const withoutBottomBigPadding = EdgeInsets.only(left: 14, top: 21, right: 14);
   static const withoutTopPaddingMini = EdgeInsets.only(left: 7, bottom: 7, right: 7);
   static const withoutRightPaddingMini = EdgeInsets.only(left: 7, top: 7, bottom: 7);
 
