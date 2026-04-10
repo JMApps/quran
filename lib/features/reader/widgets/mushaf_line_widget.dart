@@ -45,6 +45,8 @@ class MushafLineWidget extends StatelessWidget {
   }
 
   Widget _buildSurahNameLine() {
+    final shouldCenter = line.isCentered;
+
     if (pageNumber == 1 || pageNumber == 2) {
       return const SizedBox.shrink();
     }
@@ -61,21 +63,23 @@ class MushafLineWidget extends StatelessWidget {
       child: Text(
         surahLabel,
         textDirection: TextDirection.rtl,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: AppStrings.fontSurahName,
+          fontSize: shouldCenter ? 40.0 : 100.0,
         ),
       ),
     );
   }
 
   Widget _buildBasmallahLine() {
+    final shouldCenter = line.isCentered;
     return Center(
       child: Text(
         '﷽',
         textDirection: .rtl,
         style: TextStyle(
           fontFamily: fontFamily,
-          fontSize: 26.0,
+          fontSize: shouldCenter ? 30.0 : 100.0,
         ),
       ),
     );

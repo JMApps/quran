@@ -14,8 +14,9 @@ class MushafFontState extends ChangeNotifier {
   }
 
   Future<void> onPageChanged(int pageNumber) async {
+    final wasLoaded = _loader.isFontLoaded(pageNumber);
     await _loader.loadPageFont(pageNumber);
-    notifyListeners();
+    if (!wasLoaded) notifyListeners();
   }
 
   String? fontFamilyForPage(int pageNumber) {

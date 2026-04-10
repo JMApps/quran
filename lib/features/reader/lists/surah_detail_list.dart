@@ -33,6 +33,11 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _currentPage = Provider.of<SurahState>(context, listen: false).currentMushafPage;
+
+    // Предзагрузка шрифтов вокруг стартовой страницы
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MushafFontState>(context, listen: false).preloadRange(_currentPage - 2, _currentPage + 2);
+    });
   }
 
   @override

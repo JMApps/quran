@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/strings/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/line_type.dart';
-import '../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/domain/entities/word_glyph_entity.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
@@ -47,12 +46,13 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final int mushafPage = context.select<SurahState, int>((s) => s.currentMushafPage);
-    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>((s) => s.getPageMetaByPage(mushafPage));
+
     final lines = context.select<PageLayoutState, List<LayoutEntity>>((s) => s.getPageLines(widget.pageNumber));
     final glyphs = context.select<WordGlyphState, List<WordGlyphEntity>>((s) => s.getPageWords(widget.pageNumber));
     final fontFamily = context.select<MushafFontState, String?>((s) => s.fontFamilyForPage(widget.pageNumber));
     final allSurahs = context.select<SurahState, List<SurahNameEntity>>((s) => s.allSurahs);
+
+    final mushafPageMeta = Provider.of<MushafPageMetaState>(context, listen: false).getPageMetaByPage(widget.pageNumber);
 
     if (lines.isEmpty || fontFamily == null) {
       return const Center(

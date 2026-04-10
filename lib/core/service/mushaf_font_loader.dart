@@ -27,11 +27,11 @@ class MushafFontLoader {
   Future<void> loadPageFont(int pageNumber) async {
     await _loadSingleFont(pageNumber);
 
-    if (pageNumber > 1) {
-      _loadSingleFont(pageNumber - 1);
-    }
-    if (pageNumber < AppStrings.totalPages) {
-      _loadSingleFont(pageNumber + 1);
+    // Префетчим 2 страницы в каждую сторону
+    for (final p in [pageNumber - 1, pageNumber + 1, pageNumber - 2, pageNumber + 2]) {
+      if (p >= 1 && p <= AppStrings.totalPages) {
+        _loadSingleFont(p); // fire and forget
+      }
     }
 
     _evictDistantFonts(pageNumber);
