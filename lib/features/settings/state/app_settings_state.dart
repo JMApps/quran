@@ -5,6 +5,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../core/strings/app_keys.dart';
+import '../../library/domain/entities/translation_type.dart';
 
 class AppSettingsState extends ChangeNotifier {
   AppSettingsState() {
@@ -13,7 +14,17 @@ class AppSettingsState extends ChangeNotifier {
 
   final Box<dynamic> _appSettingsBox = Hive.box(AppKeys.mainAppSettingsBox);
 
-  bool _arabicNameSurah = false;
+  TranslationType _translationType = TranslationType.defaultTranslation;
+  TranslationType get translationType => _translationType;
+
+  set translationType(TranslationType value) {
+    if (_translationType == value) return;
+    _translationType = value;
+    _appSettingsBox.put(AppKeys.keyTranslationType, value.name);
+    notifyListeners();
+  }
+
+  bool _arabicNameSurah = true;
   bool get arabicNameSurah => _arabicNameSurah;
 
   set arabicNameSurah(bool value) {
@@ -101,9 +112,15 @@ class AppSettingsState extends ChangeNotifier {
   }
 
   void _loadSettings() {
+    final savedTranslation = _appSettingsBox.get(AppKeys.keyTranslationType);
+
+    _translationType = savedTranslation != null ? TranslationType.values.firstWhere((e) => e.name == savedTranslation,
+      orElse: () => TranslationType.defaultTranslation,
+    ) : TranslationType.defaultTranslation;
+
     _arabicNameSurah = _appSettingsBox.get(
       AppKeys.keySurahArabicName,
-      defaultValue: false,
+      defaultValue: true,
     );
 
     _translationNameSurah = _appSettingsBox.get(

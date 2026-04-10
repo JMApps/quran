@@ -249,4 +249,15 @@ class MushafPageMetaState extends ChangeNotifier {
     await _persistLastPages();
     notifyListeners();
   }
+
+  Future<void> reloadFavoriteAyahsMeta({required String tableName}) async {
+    if (_ayahTableName == tableName && _isLoadedAyahs) return;
+
+    _isLoadedAyahs = false;
+    _isLoadingAyahs = false;
+    _ayahMetaById = const {};
+    _ayahTableName = null;
+
+    await loadFavoriteAyahsMeta(tableName: tableName);
+  }
 }

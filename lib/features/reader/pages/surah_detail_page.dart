@@ -122,8 +122,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
           ),
         ),
         body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
+          behavior: HitTestBehavior.opaque,
+          onTapUp: (_) {
             final surahState = Provider.of<SurahState>(context, listen: false);
             surahState.toggleShowAppBar();
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();

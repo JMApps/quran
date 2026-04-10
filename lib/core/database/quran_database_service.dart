@@ -9,7 +9,7 @@ class QuranDatabaseService {
   static final QuranDatabaseService instance = QuranDatabaseService._();
 
   static const String _dbFileName = 'quran.db';
-  static const int _dbVersion = 5;
+  static const int _dbVersion = 1;
 
   static const String _assetPath = 'assets/databases/$_dbFileName';
 

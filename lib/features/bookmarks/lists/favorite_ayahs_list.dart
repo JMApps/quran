@@ -24,14 +24,22 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() => _load());
+  }
 
-    Future.microtask(() async {
-      if (!mounted) return;
+  @override
+  void didUpdateWidget(FavoriteAyahsList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.tableName != widget.tableName) {
+      Future.microtask(() => _load());
+    }
+  }
 
-      await context.read<MushafPageMetaState>().loadFavoriteAyahsMeta(
-        tableName: widget.tableName,
-      );
-    });
+  Future<void> _load() async {
+    if (!mounted) return;
+    await Provider.of<MushafPageMetaState>(context, listen: false).reloadFavoriteAyahsMeta(
+      tableName: widget.tableName,
+    );
   }
 
   @override

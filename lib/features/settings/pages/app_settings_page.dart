@@ -8,6 +8,7 @@ import '../state/app_settings_state.dart';
 import '../widgets/ayah_text_size_slider.dart';
 import '../widgets/theme_color_picker.dart';
 import '../widgets/theme_mode_drop_down.dart';
+import '../widgets/translation_drop_down.dart';
 
 class AppSettingsPage extends StatelessWidget {
   const AppSettingsPage({super.key});
@@ -64,6 +65,13 @@ class AppSettingsPage extends StatelessWidget {
                   },
                 ),
                 const Divider(indent: 16, endIndent: 16),
+                TranslationDropDown(
+                  value: appSettingsState.translationType,
+                  onChanged: (value) {
+                    appSettingsState.translationType = value;
+                  },
+                ),
+                const Divider(indent: 16, endIndent: 16),
                 const Padding(
                   padding: AppStyles.mainPadding,
                   child: Text(
@@ -76,12 +84,12 @@ class AppSettingsPage extends StatelessWidget {
                   size: appSettingsState.ayahArabicTextSize,
                   onChanged: (double value) => appSettingsState.ayahArabicTextSize = value,
                 ),
-                const Divider(indent: 16, endIndent: 16),
                 AyahTextSizeSlider(
                   title: AppStrings.translation,
                   size: appSettingsState.ayahTranslationTextSize,
                   onChanged: (double value) => appSettingsState.ayahTranslationTextSize = value,
                 ),
+                const Divider(indent: 16, endIndent: 16),
               ],
             );
           },

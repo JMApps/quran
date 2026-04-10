@@ -5,6 +5,8 @@ class LayoutEntity {
   final int lineNumber;
   final LineType lineType;
   final bool isCentered;
+  final int? firstWordId;
+  final int? lastWordId;
   final int? surahNumber;
 
   const LayoutEntity({
@@ -12,6 +14,8 @@ class LayoutEntity {
     required this.lineNumber,
     required this.lineType,
     required this.isCentered,
+    required this.firstWordId,
+    required this.lastWordId,
     required this.surahNumber,
   });
 }

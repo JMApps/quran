@@ -2,22 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
+import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/page_layout_state.dart';
 import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/word_glyph_state.dart';
 import '../lists/ayah_by_ayah_list.dart';
+import '../widgets/mushaf_page_widget.dart';
 
 class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
     required this.index,
+    required this.tableName,
     required this.ayahPosition,
   });
 
   final int index;
+  final String tableName;
   final int ayahPosition;
 
   @override
@@ -26,7 +30,6 @@ class SurahDetailItem extends StatefulWidget {
 
 class _SurahDetailItemState extends State<SurahDetailItem> {
   late final int _pageNumber;
-  final String tableName = 'Table_of_translation_kuliev';
 
   @override
   void initState() {
@@ -45,39 +48,39 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
   Future<void> _loadCurrentPage() async {
     if (!mounted) return;
+    await Provider.of<MushafFontState>(context, listen: false).ensureFontLoaded(_pageNumber);
+    if (!mounted) return;
+    Provider.of<WordGlyphState>(context, listen: false).loadPageWords(_pageNumber, prefetchNext: false);
+    if (!mounted) return;
     await Provider.of<PageLayoutState>(context, listen: false).loadPageLines(_pageNumber);
     if (!mounted) return;
-    await Provider.of<AyahByAyahState>(context, listen: false
-    ).loadPageAyahs(pageNumber: _pageNumber, tableName: tableName);
-    if (!mounted) return;
-    Provider.of<PageLayoutState>(context, listen: false).trimCache(currentPage: _pageNumber);
+    await Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(pageNumber: _pageNumber, tableName: widget.tableName);
   }
 
   void _prefetchNextPage() {
     final nextPage = _pageNumber + 1;
-    Provider.of<PageLayoutState>(context, listen: false).loadPageLines(nextPage, prefetchNext: false);
-    Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(pageNumber: nextPage, tableName: tableName, prefetchNext: false);
+    if (nextPage > 604) return;
+    Provider.of<MushafFontState>(context, listen: false).onPageChanged(nextPage);
+    Provider.of<WordGlyphState>(context, listen: false).loadPageWords(nextPage, prefetchNext: true);
+    Provider.of<PageLayoutState>(context, listen: false).loadPageLines(nextPage);
+    Provider.of<AyahByAyahState>(context, listen: false).loadPageAyahs(pageNumber: nextPage, tableName: widget.tableName);
   }
 
   @override
   Widget build(BuildContext context) {
-    final lines = context.select<PageLayoutState, List<LayoutEntity>>(
-      (s) => s.getPageLines(_pageNumber),
-    );
-
-    final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
-      (s) => s.getPageAyahs(pageNumber: _pageNumber, tableName: tableName),
-    );
-
-    final allSurahs = context.select<SurahState, List<SurahNameEntity>>(
-      (s) => s.allSurahs,
-    );
+    final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>((s) => s.getPageAyahs(pageNumber: _pageNumber, tableName: widget.tableName),);
+    final allSurahs = context.select<SurahState, List<SurahNameEntity>>((s) => s.allSurahs,);
 
     return Consumer<MushafPageMetaState>(
       builder: (context, mushafPageMetaState, _) {
-        return mushafPageMetaState.translationEnabled
-            ? AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition)
-            : AyahByAyahList(ayahsPage: ayahs, allSurahs: allSurahs, ayahPosition: widget.ayahPosition);
+        if (mushafPageMetaState.translationEnabled) {
+          return AyahByAyahList(
+            ayahsPage: ayahs,
+            allSurahs: allSurahs,
+            ayahPosition: widget.ayahPosition,
+          );
+        }
+        return MushafPageWidget(pageNumber: _pageNumber);
       },
     );
   }

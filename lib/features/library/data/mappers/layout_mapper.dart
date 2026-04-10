@@ -7,6 +7,8 @@ extension LayoutModelX on LayoutModel {
     lineNumber: lineNumber,
     lineType: lineType,
     isCentered: isCentered,
+    firstWordId: firstWordId,
+    lastWordId: lastWordId,
     surahNumber: surahNumber,
   );
 }

@@ -69,6 +69,7 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
           case AyahListRowType.surahHeader:
             return SurahHeaderItem(
               surahName: surahNamesMap[row.surahNumber] ?? '${AppStrings.surah} ${row.surahNumber}',
+              surahNumber: row.surahNumber!,
             );
 
           case AyahListRowType.basmallah:

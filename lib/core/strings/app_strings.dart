@@ -1,4 +1,5 @@
 import '../../features/library/domain/entities/line_type.dart';
+import '../../features/library/domain/entities/translation_type.dart';
 
 class AppStrings {
   static const String basmaLlah = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيم';
@@ -33,7 +34,6 @@ class AppStrings {
   static const String removedFromFavorite = 'Удалено из избранного';
   static const String removeFromFavorite = 'Удалить из избранного';
 
-  static const String lastMushafPages = 'Недавние страницы: ';
   static const String lastMushafPagesEmpty = 'Недавних страниц нет';
   static const String favoriteMushafPages = 'Избранные страницы';
   static const String favoritePagesEmpty = 'Избранных страниц нет';
@@ -41,7 +41,9 @@ class AppStrings {
   static const String goTo = 'Перейти к...';
   static const String searchByAyahs = 'Поиск аятов';
   static const String translate = 'Перевод';
+  static const String semanticTranslation = 'Смысловой перевод';
   static const String recent = 'Недавнее';
+  static const String strDefault = 'По умолчанию';
 
   static const String themeColor = 'Цвет темы';
   static const String selectThemeColor = 'Выберите цвет темы';
@@ -78,9 +80,6 @@ class AppStrings {
 
   static const String searchByQuery = 'По запросу';
 
-  static const String arabicHighlightStart = '[[AR_HL]]';
-  static const String translationHighlightStart = '[[TR_HL]]';
-
   static bool containsArabic(String value) {
     return RegExp(
       r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]',
@@ -108,6 +107,28 @@ class AppStrings {
       default:
         return many;
     }
+  }
+
+  static const List<String> semanticTranslationNames = [
+    'По умолчанию',
+    'Эльмир Кулиев',
+    'Абу Адель',
+  ];
+  static const String tableOfKuliev = 'Table_of_translation_kuliev';
+  static const String tableOfAdel = 'Table_of_translation_adel';
+
+  static const Map<String, TranslationType> _defaultTranslationByLocale = {
+    'ru': TranslationType.kuliev,
+  };
+
+  static const Map<TranslationType, ({String table, String fts})> _translationColumns = {
+    TranslationType.kuliev: (table: tableOfKuliev, fts: 'translation_kuliev_fts'),
+    TranslationType.adel: (table: tableOfAdel, fts: 'translation_adel_fts'),
+  };
+
+  static ({String table, String fts}) resolveTranslation({required String locale, TranslationType? userSelected}) {
+    final type = userSelected ?? _defaultTranslationByLocale[locale] ?? TranslationType.kuliev;
+    return _translationColumns[type]!;
   }
 
   static LineType lineTypeFromDb(String value) {

@@ -7,22 +7,25 @@ import '../../features/library/data/repositories/juz_repository_impl.dart';
 import '../../features/library/data/repositories/layout_repository_impl.dart';
 import '../../features/library/data/repositories/mushaf_page_meta_repository_impl.dart';
 import '../../features/library/data/repositories/surah_name_repository_impl.dart';
+import '../../features/library/data/repositories/word_glyph_repository_impl.dart';
 import '../../features/library/domain/usecases/ayah_by_ayah_use_case.dart';
 import '../../features/library/domain/usecases/hizb_use_case.dart';
 import '../../features/library/domain/usecases/juz_use_case.dart';
 import '../../features/library/domain/usecases/layout_use_case.dart';
 import '../../features/library/domain/usecases/mushaf_page_meta_use_case.dart';
 import '../../features/library/domain/usecases/surah_name_use_case.dart';
+import '../../features/library/domain/usecases/word_glyph_use_case.dart';
 import '../../features/library/presentation/state/ayah_by_ayah_state.dart';
 import '../../features/library/presentation/state/hizb_state.dart';
 import '../../features/library/presentation/state/juz_state.dart';
 import '../../features/library/presentation/state/main_state.dart';
+import '../../features/library/presentation/state/mushaf_font_state.dart';
 import '../../features/library/presentation/state/mushaf_page_meta_state.dart';
 import '../../features/library/presentation/state/page_layout_state.dart';
 import '../../features/library/presentation/state/surah_state.dart';
+import '../../features/library/presentation/state/word_glyph_state.dart';
 import '../../features/settings/state/app_settings_state.dart';
 import '../database/quran_database_service.dart';
-import '../services/mushaf_font_loader.dart';
 
 class AppProviders {
   static List<SingleChildWidget> build(QuranDatabaseService databaseService) {
@@ -38,8 +41,8 @@ class AppProviders {
     ChangeNotifierProvider<AppSettingsState>(
       create: (_) => AppSettingsState(),
     ),
-    Provider<MushafFontLoader>(
-      create: (_) => MushafFontLoader.instance,
+    ChangeNotifierProvider<MushafFontState>(
+      create: (_) => MushafFontState(),
     ),
     ChangeNotifierProvider<MainState>(
       create: (_) => MainState(),
@@ -58,6 +61,9 @@ class AppProviders {
     ),
     Provider<LayoutRepositoryImpl>(
       create: (_) => LayoutRepositoryImpl(databaseService),
+    ),
+    Provider<WordGlyphRepositoryImpl>(
+      create: (_) => WordGlyphRepositoryImpl(databaseService),
     ),
     Provider<SurahNameRepositoryImpl>(
       create: (_) => SurahNameRepositoryImpl(databaseService),
@@ -81,6 +87,11 @@ class AppProviders {
     Provider<HizbUseCase>(
       create: (context) => HizbUseCase(
         context.read<HizbRepositoryImpl>(),
+      ),
+    ),
+    Provider<WordGlyphUseCase>(
+      create: (context) => WordGlyphUseCase(
+        context.read<WordGlyphRepositoryImpl>(),
       ),
     ),
     Provider<LayoutUseCase>(
@@ -131,6 +142,12 @@ class AppProviders {
         context.read<MushafPageMetaUseCase>(),
         context.read<AyahByAyahUseCase>(),
       )..loadAllPagesMeta(),
+    ),
+    ChangeNotifierProvider<WordGlyphState>(
+      lazy: false,
+      create: (context) => WordGlyphState(
+        context.read<WordGlyphUseCase>(),
+      ),
     ),
     ChangeNotifierProvider<PageLayoutState>(
       lazy: false,

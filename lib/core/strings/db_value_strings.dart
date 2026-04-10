@@ -33,7 +33,12 @@ class DbValueStrings {
   static const String dbLastWordId = 'last_word_id';
 
   static const String tableOfWordsGlyph = 'Table_of_words_glyph';
-
+  static const String dbId = 'id';
+  static const String dbLocation = 'location';
+  static const String dbSurah = 'surah';
+  static const String dbAyah = 'ayah';
+  static const String dbWord = 'word';
+  static const String dbText = 'text';
 
   static const String dbStartNumberPage = 'start_page_number';
   static const String dbVersesCount = 'verses_count';

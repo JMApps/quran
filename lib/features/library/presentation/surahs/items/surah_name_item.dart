@@ -42,10 +42,11 @@ class SurahNameItem extends StatelessWidget {
             children: [
               if (appSettingsState.arabicNameSurah)
                 Text(
-                  surahModel.nameArabic,
+                  AppStrings.surahNameByNumber(surahModel.surahNumber),
                   style: TextStyle(
                     color: appColors.primary,
-                    fontFamily: AppStrings.fontUthmanicHafs,
+                    fontSize: 25.0,
+                    fontFamily: AppStrings.fontSurahName,
                   ),
                   maxLines: 1,
                   overflow: .ellipsis,

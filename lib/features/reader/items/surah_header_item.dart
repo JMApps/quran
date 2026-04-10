@@ -7,9 +7,11 @@ class SurahHeaderItem extends StatelessWidget {
   const SurahHeaderItem({
     super.key,
     required this.surahName,
+    required this.surahNumber,
   });
 
   final String surahName;
+  final int surahNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,23 @@ class SurahHeaderItem extends StatelessWidget {
         color: appColors.secondaryContainer.withAlpha(120),
         borderRadius: AppStyles.mainBorder,
       ),
-      child: Text(
-        '${AppStrings.surah} $surahName',
-        style: AppStyles.mainTextStyle18,
-        textAlign: .center,
+      child: Column(
+        children: [
+          Text(
+            AppStrings.surahNameByNumber(surahNumber),
+            style: const TextStyle(
+              fontSize: 35.0,
+              fontFamily: AppStrings.fontSurahName,
+            ),
+            textDirection: .ltr,
+            textAlign: .center,
+          ),
+          Text(
+            '${AppStrings.surah} $surahName',
+            style: AppStyles.mainTextStyle18,
+            textAlign: .center,
+          ),
+        ],
       ),
     );
   }

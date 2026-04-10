@@ -37,7 +37,7 @@ class LayoutModel {
       isCentered: _asBool01(map[DbValueStrings.dbIsCentered]),
       firstWordId: map[DbValueStrings.dbFirstWordId] as int?,
       lastWordId: map[DbValueStrings.dbLastWordId] as int?,
-      surahNumber: map[DbValueStrings.dbSurahNumber] as int,
+      surahNumber: map[DbValueStrings.dbSurahNumber] != null ? map[DbValueStrings.dbSurahNumber] as int : null,
     );
   }
 }

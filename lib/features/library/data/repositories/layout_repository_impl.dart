@@ -21,6 +21,8 @@ class LayoutRepositoryImpl implements LayoutRepository {
         DbValueStrings.dbLineNumber,
         DbValueStrings.dbLineType,
         DbValueStrings.dbIsCentered,
+        DbValueStrings.dbFirstWordId,
+        DbValueStrings.dbLastWordId,
         DbValueStrings.dbSurahNumber,
       ],
       where: '${DbValueStrings.dbPageNumber} = ?',

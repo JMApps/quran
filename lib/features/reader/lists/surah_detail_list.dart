@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../library/domain/entities/translation_type.dart';
+import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/surah_state.dart';
+import '../../settings/state/app_settings_state.dart';
 import '../items/surah_detail_item.dart';
 
 class SurahDetailList extends StatefulWidget {
@@ -56,6 +59,11 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
+    final appSettingsState = Provider.of<AppSettingsState>(context, listen: false);
+    final fontLoaderState = Provider.of<MushafFontState>(context, listen: false);
+    final tableName = AppStrings.resolveTranslation(
+      locale: Localizations.localeOf(context).languageCode,
+      userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType).table;
     return Padding(
       padding: AppStyles.hrMiniPadding,
       child: PageView.builder(
@@ -63,13 +71,16 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
         controller: widget.mushafPageController,
         itemCount: AppStrings.totalPages,
         onPageChanged: (int index) {
-          Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(index + 1);
           _currentPage = index + 1;
+          Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(_currentPage);
+          fontLoaderState.preloadRange(_currentPage - 1, _currentPage + 1);
+          fontLoaderState.onPageChanged(_currentPage);
         },
         itemBuilder: (context, index) {
           return SurahDetailItem(
             index: index,
             ayahPosition: widget.ayahPosition,
+            tableName: tableName,
           );
         },
       ),
