@@ -13,6 +13,7 @@ import '../../library/presentation/state/page_layout_state.dart';
 import '../../library/presentation/state/surah_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
 import 'mushaf_line_widget.dart';
+
 class MushafPageWidget extends StatefulWidget {
   const MushafPageWidget({
     super.key,
@@ -40,19 +41,31 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
     if (!mounted) return;
     await Provider.of<PageLayoutState>(context, listen: false).loadPageLines(widget.pageNumber);
     if (!mounted) return;
-    Provider.of<WordGlyphState>(context, listen: false).loadPageWords(widget.pageNumber, prefetchNext: false);
+    Provider.of<WordGlyphState>(
+      context,
+      listen: false,
+    ).loadPageWords(widget.pageNumber, prefetchNext: false);
   }
 
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
 
-    final lines = context.select<PageLayoutState, List<LayoutEntity>>((s) => s.getPageLines(widget.pageNumber));
-    final glyphs = context.select<WordGlyphState, List<WordGlyphEntity>>((s) => s.getPageWords(widget.pageNumber));
-    final fontFamily = context.select<MushafFontState, String?>((s) => s.fontFamilyForPage(widget.pageNumber));
+    final lines = context.select<PageLayoutState, List<LayoutEntity>>(
+      (s) => s.getPageLines(widget.pageNumber),
+    );
+    final glyphs = context.select<WordGlyphState, List<WordGlyphEntity>>(
+      (s) => s.getPageWords(widget.pageNumber),
+    );
+    final fontFamily = context.select<MushafFontState, String?>(
+      (s) => s.fontFamilyForPage(widget.pageNumber),
+    );
     final allSurahs = context.select<SurahState, List<SurahNameEntity>>((s) => s.allSurahs);
 
-    final mushafPageMeta = Provider.of<MushafPageMetaState>(context, listen: false).getPageMetaByPage(widget.pageNumber);
+    final mushafPageMeta = Provider.of<MushafPageMetaState>(
+      context,
+      listen: false,
+    ).getPageMetaByPage(widget.pageNumber);
 
     if (lines.isEmpty || fontFamily == null) {
       return const Center(
@@ -69,8 +82,14 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
       child: Row(
         mainAxisAlignment: .spaceBetween,
         children: [
-          Text('${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}'),
-          Text('${AppStrings.surah} ${mushafPageMeta?.nameTranscription}'),
+          Text(
+            '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
+            textDirection: .ltr,
+          ),
+          Text(
+            '${AppStrings.surah} ${mushafPageMeta?.nameTranscription}',
+            textDirection: .ltr,
+          ),
         ],
       ),
     );
@@ -79,6 +98,7 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
       padding: AppStyles.bottomMiniPadding,
       child: Text(
         '${widget.pageNumber}',
+        textDirection: .ltr,
       ),
     );
 
@@ -96,7 +116,15 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
               SizedBox(
                 width: pageWidth,
                 height: pageHeight,
-                child: _buildPageContent(isLandscape, lines, glyphs, fontFamily, allSurahs, textColor, appColors.primary),
+                child: _buildPageContent(
+                  isLandscape,
+                  lines,
+                  glyphs,
+                  fontFamily,
+                  allSurahs,
+                  textColor,
+                  appColors.primary,
+                ),
               ),
               footer,
             ],
@@ -113,7 +141,15 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
           Expanded(
             child: Padding(
               padding: AppStyles.mainPadding,
-              child: _buildPageContent(isLandscape, lines, glyphs, fontFamily, allSurahs, textColor, appColors.primary),
+              child: _buildPageContent(
+                isLandscape,
+                lines,
+                glyphs,
+                fontFamily,
+                allSurahs,
+                textColor,
+                appColors.primary,
+              ),
             ),
           ),
           footer,
@@ -122,7 +158,15 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
     );
   }
 
-  Widget _buildPageContent(bool isLandscape, List<LayoutEntity> lines, List<WordGlyphEntity> glyphs, String fontFamily, List<SurahNameEntity> allSurahs, Color textColor, Color endAyahColor) {
+  Widget _buildPageContent(
+    bool isLandscape,
+    List<LayoutEntity> lines,
+    List<WordGlyphEntity> glyphs,
+    String fontFamily,
+    List<SurahNameEntity> allSurahs,
+    Color textColor,
+    Color endAyahColor,
+  ) {
     return Column(
       mainAxisAlignment: .spaceBetween,
       children: lines.map((line) {

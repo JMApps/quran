@@ -15,9 +15,10 @@ void main() async {
   Hive.init(dir.path);
 
   await Future.wait([
+    if (!Hive.isBoxOpen(AppKeys.mainAppSettingsBox))
+      Hive.openBox(AppKeys.mainAppSettingsBox),
     if (!Hive.isBoxOpen(AppKeys.mushafFavoriteSettingsBox))
       Hive.openBox(AppKeys.mushafFavoriteSettingsBox),
-    if (!Hive.isBoxOpen(AppKeys.mainAppSettingsBox)) Hive.openBox(AppKeys.mainAppSettingsBox),
   ]);
 
   final databaseService = QuranDatabaseService.instance;

@@ -43,19 +43,19 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   Future<void> _showSystemUiWithDelay() async {
     await Future<void>.delayed(const Duration(milliseconds: 125));
-
-    await SystemChrome.setEnabledSystemUIMode(
-      .manual,
-      overlays: SystemUiOverlay.values,
-    );
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarContrastEnforced: false,
+      systemStatusBarContrastEnforced: false,
+    ));
   }
 
   Future<void> _hideSystemUiWithDelay() async {
     await Future<void>.delayed(const Duration(milliseconds: 125));
-
     await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: const [],
+      SystemUiMode.immersiveSticky,
     );
   }
 
@@ -122,8 +122,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
           ),
         ),
         body: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTapUp: (_) {
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
             final surahState = Provider.of<SurahState>(context, listen: false);
             surahState.toggleShowAppBar();
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
