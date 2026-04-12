@@ -26,6 +26,7 @@ class AppRouter {
         currentMushafPage: arguments.currentMushafPage,
         ayahPosition: arguments.ayahPosition,
       );
-    },    NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
+    },
+    NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
   };
 }

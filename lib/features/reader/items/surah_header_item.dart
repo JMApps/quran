@@ -17,7 +17,7 @@ class SurahHeaderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     return Container(
-      padding: AppStyles.mainPadding,
+      padding: AppStyles.miniPadding,
       margin: AppStyles.vrBigHrMiniPadding,
       alignment: .center,
       decoration: BoxDecoration(
@@ -31,6 +31,7 @@ class SurahHeaderItem extends StatelessWidget {
             style: const TextStyle(
               fontSize: 35.0,
               fontFamily: AppStrings.fontSurahName,
+              height: 1
             ),
             textDirection: .ltr,
             textAlign: .center,

@@ -23,10 +23,15 @@ class SurahDetailList extends StatefulWidget {
   State<SurahDetailList> createState() => _SurahDetailListState();
 }
 
-class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingObserver {
+class _SurahDetailListState extends State<SurahDetailList>
+    with WidgetsBindingObserver {
   late final MushafPageMetaState _mushafPageMetaState;
 
   int _currentPage = 1;
+
+  /// Направление последнего листания (вперёд по тексту = true).
+  /// PageView reverse: true → увеличение index = движение вперёд по Корану.
+  bool _isDirectionForward = true;
 
   @override
   void initState() {
@@ -34,16 +39,21 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
     WidgetsBinding.instance.addObserver(this);
     _currentPage = Provider.of<SurahState>(context, listen: false).currentMushafPage;
 
-    // Предзагрузка шрифтов вокруг стартовой страницы
+    // При первом открытии ридера — параллельная preload-инициализация
+    // шрифтов в диапазоне ±3 от стартовой страницы.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MushafFontState>(context, listen: false).preloadRange(_currentPage - 2, _currentPage + 2);
+      Provider.of<MushafFontState>(context, listen: false).preloadRange(
+        _currentPage - 3,
+        _currentPage + 3,
+      );
     });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _mushafPageMetaState = Provider.of<MushafPageMetaState>(context, listen: false);
+    _mushafPageMetaState =
+        Provider.of<MushafPageMetaState>(context, listen: false);
   }
 
   @override
@@ -63,26 +73,38 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    final appSettingsState = Provider.of<AppSettingsState>(context, listen: false);
-    final fontLoaderState = Provider.of<MushafFontState>(context, listen: false);
+    final appSettingsState =
+    Provider.of<AppSettingsState>(context, listen: false);
+
     final tableName = AppStrings.resolveTranslation(
       locale: Localizations.localeOf(context).languageCode,
-      userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType).table;
+      userSelected: appSettingsState.translationType ==
+          TranslationType.defaultTranslation
+          ? null
+          : appSettingsState.translationType,
+    ).table;
+
     return PageView.builder(
       reverse: true,
       controller: widget.mushafPageController,
       itemCount: AppStrings.totalPages,
       onPageChanged: (int index) {
-        _currentPage = index + 1;
-        Provider.of<SurahState>(context, listen: false).setMushafCurrentPage(_currentPage);
-        fontLoaderState.preloadRange(_currentPage - 1, _currentPage + 1);
-        fontLoaderState.onPageChanged(_currentPage);
+        final newPage = index + 1;
+
+        // Определяем направление: в reverse PageView увеличение index
+        // означает движение вперёд по тексту (следующая страница Корана).
+        _isDirectionForward = newPage > _currentPage;
+        _currentPage = newPage;
+
+        Provider.of<SurahState>(context, listen: false)
+            .setMushafCurrentPage(_currentPage);
       },
       itemBuilder: (context, index) {
         return SurahDetailItem(
           index: index,
           ayahPosition: widget.ayahPosition,
           tableName: tableName,
+          isDirectionForward: _isDirectionForward,
         );
       },
     );

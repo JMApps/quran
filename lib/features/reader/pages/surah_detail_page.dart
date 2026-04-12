@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
@@ -44,12 +45,14 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
   Future<void> _showSystemUiWithDelay() async {
     await Future<void>.delayed(const Duration(milliseconds: 125));
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarContrastEnforced: false,
-      systemStatusBarContrastEnforced: false,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarContrastEnforced: false,
+        systemStatusBarContrastEnforced: false,
+      ),
+    );
   }
 
   Future<void> _hideSystemUiWithDelay() async {
@@ -86,24 +89,24 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                   child: IgnorePointer(
                     ignoring: !surahState.showAppBar,
                     child: AppBar(
-                      elevation: 5.0,
+                      elevation: 3.5,
+                      titleSpacing: 0,
                       title: Column(
                         crossAxisAlignment: .stretch,
                         children: [
-                          Text('${AppStrings.surah} ${mushafPageMeta?.nameTranscription}'),
+                          Text(
+                            '${AppStrings.surah} ${mushafPageMeta?.nameTranscription}',
+                            style: AppStyles.mainTextStyle18,
+                          ),
                           Row(
                             children: [
                               Text(
                                 '${AppStrings.page} ${mushafPageMeta?.pageNumber}, ',
-                                style: const TextStyle(
-                                  fontSize: 12.5,
-                                ),
+                                style: AppStyles.mainTextStyle12,
                               ),
                               Text(
                                 '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
-                                style: const TextStyle(
-                                  fontSize: 12.5,
-                                ),
+                                style: AppStyles.mainTextStyle12,
                               ),
                             ],
                           ),

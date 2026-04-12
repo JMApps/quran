@@ -12,14 +12,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final dir = await getApplicationDocumentsDirectory();
+  
   Hive.init(dir.path);
 
-  await Future.wait([
-    if (!Hive.isBoxOpen(AppKeys.mainAppSettingsBox))
-      Hive.openBox(AppKeys.mainAppSettingsBox),
-    if (!Hive.isBoxOpen(AppKeys.mushafFavoriteSettingsBox))
-      Hive.openBox(AppKeys.mushafFavoriteSettingsBox),
-  ]);
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+    Hive.init(dir.path);
+    await Hive.openBox(AppKeys.mainAppSettingsBox);
+    await Hive.openBox(AppKeys.mushafFavoriteSettingsBox);
+  } catch (e) {
+    await Hive.deleteBoxFromDisk(AppKeys.mainAppSettingsBox);
+    await Hive.deleteBoxFromDisk(AppKeys.mushafFavoriteSettingsBox);
+    await Hive.openBox(AppKeys.mainAppSettingsBox);
+    await Hive.openBox(AppKeys.mushafFavoriteSettingsBox);
+  }
 
   final databaseService = QuranDatabaseService.instance;
 
