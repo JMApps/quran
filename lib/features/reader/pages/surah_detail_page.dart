@@ -6,7 +6,7 @@ import 'package:quran/core/theme/app_styles.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/mushaf_page_meta_entity.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/surah_detail_list.dart';
 import '../widgets/favorite_mushaf_page_button.dart';
 import '../widgets/to_mushaf_page_button.dart';
@@ -64,7 +64,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int mushafPage = context.select<SurahState, int>((s) => s.currentMushafPage);
+    final int mushafPage = context.select<SurahNameState, int>((s) => s.currentPage);
     final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
       (s) => s.getPageMetaByPage(mushafPage),
     );
@@ -77,7 +77,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Consumer<SurahState>(
+          child: Consumer<SurahNameState>(
             builder: (context, surahState, _) {
               return AnimatedSlide(
                 duration: const Duration(milliseconds: 250),
@@ -114,7 +114,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       ),
                       actions: [
                         const FavoriteMushafPageButton(),
-                        TranslateMushafPageButton(currentMushafPage: surahState.currentMushafPage),
+                        TranslateMushafPageButton(currentMushafPage: surahState.currentPage),
                         ToMushafPageButton(mushafPageController: _mushafPageController),
                       ],
                     ),
@@ -127,7 +127,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
         body: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            final surahState = Provider.of<SurahState>(context, listen: false);
+            final surahState = Provider.of<SurahNameState>(context, listen: false);
             surahState.toggleShowAppBar();
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
           },

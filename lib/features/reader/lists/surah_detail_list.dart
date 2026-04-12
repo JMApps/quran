@@ -5,7 +5,7 @@ import '../../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/translation_type.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../../settings/state/app_settings_state.dart';
 import '../items/surah_detail_item.dart';
 
@@ -37,7 +37,7 @@ class _SurahDetailListState extends State<SurahDetailList>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _currentPage = Provider.of<SurahState>(context, listen: false).currentMushafPage;
+    _currentPage = Provider.of<SurahNameState>(context, listen: false).currentPage;
 
     // При первом открытии ридера — параллельная preload-инициализация
     // шрифтов в диапазоне ±3 от стартовой страницы.
@@ -96,8 +96,8 @@ class _SurahDetailListState extends State<SurahDetailList>
         _isDirectionForward = newPage > _currentPage;
         _currentPage = newPage;
 
-        Provider.of<SurahState>(context, listen: false)
-            .setMushafCurrentPage(_currentPage);
+        Provider.of<SurahNameState>(context, listen: false)
+            .setCurrentPage(_currentPage);
       },
       itemBuilder: (context, index) {
         return SurahDetailItem(

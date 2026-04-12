@@ -1,17 +1,15 @@
 class SurahNameEntity {
   final int surahNumber;
-  final String nameArabic;
   final String nameTranslation;
   final String nameTranscription;
   final int revelationOrder;
-  final String revelationPlace;
+  final int revelationPlace;
   final int ayahsCount;
   final int basmallaPre;
   final int startPageNumber;
 
   const SurahNameEntity({
     required this.surahNumber,
-    required this.nameArabic,
     required this.nameTranslation,
     required this.nameTranscription,
     required this.revelationOrder,

@@ -8,7 +8,7 @@ import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/page_layout_state.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
 import '../lists/ayah_by_ayah_list.dart';
 import '../widgets/mushaf_page_widget.dart';
@@ -52,7 +52,7 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Сначала убедимся, что список сур загружен.
-      await Provider.of<SurahState>(context, listen: false).loadAllSurahs();
+      await Provider.of<SurahNameState>(context, listen: false).loadAllSurahNames();
       if (!mounted) return;
 
       // Параллельная загрузка текущей страницы.
@@ -150,7 +150,7 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
         tableName: widget.tableName,
       ),
     );
-    final allSurahs = context.select<SurahState, List<SurahNameEntity>>(
+    final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(
           (s) => s.allSurahs,
     );
 

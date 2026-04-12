@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
-import '../../../../settings/state/app_settings_state.dart';
+import '../../../../../core/theme/app_styles.dart';
 import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
-import '../../state/surah_state.dart';
+import '../../state/surah_name_state.dart';
 
 class SurahNameItem extends StatelessWidget {
   const SurahNameItem({
@@ -24,82 +23,72 @@ class SurahNameItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(25);
     final itemEvenColor = appColors.secondary.withAlpha(05);
-    return ListTile(
-      visualDensity: .adaptivePlatformDensity,
-      tileColor: index.isOdd ? itemEvenColor : itemOddColor,
+    return InkWell(
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
-      leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Text(
-          surahModel.surahNumber.toString(),
-        ),
-      ),
-      title: Consumer<AppSettingsState>(
-        builder: (context, appSettingsState, _) {
-          return Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              if (appSettingsState.arabicNameSurah)
-                Text(
-                  AppStrings.surahNameByNumber(surahModel.surahNumber),
-                  style: TextStyle(
-                    color: appColors.primary,
-                    fontSize: 25.0,
-                    fontFamily: AppStrings.fontSurahName,
-                  ),
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                ),
-              Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      surahModel.nameTranscription,
-                      style: AppStyles.mediumTextStyle16,
-                      maxLines: 1,
-                      overflow: .ellipsis,
-                    ),
-                  ),
-                  if (appSettingsState.translationNameSurah)
-                    Flexible(
-                      child: Text(
-                        ' (${surahModel.nameTranslation})',
-                        style: AppStyles.mainTextStyle16,
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-      subtitle: Text(
-        '${surahModel.ayahsCount} ${AppStrings.plural(surahModel.ayahsCount, AppStrings.ayahOne, AppStrings.ayahFew, AppStrings.ayahMany)} – ${surahModel.revelationPlace}',
-        style: AppStyles.mainTextStyle12,
-        maxLines: 1,
-        overflow: .ellipsis,
-      ),
-      trailing: Text(
-        surahModel.startPageNumber.toString(),
-        style: TextStyle(
-          color: appColors.secondary,
-        ),
-      ),
       onTap: () {
-        final surahState = Provider.of<SurahState>(context, listen: false);
+        final surahState = Provider.of<SurahNameState>(context, listen: false);
         final arguments = SurahDetailArgs(
           currentMushafPage: surahModel.startPageNumber,
         );
-        surahState.setMushafCurrentPage(surahModel.startPageNumber);
+        surahState.setCurrentPage(surahModel.startPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
           arguments: arguments,
         );
       },
+      child: Container(
+        padding: AppStyles.hrMiniVrMainPadding,
+        decoration: BoxDecoration(
+          color: index.isOdd ? itemEvenColor : itemOddColor,
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Text(
+                surahModel.surahNumber.toString(),
+              ),
+            ),
+            const SizedBox(width: 7),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        surahModel.nameTranscription,
+                        style: AppStyles.mediumTextStyle16,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        ' (${surahModel.nameTranslation})',
+                        style: AppStyles.mainTextStyle16,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${surahModel.ayahsCount} ${AppStrings.plural(surahModel.ayahsCount, AppStrings.ayahOne, AppStrings.ayahFew, AppStrings.ayahMany)} – ${surahModel.revelationPlace == 0 ? AppStrings.mecca : AppStrings.medina}',
+                    style: AppStyles.mainTextStyle12,
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 14),
+            Text(
+              surahModel.startPageNumber.toString(),
+              style: AppStyles.mainTextStyle12.copyWith(color: appColors.secondary),
+            ),
+            const SizedBox(width: 7),
+          ],
+        ),
+      ),
     );
   }
 }
