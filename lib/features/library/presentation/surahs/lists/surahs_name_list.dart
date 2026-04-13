@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/surah_name_entity.dart';
 import '../items/surah_name_item.dart';
-
 class SurahsNameList extends StatelessWidget {
   const SurahsNameList({
     super.key,

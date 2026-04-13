@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/hizb_entity.dart';
-import '../../domain/usecases/hizb_use_case.dart';
+import '../../domain/repositories/hizb_repository.dart';
 
 class HizbState extends ChangeNotifier {
-  final HizbUseCase _hizbUseCase;
+  final HizbRepository _hizbRepository;
 
-  HizbState(this._hizbUseCase);
+  HizbState(this._hizbRepository);
 
   List<HizbEntity> _allHizbs = const [];
+  final Map<int, HizbEntity> _hizbMap = {};
+
   bool _isLoading = false;
   bool _isLoaded = false;
   Object? _error;
@@ -17,24 +19,15 @@ class HizbState extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  bool get isLoaded => _isLoaded;
-
-  bool get hasError => _error != null;
-
-  bool get hasData => _allHizbs.isNotEmpty;
-
   Object? get error => _error;
 
-  Future<void> loadAllHizbs() async {
-    if (_isLoading || _isLoaded) return;
-    await _load(force: false);
+  HizbEntity? getHizbById(int hizbNumber) {
+    return _hizbMap[hizbNumber];
   }
 
-  Future<void> refreshAllHizbs() async {
-    await _load(force: true);
-  }
+  Future<void> loadAllHizbs() => _loadData(force: false);
 
-  Future<void> _load({required bool force}) async {
+  Future<void> _loadData({required bool force}) async {
     if (_isLoading) return;
     if (!force && _isLoaded) return;
 
@@ -43,8 +36,8 @@ class HizbState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final List<HizbEntity> result = await _hizbUseCase.getAllHizbs();
-      _allHizbs = result;
+      _allHizbs = await _hizbRepository.getAllHizbs();
+      _hizbMap..clear()..addEntries(_allHizbs.map((s) => MapEntry(s.hizbNumber, s)));
       _isLoaded = true;
     } catch (e) {
       _error = e;
@@ -55,11 +48,5 @@ class HizbState extends ChangeNotifier {
     }
   }
 
-  void clear() {
-    _allHizbs = const [];
-    _isLoading = false;
-    _isLoaded = false;
-    _error = null;
-    notifyListeners();
-  }
+  Future<void> refreshAllHizbs() => _loadData(force: true);
 }

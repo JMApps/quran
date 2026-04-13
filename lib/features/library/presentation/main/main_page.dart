@@ -88,7 +88,7 @@ class _MainPageState extends State<MainPage> {
                   title: const Text(AppStrings.surahs),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.bookmark_border_rounded),
+                  icon: const Icon(Icons.bookmark_rounded),
                   title: const Text(AppStrings.bookmarks),
                 ),
                 SalomonBottomBarItem(

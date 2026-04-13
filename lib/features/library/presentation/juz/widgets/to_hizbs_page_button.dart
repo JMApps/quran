@@ -12,9 +12,21 @@ class ToHizbsPageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HizbState>(
       builder: (BuildContext context, hizbState, _) {
-        if (hizbState.isLoading && hizbState.allHizbs.isEmpty) {
-          return const SizedBox();
+        if (hizbState.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
         }
+
+        if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
+          return IconButton(
+            onPressed: () {
+              hizbState.refreshAllHizbs();
+            },
+            icon: const Icon(Icons.refresh_rounded),
+          );
+        }
+
         return IconButton(
           onPressed: () {
             showModalBottomSheet(

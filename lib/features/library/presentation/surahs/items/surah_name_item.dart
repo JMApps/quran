@@ -39,7 +39,7 @@ class SurahNameItem extends StatelessWidget {
         );
       },
       child: Container(
-        padding: AppStyles.hrMiniVrMainPadding,
+        padding: AppStyles.hrMiniVrBigPadding,
         decoration: BoxDecoration(
           color: index.isOdd ? itemEvenColor : itemOddColor,
         ),

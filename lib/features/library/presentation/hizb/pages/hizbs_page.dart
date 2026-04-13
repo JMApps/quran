@@ -11,6 +11,7 @@ class HizbsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -24,15 +25,32 @@ class HizbsPage extends StatelessWidget {
             );
           }
 
-          if (hizbState.error != null) {
-            return Center(
-              child: Padding(
-                padding: AppStyles.mainPadding,
-                child: Text(
-                  '${AppStrings.errorLoadHizbsList}\n${hizbState.error}',
-                  style: AppStyles.mainTextStyle18,
-                  textAlign: .center,
-                ),
+          if (hizbState.error != null && hizbState.allHizbs.isEmpty) {
+            return Padding(
+              padding: AppStyles.mainPadding,
+              child: Column(
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .stretch,
+                children: [
+                  Text(
+                    '${AppStrings.errorLoadSurahsList}\n${hizbState.error}',
+                    style: AppStyles.mainTextStyle18,
+                    textAlign: .center,
+                  ),
+                  const SizedBox(height: 7),
+                  MaterialButton(
+                    onPressed: () {
+                      hizbState.refreshAllHizbs();
+                    },
+                    elevation: 0.25,
+                    color: appColors.secondaryContainer,
+                    shape: AppStyles.mainShape,
+                    child: const Text(
+                      AppStrings.retry,
+                      style: AppStyles.mainTextStyle16,
+                    ),
+                  ),
+                ],
               ),
             );
           }

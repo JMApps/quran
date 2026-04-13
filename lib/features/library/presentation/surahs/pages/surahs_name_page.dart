@@ -66,7 +66,7 @@ class SurahNamePage extends StatelessWidget {
                     style: AppStyles.mainTextStyle18,
                     textAlign: .center,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 7),
                   MaterialButton(
                     onPressed: () {
                       surahState.refreshAllSurahs();

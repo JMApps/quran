@@ -17,6 +17,7 @@ class JuzsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -33,15 +34,32 @@ class JuzsPage extends StatelessWidget {
             );
           }
 
-          if (juzState.error != null) {
-            return Center(
-              child: Padding(
-                padding: AppStyles.mainPadding,
-                child: Text(
-                  '${AppStrings.errorLoadJuzsList}\n${juzState.error}',
-                  style: AppStyles.mainTextStyle18,
-                  textAlign: .center,
-                ),
+          if (juzState.error != null && juzState.allJuzs.isEmpty) {
+            return Padding(
+              padding: AppStyles.mainPadding,
+              child: Column(
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .stretch,
+                children: [
+                  Text(
+                    '${AppStrings.errorLoadJuzsList}\n${juzState.error}',
+                    style: AppStyles.mainTextStyle18,
+                    textAlign: .center,
+                  ),
+                  const SizedBox(height: 7),
+                  MaterialButton(
+                    onPressed: () {
+                      juzState.refreshAllJuzs();
+                    },
+                    elevation: 0.25,
+                    color: appColors.secondaryContainer,
+                    shape: AppStyles.mainShape,
+                    child: const Text(
+                      AppStrings.retry,
+                      style: AppStyles.mainTextStyle16,
+                    ),
+                  ),
+                ],
               ),
             );
           }
