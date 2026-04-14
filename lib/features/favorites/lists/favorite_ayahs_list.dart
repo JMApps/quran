@@ -21,9 +21,13 @@ class FavoriteAyahsList extends StatefulWidget {
 }
 
 class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
+  late FavoritesState _favoritesState;
+
   @override
   void initState() {
     super.initState();
+    _favoritesState = Provider.of<FavoritesState>(context, listen: false);
+    _favoritesState.addListener(_onFavoritesChanged);
     Future.microtask(() => _load());
   }
 
@@ -35,12 +39,23 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
     }
   }
 
+  @override
+  void dispose() {
+    _favoritesState.removeListener(_onFavoritesChanged);
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    _load();
+  }
+
   Future<void> _load() async {
     if (!mounted) return;
-    final bookmarksState = Provider.of<FavoritesState>(context, listen: false);
-    await Provider.of<AyahMetaState>(context, listen: false).reloadIfTableChanged(
+    final ayahIds = _favoritesState.favoriteAyahIds;
+
+    await Provider.of<AyahMetaState>(context, listen: false).syncFavoriteAyahs(
       tableName: widget.tableName,
-      ayahIds: bookmarksState.favoriteAyahIds,
+      ayahIds: ayahIds,
     );
   }
 

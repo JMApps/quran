@@ -23,17 +23,17 @@ class FavoritesState extends ChangeNotifier {
   bool isFavoriteAyah(int ayahId) => _favoriteAyahIds.contains(ayahId);
 
   void _loadPersistedSettings() {
-    final dynamic rawLastPages = _favoriteSettingsBox.get(
+    final List<int> rawLastPages = _favoriteSettingsBox.get(
       AppKeys.keyLastOpenedPages,
-      defaultValue: <int>[1],
+      defaultValue: <int>[],
     );
-    final dynamic rawFavPages = _favoriteSettingsBox.get(
+    final List<int> rawFavPages = _favoriteSettingsBox.get(
       AppKeys.keyFavoritePages,
-      defaultValue: <int>[293],
+      defaultValue: <int>[],
     );
-    final dynamic rawFavAyahs = _favoriteSettingsBox.get(
+    final List<int> rawFavAyahs = _favoriteSettingsBox.get(
       AppKeys.keyFavoriteAyahs,
-      defaultValue: <int>[262],
+      defaultValue: <int>[],
     );
 
     _lastPageIds = (rawLastPages as List).cast<int>().take(AppConstants.maxLastOpenedPages).toList();

@@ -4,7 +4,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../../bookmarks/pages/favorite_pages_page.dart';
+import '../../../favorites/pages/favorite_pages_page.dart';
 import '../../../settings/pages/app_settings_page.dart';
 import '../juz/pages/juzs_page.dart';
 import '../state/main_state.dart';

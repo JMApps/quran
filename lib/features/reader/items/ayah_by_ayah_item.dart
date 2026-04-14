@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../bookmarks/widgets/ayah_item_params.dart';
+import '../../favorites/widgets/ayah_item_params.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../settings/state/app_settings_state.dart';
 

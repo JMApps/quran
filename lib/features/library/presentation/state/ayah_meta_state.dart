@@ -62,6 +62,50 @@ class AyahMetaState extends ChangeNotifier {
     ]);
   }
 
+  Future<void> syncFavoriteAyahs({required String tableName, required List<int> ayahIds}) async {
+    if (_loadedTableName != tableName) {
+      _isLoaded = false;
+      _loadedTableName = null;
+      _ayahMetaById = const {};
+      await loadAyahsMeta(tableName: tableName, ayahIds: ayahIds);
+      return;
+    }
+
+    if (ayahIds.isEmpty) {
+      _ayahMetaById = const {};
+      notifyListeners();
+      return;
+    }
+
+    final ayahIdsSet = ayahIds.toSet();
+    final hasStale = _ayahMetaById.keys.any((id) => !ayahIdsSet.contains(id));
+    if (hasStale) {
+      _ayahMetaById = {
+        for (final entry in _ayahMetaById.entries)
+          if (ayahIdsSet.contains(entry.key)) entry.key: entry.value,
+      };
+      notifyListeners();
+    }
+
+    final missingIds = ayahIds.where((id) => !_ayahMetaById.containsKey(id)).toList();
+    if (missingIds.isEmpty) return;
+
+    try {
+      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(
+        tableName: tableName,
+        ayahIds: missingIds,
+      );
+      _ayahMetaById = {
+        ..._ayahMetaById,
+        for (final item in result) item.ayahId: item,
+      };
+      notifyListeners();
+    } catch (e) {
+      _error = e;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchAndCacheAyah({required int ayahId, required String tableName}) async {
     if (_ayahMetaById.containsKey(ayahId)) return;
 

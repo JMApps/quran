@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/strings/db_value_strings.dart';
 
 import '../../../core/strings/app_constants.dart';
 import '../../../core/strings/app_strings.dart';
+import '../../../core/strings/db_value_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../lists/favorite_ayahs_list.dart';
 import '../lists/favorite_pages_list.dart';
 import '../lists/last_favorite_pages_list.dart';
+import '../widgets/clean_favorites_button.dart';
 
 class FavoritePagesPage extends StatelessWidget {
   const FavoritePagesPage({super.key});
@@ -19,6 +20,9 @@ class FavoritePagesPage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: false,
           title: const Text(AppStrings.bookmarks),
+          actions: const [
+            CleanFavoritesButton(),
+          ],
           bottom: const TabBar(
             labelStyle: AppStyles.mainTextStyle16,
             tabs: [

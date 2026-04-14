@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/router/names_router.dart';
-import '../../bookmarks/widgets/ayah_item_params.dart';
+import '../../favorites/widgets/ayah_item_params.dart';
 import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/surah_name_state.dart';

@@ -47,6 +47,10 @@ class AppStrings {
   static const String recent = 'Недавнее';
   static const String strDefault = 'По умолчанию';
 
+  static const String deleteAllFavorites = 'Удалить все избарнные';
+  static const String delete = 'Удалить';
+  static const String cancel = 'Отмена';
+
   static const String themeColor = 'Цвет темы';
   static const String selectThemeColor = 'Выберите цвет темы';
   static const String arabicSurahName = 'Название сур на арабском';
