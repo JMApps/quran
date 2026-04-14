@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/domain/entities/mushaf_page_meta_entity.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/page_meta_state.dart';
 import '../items/last_favorite_page_item.dart';
 
 class LastFavoritePagesList extends StatelessWidget {
@@ -12,29 +12,28 @@ class LastFavoritePagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 21;
-    return Consumer<MushafPageMetaState>(
-      builder: (context, mushafPageMetaState, _) {
-        final recentPagesList = mushafPageMetaState.lastOpenedPages();
+    final bottomHeight = kBottomNavigationBarHeight + 14;
 
-        if (mushafPageMetaState.isLoadingPages) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
+    return Consumer2<FavoritesState, PageMetaState>(
+      builder: (context, bookmarksState, pageMetaState, _) {
+        if (pageMetaState.isLoading) {
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
 
-        if (mushafPageMetaState.errorPages != null) {
+        if (pageMetaState.error != null) {
           return Center(
             child: Padding(
               padding: AppStyles.mainPadding,
               child: Text(
-                '${AppStrings.errorMushafLastFavoritesList}\n${mushafPageMetaState.errorPages}',
+                '${AppStrings.errorMushafLastFavoritesList}\n${pageMetaState.error}',
                 style: AppStyles.mainTextStyle18,
-                textAlign: .center,
+                textAlign: TextAlign.center,
               ),
             ),
           );
         }
+
+        final recentPagesList = pageMetaState.resolvePages(bookmarksState.lastPageIds);
 
         if (recentPagesList.isEmpty) {
           return const Center(
@@ -43,7 +42,7 @@ class LastFavoritePagesList extends StatelessWidget {
               child: Text(
                 AppStrings.lastMushafPagesEmpty,
                 style: AppStyles.mainTextStyle18,
-                textAlign: .center,
+                textAlign: TextAlign.center,
               ),
             ),
           );
@@ -51,12 +50,11 @@ class LastFavoritePagesList extends StatelessWidget {
 
         return Scrollbar(
           child: ListView.builder(
-            padding: .only(bottom: bottomHeight),
+            padding: EdgeInsets.only(bottom: bottomHeight),
             itemCount: recentPagesList.length,
             itemBuilder: (context, index) {
-              final MushafPageMetaEntity mushafPageMetaModel = recentPagesList[index];
               return LastFavoritePageItem(
-                mushafPageMetaModel: mushafPageMetaModel,
+                mushafPageMetaModel: recentPagesList[index],
                 index: index,
               );
             },

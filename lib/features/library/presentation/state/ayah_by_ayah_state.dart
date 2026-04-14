@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/strings/app_strings.dart';
+import '../../../../core/strings/app_constants.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
-import '../../domain/usecases/ayah_by_ayah_use_case.dart';
+import '../../domain/repositories/ayah_by_ayah_repository.dart';
 
 class AyahByAyahState extends ChangeNotifier {
-  final AyahByAyahUseCase _ayahByAyahUseCase;
+  final AyahByAyahRepository _ayahByAyahRepository;
 
-  AyahByAyahState(this._ayahByAyahUseCase);
+  AyahByAyahState(this._ayahByAyahRepository);
 
   final Map<String, List<AyahByAyahEntity>> _pagesCache = {};
   final Map<String, bool> _loadingMap = {};
@@ -50,7 +50,7 @@ class AyahByAyahState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _ayahByAyahUseCase.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
+      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
 
       _pagesCache[key] = result;
     } catch (e) {
@@ -61,7 +61,7 @@ class AyahByAyahState extends ChangeNotifier {
       notifyListeners();
     }
 
-    if (prefetchNext && pageNumber < AppStrings.totalPages) {
+    if (prefetchNext && pageNumber < AppConstants.totalPagesCount) {
       _prefetchPage(pageNumber: pageNumber + 1, tableName: tableName);
     }
   }
@@ -69,7 +69,7 @@ class AyahByAyahState extends ChangeNotifier {
   Future<void> _prefetchPage({required int pageNumber, required String tableName}) async {
     final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
 
-    if (pageNumber > AppStrings.totalPages) return;
+    if (pageNumber > AppConstants.totalPagesCount) return;
     if (_pagesCache.containsKey(key)) return;
     if (_inFlight.contains(key)) return;
 
@@ -77,7 +77,7 @@ class AyahByAyahState extends ChangeNotifier {
     _errorMap.remove(key);
 
     try {
-      final result = await _ayahByAyahUseCase.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
+      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
 
       _pagesCache[key] = result;
     } catch (_) {
@@ -88,7 +88,7 @@ class AyahByAyahState extends ChangeNotifier {
   }
   
   Future<List<AyahByAyahEntity>> searchAyahs({required String query, required String dataTable, required String ftsTable}) {
-    return _ayahByAyahUseCase.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
+    return _ayahByAyahRepository.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
   }
 
   void clearCache() {

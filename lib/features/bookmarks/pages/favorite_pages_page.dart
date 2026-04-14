@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:quran/core/strings/db_value_strings.dart';
 
+import '../../../core/strings/app_constants.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/domain/entities/translation_type.dart';
-import '../../settings/state/app_settings_state.dart';
 import '../lists/favorite_ayahs_list.dart';
 import '../lists/favorite_pages_list.dart';
 import '../lists/last_favorite_pages_list.dart';
@@ -14,14 +13,8 @@ class FavoritePagesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appSettingsState = context.watch<AppSettingsState>();
-    final locale = Localizations.localeOf(context).languageCode;
-    final tableName = AppStrings.resolveTranslation(
-      locale: locale,
-      userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType).table;
-
     return DefaultTabController(
-      length: 3,
+      length: AppConstants.bookmarksTabLength,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
@@ -35,11 +28,11 @@ class FavoritePagesPage extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const LastFavoritePagesList(),
-            const FavoritePagesList(),
-            FavoriteAyahsList(tableName: tableName),
+            LastFavoritePagesList(),
+            FavoritePagesList(),
+            FavoriteAyahsList(tableName: DbValueStrings.tableOfKuliev),
           ],
         ),
       ),

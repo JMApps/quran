@@ -6,7 +6,7 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../../settings/state/app_settings_state.dart';
 import '../widgets/ayah_item_params.dart';
 
@@ -23,11 +23,11 @@ class FavoriteAyahItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final surahState = Provider.of<SurahState>(context, listen: false);
-    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey) ?? ayahByAyahModel.verseKey;
+    final surahState = Provider.of<SurahNameState>(context, listen: false);
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey);
     return InkWell(
       onTap: () async {
-        surahState.setMushafCurrentPage(ayahByAyahModel.ayahPageNumber);
+        surahState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition - 1,
@@ -73,7 +73,7 @@ class FavoriteAyahItem extends StatelessWidget {
                     letterSpacing: 0,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 Text(
                   ayahByAyahModel.ayahTranslation,
                   style: TextStyle(
@@ -81,7 +81,7 @@ class FavoriteAyahItem extends StatelessWidget {
                     fontFamily: AppStrings.fontGilroy,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 Text(
                   surahInfo,
                   style: AppStyles.mainTextStyle16.copyWith(

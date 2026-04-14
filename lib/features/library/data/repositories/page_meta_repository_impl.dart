@@ -1,20 +1,20 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/quran_database_service.dart';
-import '../../../../core/strings/app_strings.dart';
+import '../../../../core/strings/app_constants.dart';
 import '../../../../core/strings/db_value_strings.dart';
-import '../../domain/entities/mushaf_page_meta_entity.dart';
-import '../../domain/repositories/mushaf_page_meta_repository.dart';
-import '../mappers/mushaf_page_meta_mapper.dart';
-import '../models/mushaf_page_meta_model.dart';
+import '../../domain/entities/page_meta_entity.dart';
+import '../../domain/repositories/page_meta_repository.dart';
+import '../mappers/page_meta_mapper.dart';
+import '../models/page_meta_model.dart';
 
-class MushafPageMetaRepositoryImpl implements MushafPageMetaRepository {
+class PageMetaRepositoryImpl implements PageMetaRepository {
   final QuranDatabaseService _quranDatabaseService;
 
-  const MushafPageMetaRepositoryImpl(this._quranDatabaseService);
+  const PageMetaRepositoryImpl(this._quranDatabaseService);
 
   @override
-  Future<List<MushafPageMetaEntity>> getAllPagesMeta() async {
+  Future<List<PageMetaEntity>> getAllPagesMeta() async {
     final Database database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> result = await database.rawQuery(
@@ -55,10 +55,10 @@ class MushafPageMetaRepositoryImpl implements MushafPageMetaRepository {
       FROM pages p
       ORDER BY p.${DbValueStrings.dbPageNumber} ${DbValueStrings.dbOrderASC}
       ''',
-      [AppStrings.totalPages],
+      [AppConstants.totalPagesCount],
     );
 
     return result.where((row) => row[DbValueStrings.dbNameTranscription] != null && row[DbValueStrings.dbJuzNumber] != null,
-    ).map((row) => MushafPageMetaModel.fromMap(row).toEntity()).toList();
+    ).map((row) => PageMetaModel.fromMap(row).toEntity()).toList();
   }
 }

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 
 class FavoriteMushafPageButton extends StatelessWidget {
   const FavoriteMushafPageButton({super.key});
@@ -12,8 +12,8 @@ class FavoriteMushafPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final int mushafPage = context.select<SurahState, int>((s) => s.currentMushafPage);
-    return Consumer<MushafPageMetaState>(
+    final int mushafPage = context.select<SurahNameState, int>((s) => s.currentPage);
+    return Consumer<FavoritesState>(
       builder: (context, mushafPageMetaState, _) {
         return IconButton(
           onPressed: () {

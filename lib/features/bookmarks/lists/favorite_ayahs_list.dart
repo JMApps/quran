@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/ayah_meta_state.dart';
+import '../../library/presentation/state/favorites_state.dart';
 import '../items/favorite_ayah_item.dart';
 
 class FavoriteAyahsList extends StatefulWidget {
@@ -20,7 +21,6 @@ class FavoriteAyahsList extends StatefulWidget {
 }
 
 class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
-
   @override
   void initState() {
     super.initState();
@@ -37,36 +37,37 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
 
   Future<void> _load() async {
     if (!mounted) return;
-    await Provider.of<MushafPageMetaState>(context, listen: false).reloadFavoriteAyahsMeta(
+    final bookmarksState = Provider.of<FavoritesState>(context, listen: false);
+    await Provider.of<AyahMetaState>(context, listen: false).reloadIfTableChanged(
       tableName: widget.tableName,
+      ayahIds: bookmarksState.favoriteAyahIds,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 21;
-    return Consumer<MushafPageMetaState>(
-      builder: (context, mushafPageMetaState, _) {
-        final favoriteAyahsList = mushafPageMetaState.favoriteAyahs();
+    final bottomHeight = kBottomNavigationBarHeight + 14;
 
-        if (mushafPageMetaState.isLoadingAyahs) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
+    return Consumer2<FavoritesState, AyahMetaState>(
+      builder: (context, bookmarksState, ayahMetaState, _) {
+        if (ayahMetaState.isLoading) {
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
 
-        if (mushafPageMetaState.errorAyahsList != null) {
+        if (ayahMetaState.error != null) {
           return Center(
             child: Padding(
               padding: AppStyles.mainPadding,
               child: Text(
-                '${AppStrings.errorAyahFavoritesList}\n${mushafPageMetaState.errorAyahsList}',
+                '${AppStrings.errorAyahFavoritesList}\n${ayahMetaState.error}',
                 style: AppStyles.mainTextStyle18,
-                textAlign: .center,
+                textAlign: TextAlign.center,
               ),
             ),
           );
         }
+
+        final favoriteAyahsList = ayahMetaState.resolveAyahs(bookmarksState.favoriteAyahIds);
 
         if (favoriteAyahsList.isEmpty) {
           return const Center(
@@ -75,7 +76,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
               child: Text(
                 AppStrings.favoriteAyahsEmpty,
                 style: AppStyles.mainTextStyle18,
-                textAlign: .center,
+                textAlign: TextAlign.center,
               ),
             ),
           );
@@ -83,7 +84,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
 
         return Scrollbar(
           child: ListView.builder(
-            padding: .only(bottom: bottomHeight),
+            padding: EdgeInsets.only(bottom: bottomHeight),
             itemCount: favoriteAyahsList.length,
             itemBuilder: (context, index) {
               final AyahByAyahEntity ayahByAyahModel = favoriteAyahsList[index];
