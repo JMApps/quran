@@ -8,9 +8,9 @@ import '../../library/domain/entities/line_type.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/domain/entities/word_glyph_entity.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/page_layout_state.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/page_meta_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
 import 'mushaf_line_widget.dart';
 
@@ -68,13 +68,13 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
     final fontFamily = context.select<MushafFontState, String?>(
           (s) => s.fontFamilyForPage(widget.pageNumber),
     );
-    final allSurahs = context.select<SurahState, List<SurahNameEntity>>(
+    final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(
           (s) => s.allSurahs,
     );
-    final mushafPageMeta = Provider.of<MushafPageMetaState>(
+    final mushafPageMeta = Provider.of<PageMetaState>(
       context,
       listen: false,
-    ).getPageMetaByPage(widget.pageNumber);
+    ).getPageMeta(widget.pageNumber);
 
     // Показываем индикатор, пока нет шрифта ИЛИ нет layout.
     // Glyphs можно подождать — layout рендерится и без них (surah_name и basmallah).

@@ -2,8 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
-import '../strings/app_strings.dart';
+import 'package:quran/core/strings/app_constants.dart';
 
 /// Загрузчик шрифтов страниц Мусхафа.
 ///
@@ -84,8 +83,8 @@ class MushafFontLoader {
   /// Загружает диапазон страниц параллельно.
   /// Используется при первом открытии ридера для быстрой preload-инициализации.
   Future<void> preloadRange(int startPage, int endPage) {
-    final start = startPage.clamp(1, AppStrings.totalPages);
-    final end = endPage.clamp(1, AppStrings.totalPages);
+    final start = startPage.clamp(1, AppConstants.totalPagesCount);
+    final end = endPage.clamp(1, AppConstants.totalPagesCount);
     if (start > end) return Future.value();
 
     // Все страницы диапазона стартуют одновременно.
@@ -105,12 +104,7 @@ class MushafFontLoader {
   /// [isForward] — направление листания (вперёд по тексту).
   /// При forward читатель скорее пойдёт на следующие страницы,
   /// поэтому их prefetch приоритетнее.
-  void _schedulePrefetch({
-    required int pageNumber,
-    required bool isForward,
-    required int range,
-    int startFrom = 1,
-  }) {
+  void _schedulePrefetch({required int pageNumber, required bool isForward, required int range, int startFrom = 1}) {
     for (int delta = startFrom; delta <= range; delta++) {
       // Направление вперёд грузим первыми (приоритет).
       final forward = isForward ? pageNumber + delta : pageNumber - delta;
@@ -174,14 +168,12 @@ class MushafFontLoader {
 
     // Собираем страницы, отсортированные по убыванию расстояния.
     final sorted = _loadedPages.toList()
-      ..sort((a, b) =>
-          (b - currentPage).abs().compareTo((a - currentPage).abs()));
+      ..sort((a, b) => (b - currentPage).abs().compareTo((a - currentPage).abs()));
 
     while (_loadedPages.length > maxCachedFonts && sorted.isNotEmpty) {
       _loadedPages.remove(sorted.removeAt(0));
     }
   }
 
-  bool _isValid(int pageNumber) =>
-      pageNumber >= 1 && pageNumber <= AppStrings.totalPages;
+  bool _isValid(int pageNumber) => pageNumber >= 1 && pageNumber <= AppConstants.totalPagesCount;
 }

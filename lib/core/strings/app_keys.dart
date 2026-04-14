@@ -1,11 +1,11 @@
 class AppKeys {
-  static const String mushafFavoriteSettingsBox = 'key_mushaf_favorite_settings_box';
+  static const String mainAppSettingsBox = 'main_app_settings_box';
+  static const String favoriteSettingsBox = 'key_favorite_settings_box';
 
   static const String keyLastOpenedPages = 'key_last_opened_pages';
   static const String keyFavoritePages = 'key_favorite_pages';
   static const String keyFavoriteAyahs = 'key_favorite_ayahs';
 
-  static const String mainAppSettingsBox = 'main_app_settings_box';
   static const String keyTranslationType = 'key_translation_type';
   static const String keySurahArabicName = 'key_surah_arabic_name';
   static const String keyTranslationNameSurah = 'key_translation_surah_name';

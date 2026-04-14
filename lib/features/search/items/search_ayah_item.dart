@@ -7,7 +7,7 @@ import '../../../core/router/names_router.dart';
 import '../../bookmarks/widgets/ayah_item_params.dart';
 import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 
 class SearchAyahItem extends StatelessWidget {
   const SearchAyahItem({
@@ -24,8 +24,8 @@ class SearchAyahItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final surahState = Provider.of<SurahState>(context, listen: false);
-    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey) ?? ayahByAyahModel.verseKey;
+    final surahState = Provider.of<SurahNameState>(context, listen: false);
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey);
     const arabicStyle = TextStyle(
       fontSize: 19.0,
       fontFamily: AppStrings.fontUthmanicHafs,
@@ -66,7 +66,7 @@ class SearchAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        surahState.setMushafCurrentPage(ayahByAyahModel.ayahPageNumber);
+        surahState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition,

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quran/core/theme/app_styles.dart';
+import 'package:quran/features/library/presentation/state/page_meta_state.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../library/domain/entities/mushaf_page_meta_entity.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/domain/entities/page_meta_entity.dart';
+import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/surah_detail_list.dart';
 import '../widgets/favorite_mushaf_page_button.dart';
@@ -64,13 +65,13 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int mushafPage = context.select<SurahNameState, int>((s) => s.currentPage);
-    final mushafPageMeta = context.select<MushafPageMetaState, MushafPageMetaEntity?>(
-      (s) => s.getPageMetaByPage(mushafPage),
+    final int page = context.select<SurahNameState, int>((s) => s.currentPage);
+    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>(
+      (s) => s.getPageMeta(page),
     );
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        Provider.of<MushafPageMetaState>(context, listen: false).addLastOpenedPage(mushafPage);
+        Provider.of<FavoritesState>(context, listen: false).addLastOpenedPage(page);
       },
       child: Scaffold(
         extendBody: true,

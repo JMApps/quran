@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../library/presentation/state/surah_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 
 class ToMushafPageButton extends StatelessWidget {
   const ToMushafPageButton({
@@ -24,7 +24,7 @@ class ToMushafPageButton extends StatelessWidget {
               margin: AppStyles.topMiniPadding,
               padding: AppStyles.withoutTopPadding,
               height: 65,
-              child: Consumer<SurahState>(
+              child: Consumer<SurahNameState>(
                 builder: (context, surahState, _) {
                   return SliderTheme(
                     data: SliderTheme.of(context).copyWith(
@@ -35,16 +35,16 @@ class ToMushafPageButton extends StatelessWidget {
                       textDirection: .rtl,
                       child: Slider(
                         showValueIndicator: .alwaysVisible,
-                        value: surahState.currentMushafPage.toDouble(),
-                        label: '${surahState.currentMushafPage}',
+                        value: surahState.currentPage.toDouble(),
+                        label: '${surahState.currentPage}',
                         min: 1,
                         max: 604,
                         divisions: 604,
                         onChanged: (double value) {
-                          surahState.setMushafCurrentPage(value.round());
+                          surahState.setCurrentPage(value.round());
                         },
                         onChangeEnd: (double value) {
-                          surahState.setMushafCurrentPage(value.round());
+                          surahState.setCurrentPage(value.round());
                           if (mushafPageController.hasClients) {
                             mushafPageController.jumpToPage(value.toInt() - 1);
                           }

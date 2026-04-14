@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/strings/app_strings.dart';
+import '../../../core/strings/app_constants.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
 import '../../library/presentation/state/page_layout_state.dart';
+import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
 import '../lists/ayah_by_ayah_list.dart';
@@ -111,15 +111,13 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
     // Назад (против направления) — 2 страницы.
     for (int delta = 1; delta <= 2; delta++) {
-      final page = widget.isDirectionForward
-          ? _pageNumber - delta
-          : _pageNumber + delta;
+      final page = widget.isDirectionForward ? _pageNumber - delta : _pageNumber + delta;
       _prefetchPage(page);
     }
   }
 
   void _prefetchPage(int page) {
-    if (page < 1 || page > AppStrings.totalPages) return;
+    if (page < 1 || page > AppConstants.totalPagesCount) return;
     if (!mounted) return;
 
     final fontState = Provider.of<MushafFontState>(context, listen: false);
@@ -154,9 +152,9 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
           (s) => s.allSurahs,
     );
 
-    return Consumer<MushafPageMetaState>(
-      builder: (context, mushafPageMetaState, _) {
-        if (mushafPageMetaState.translationEnabled) {
+    return Consumer<PageMetaState>(
+      builder: (context, pageMetaState, _) {
+        if (pageMetaState.translationEnabled) {
           return AyahByAyahList(
             ayahsPage: ayahs,
             allSurahs: allSurahs,

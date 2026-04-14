@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/strings/app_constants.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/translation_type.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
-import '../../library/presentation/state/mushaf_page_meta_state.dart';
+import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../../settings/state/app_settings_state.dart';
 import '../items/surah_detail_item.dart';
@@ -25,7 +26,7 @@ class SurahDetailList extends StatefulWidget {
 
 class _SurahDetailListState extends State<SurahDetailList>
     with WidgetsBindingObserver {
-  late final MushafPageMetaState _mushafPageMetaState;
+  late final FavoritesState _mushafPageMetaState;
 
   int _currentPage = 1;
 
@@ -53,7 +54,7 @@ class _SurahDetailListState extends State<SurahDetailList>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _mushafPageMetaState =
-        Provider.of<MushafPageMetaState>(context, listen: false);
+        Provider.of<FavoritesState>(context, listen: false);
   }
 
   @override
@@ -78,16 +79,13 @@ class _SurahDetailListState extends State<SurahDetailList>
 
     final tableName = AppStrings.resolveTranslation(
       locale: Localizations.localeOf(context).languageCode,
-      userSelected: appSettingsState.translationType ==
-          TranslationType.defaultTranslation
-          ? null
-          : appSettingsState.translationType,
+      userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType,
     ).table;
 
     return PageView.builder(
       reverse: true,
       controller: widget.mushafPageController,
-      itemCount: AppStrings.totalPages,
+      itemCount: AppConstants.totalPagesCount,
       onPageChanged: (int index) {
         final newPage = index + 1;
 

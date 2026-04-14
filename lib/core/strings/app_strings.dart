@@ -1,3 +1,5 @@
+import 'package:quran/core/strings/db_value_strings.dart';
+
 import '../../features/library/domain/entities/line_type.dart';
 import '../../features/library/domain/entities/translation_type.dart';
 
@@ -74,19 +76,24 @@ class AppStrings {
   static const String resultFew = 'результата';
   static const String resultMany = 'результатов';
 
+
   static const String ayahOne = 'аят';
   static const String ayahFew = 'аята';
   static const String ayahMany = 'аятов';
 
   static const String searchByQuery = 'По запросу';
 
+  static const String noDataFor = 'Нет данных для:';
+  static const String retry = 'Повторить попытку';
+
+  static const String mecca = 'Мекка';
+  static const String medina = 'Медина';
+
   static bool containsArabic(String value) {
     return RegExp(
       r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]',
     ).hasMatch(value);
   }
-
-  static const int totalPages = 604;
 
   static const List<String> appThemeModeNames = [
     'Системная',
@@ -114,16 +121,14 @@ class AppStrings {
     'Эльмир Кулиев',
     'Абу Адель',
   ];
-  static const String tableOfKuliev = 'Table_of_translation_kuliev';
-  static const String tableOfAdel = 'Table_of_translation_adel';
 
   static const Map<String, TranslationType> _defaultTranslationByLocale = {
     'ru': TranslationType.kuliev,
   };
 
   static const Map<TranslationType, ({String table, String fts})> _translationColumns = {
-    TranslationType.kuliev: (table: tableOfKuliev, fts: 'translation_kuliev_fts'),
-    TranslationType.adel: (table: tableOfAdel, fts: 'translation_adel_fts'),
+    TranslationType.kuliev: (table: DbValueStrings.tableOfKuliev, fts: 'translation_kuliev_fts'),
+    TranslationType.adel: (table: DbValueStrings.tableOfAdel, fts: 'translation_adel_fts'),
   };
 
   static ({String table, String fts}) resolveTranslation({required String locale, TranslationType? userSelected}) {

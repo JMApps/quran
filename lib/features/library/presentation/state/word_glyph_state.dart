@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/word_glyph_entity.dart';
-import '../../domain/usecases/word_glyph_use_case.dart';
+import '../../domain/repositories/word_glyph_repository.dart';
 
 class WordGlyphState extends ChangeNotifier {
-  final WordGlyphUseCase _wordGlyphUseCase;
+  final WordGlyphRepository _wordGlyphRepository;
 
-  WordGlyphState(this._wordGlyphUseCase);
+  WordGlyphState(this._wordGlyphRepository);
 
   final Map<int, List<WordGlyphEntity>> _pageWordsCache = {};
   final Set<int> _inFlight = {};
@@ -27,7 +27,7 @@ class WordGlyphState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _wordGlyphUseCase.getWordsByPage(pageNumber: pageNumber);
+      final result = await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
       _pageWordsCache[pageNumber] = result;
     } catch (e) {
       debugPrint('ERROR loadPageWords($pageNumber): $e');
@@ -49,7 +49,7 @@ class WordGlyphState extends ChangeNotifier {
     _inFlight.add(pageNumber);
 
     try {
-      final result = await _wordGlyphUseCase.getWordsByPage(pageNumber: pageNumber);
+      final result = await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
       _pageWordsCache[pageNumber] = result;
     } finally {
       _inFlight.remove(pageNumber);
@@ -60,9 +60,7 @@ class WordGlyphState extends ChangeNotifier {
     final minPage = currentPage - keepBefore;
     final maxPage = currentPage + keepAfter;
 
-    final keysToRemove = _pageWordsCache.keys
-        .where((page) => page < minPage || page > maxPage)
-        .toList();
+    final keysToRemove = _pageWordsCache.keys.where((page) => page < minPage || page > maxPage).toList();
 
     for (final page in keysToRemove) {
       _pageWordsCache.remove(page);

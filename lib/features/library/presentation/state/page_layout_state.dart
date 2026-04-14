@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
 import '../../domain/entities/layout_entity.dart';
-import '../../domain/usecases/layout_use_case.dart';
+import '../../domain/repositories/layout_repository.dart';
 
 class PageLayoutState extends ChangeNotifier {
-  final LayoutUseCase _pageLayoutUseCase;
+  final LayoutRepository _pageLayoutRepository;
 
-  PageLayoutState(this._pageLayoutUseCase);
+  PageLayoutState(this._pageLayoutRepository);
 
   final Map<int, List<LayoutEntity>> _pagesCache = {};
   final Map<int, bool> _loadingMap = {};
@@ -39,7 +39,7 @@ class PageLayoutState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _pageLayoutUseCase.getLinesByPage(
+      final result = await _pageLayoutRepository.getLinesByPage(
         pageNumber: pageNumber,
       );
 
@@ -66,7 +66,7 @@ class PageLayoutState extends ChangeNotifier {
     _inFlight.add(pageNumber);
 
     try {
-      final result = await _pageLayoutUseCase.getLinesByPage(
+      final result = await _pageLayoutRepository.getLinesByPage(
         pageNumber: pageNumber,
       );
 

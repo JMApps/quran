@@ -18,12 +18,12 @@ void main() async {
     final dir = await getApplicationDocumentsDirectory();
     Hive.init(dir.path);
     await Hive.openBox(AppKeys.mainAppSettingsBox);
-    await Hive.openBox(AppKeys.mushafFavoriteSettingsBox);
+    await Hive.openBox(AppKeys.favoriteSettingsBox);
   } catch (e) {
     await Hive.deleteBoxFromDisk(AppKeys.mainAppSettingsBox);
-    await Hive.deleteBoxFromDisk(AppKeys.mushafFavoriteSettingsBox);
+    await Hive.deleteBoxFromDisk(AppKeys.favoriteSettingsBox);
     await Hive.openBox(AppKeys.mainAppSettingsBox);
-    await Hive.openBox(AppKeys.mushafFavoriteSettingsBox);
+    await Hive.openBox(AppKeys.favoriteSettingsBox);
   }
 
   final databaseService = QuranDatabaseService.instance;

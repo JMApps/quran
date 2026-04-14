@@ -5,13 +5,20 @@ import '../../../../../core/theme/app_styles.dart';
 import '../../../domain/entities/hizb_entity.dart';
 import '../items/hizb_item.dart';
 
-class HizbsList extends StatelessWidget {
+class HizbsList extends StatefulWidget {
   const HizbsList({
     super.key,
     required this.hizbsList,
   });
 
   final List<HizbEntity> hizbsList;
+
+  @override
+  State<HizbsList> createState() => _HizbsListState();
+}
+
+class _HizbsListState extends State<HizbsList> {
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +41,14 @@ class HizbsList extends StatelessWidget {
         ),
         Expanded(
           child: Scrollbar(
+            controller: _scrollController,
             child: ListView.separated(
+              controller: _scrollController,
               primary: false,
               padding: .zero,
-              itemCount: hizbsList.length,
+              itemCount: widget.hizbsList.length,
               itemBuilder: (context, index) {
-                final HizbEntity hizbModel = hizbsList[index];
+                final HizbEntity hizbModel = widget.hizbsList[index];
                 return HizbItem(
                   hizbModel: hizbModel,
                   index: index,
