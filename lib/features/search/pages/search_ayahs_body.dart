@@ -18,9 +18,7 @@ class SearchAyahsBody extends StatelessWidget {
 
   List<String> _extractTokens(String value) {
     final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-
     if (cleaned.isEmpty) return const <String>[];
-
     return cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false);
   }
 
@@ -43,9 +41,7 @@ class SearchAyahsBody extends StatelessWidget {
     if (trimmedQuery.isEmpty) return 0;
 
     final bool isArabicQuery = AppStrings.containsArabic(trimmedQuery);
-
     final String effectiveQuery = isArabicQuery ? AyahByAyahRepositoryImpl.normalizeArabic(trimmedQuery) : trimmedQuery;
-
     final List<String> tokens = _extractTokens(effectiveQuery);
     if (tokens.isEmpty) return 0;
 

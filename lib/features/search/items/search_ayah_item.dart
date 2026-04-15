@@ -16,7 +16,6 @@ class SearchAyahItem extends StatelessWidget {
     required this.index,
     required this.query,
   });
-
   final AyahByAyahEntity ayahByAyahModel;
   final int index;
   final String query;

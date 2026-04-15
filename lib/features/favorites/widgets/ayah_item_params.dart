@@ -26,13 +26,28 @@ class AyahItemParams extends StatelessWidget {
       ayah: AppStrings.ayah,
       verseKey: ayahByAyahModel.verseKey,
     );
-    return Row(
+    return Column(
       mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
       children: [
+        Container(
+          padding: AppStyles.microPadding,
+          margin: AppStyles.hrMainPadding,
+          alignment: .center,
+          decoration: BoxDecoration(
+            color: appColors.inversePrimary,
+            borderRadius: AppStyles.miniBorder,
+          ),
+          child: Text(
+            ayahByAyahModel.verseKey,
+            style: AppStyles.mainTextStyle18,
+          ),
+        ),
+        const SizedBox(height: 7),
         Consumer<FavoritesState>(
           builder: (context, mushafPageMetaState, _) {
             final bool isFavorite = mushafPageMetaState.isFavoriteAyah(ayahByAyahModel.ayahId);
-            return IconButton(
+            return TextButton.icon(
               onPressed: () {
                 Navigator.pop(context);
                 mushafPageMetaState.toggleFavoriteAyah(ayahId: ayahByAyahModel.ayahId);
@@ -47,12 +62,15 @@ class AyahItemParams extends StatelessWidget {
                   ),
                 );
               },
-              tooltip: isFavorite ? AppStrings.removeFromFavorite : AppStrings.addToFavorite,
+              label: Text(
+                isFavorite ? AppStrings.removeFromFavorite : AppStrings.addToFavorite,
+                style: AppStyles.mainTextStyle18,
+              ),
               icon: Icon(isFavorite ? Icons.bookmark : Icons.bookmark_border_rounded),
             );
           },
         ),
-        IconButton(
+        TextButton.icon(
           onPressed: () async {
             Navigator.pop(context);
             Pasteboard.writeText(
@@ -70,23 +88,29 @@ class AyahItemParams extends StatelessWidget {
               ),
             );
           },
-          tooltip: AppStrings.copy,
+          label: const Text(
+            AppStrings.copy,
+            style: AppStyles.mainTextStyle18,
+          ),
           icon: const Icon(Icons.content_copy_rounded),
         ),
-        IconButton(
+        TextButton.icon(
           onPressed: () async {
             Navigator.pop(context);
             await SharePlus.instance.share(
               ShareParams(
-                text:
-                    '${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo',
+                text: '${ayahByAyahModel.ayahArabic}\n\n${ayahByAyahModel.ayahTranslation}\n\n$surahInfo',
                 sharePositionOrigin: const Rect.fromLTWH(0, 0, 1, 1),
               ),
             );
           },
-          tooltip: AppStrings.share,
+          label: const Text(
+            AppStrings.share,
+            style: AppStyles.mainTextStyle18,
+          ),
           icon: const Icon(Icons.ios_share_rounded),
         ),
+        const SizedBox(height: 14),
       ],
     );
   }

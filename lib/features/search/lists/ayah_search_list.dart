@@ -15,9 +15,10 @@ class AyahSearchList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double bottomHeight = kBottomNavigationBarHeight - 21;
     return Scrollbar(
       child: ListView.builder(
-        padding: .zero,
+        padding: .only(bottom: bottomHeight),
         itemCount: searchResultList.length,
         itemBuilder: (context, index) {
           final AyahByAyahEntity ayahModel = searchResultList[index];

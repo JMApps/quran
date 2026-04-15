@@ -10,7 +10,7 @@ import '../../library/presentation/state/surah_name_state.dart';
 import '../../settings/state/app_settings_state.dart';
 import '../widgets/ayah_item_params.dart';
 
-class FavoriteAyahItem extends StatefulWidget {
+class FavoriteAyahItem extends StatelessWidget {
   const FavoriteAyahItem({
     super.key,
     required this.ayahByAyahModel,
@@ -21,29 +21,20 @@ class FavoriteAyahItem extends StatefulWidget {
   final int index;
 
   @override
-  State<FavoriteAyahItem> createState() => _FavoriteAyahItemState();
-}
-
-class _FavoriteAyahItemState extends State<FavoriteAyahItem> {
-  final _key = GlobalKey();
-  Offset _tapPosition = Offset.zero;
-
-  @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     final surahState = Provider.of<SurahNameState>(context, listen: false);
     final String surahInfo = surahState.getSurahNameWithAyah(
       surah: AppStrings.surah,
       ayah: AppStrings.ayah,
-      verseKey: widget.ayahByAyahModel.verseKey,
+      verseKey: ayahByAyahModel.verseKey,
     );
     return InkWell(
-      key: _key,
       onTap: () async {
-        surahState.setCurrentPage(widget.ayahByAyahModel.ayahPageNumber);
+        surahState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
         final arguments = SurahDetailArgs(
-          currentMushafPage: widget.ayahByAyahModel.ayahPageNumber,
-          ayahPosition: widget.ayahByAyahModel.ayahPosition - 1,
+          currentMushafPage: ayahByAyahModel.ayahPageNumber,
+          ayahPosition: ayahByAyahModel.ayahPosition - 1,
         );
         Navigator.pushNamed(
           context,
@@ -51,37 +42,14 @@ class _FavoriteAyahItemState extends State<FavoriteAyahItem> {
           arguments: arguments,
         );
       },
-      onTapDown: (details) => _tapPosition = details.globalPosition,
       onLongPress: () {
-        final box = _key.currentContext!.findRenderObject() as RenderBox;
-        final widgetOffset = box.localToGlobal(Offset.zero);
-        final widgetSize = box.size;
-
-        const menuWidth = 160.0;
-        const menuHeight = 56.0;
-
-        final dx = (_tapPosition.dx + menuWidth > widgetOffset.dx + widgetSize.width ? widgetOffset.dx + widgetSize.width - menuWidth - 8 : _tapPosition.dx).clamp(widgetOffset.dx + 8, widgetOffset.dx + widgetSize.width - menuWidth - 8);
-        final dy = (_tapPosition.dy + menuHeight > widgetOffset.dy + widgetSize.height ? widgetOffset.dy + widgetSize.height - menuHeight - 8 : _tapPosition.dy - menuHeight).clamp(widgetOffset.dy + 8, widgetOffset.dy + widgetSize.height - menuHeight - 8);
-
-        showDialog(
+        showModalBottomSheet(
           context: context,
-          barrierColor: Colors.transparent,
-          builder: (_) => Stack(
-            children: [
-              Positioned(
-                left: dx,
-                top: dy,
-                child: Material(
-                  shape: AppStyles.miniShape,
-                  color: appColors.primaryContainer,
-                  elevation: 8,
-                  child: AyahItemParams(
-                    ayahByAyahModel: widget.ayahByAyahModel,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          builder: (ctx) {
+            return AyahItemParams(
+              ayahByAyahModel: ayahByAyahModel,
+            );
+          },
         );
       },
       child: Container(
@@ -100,7 +68,7 @@ class _FavoriteAyahItemState extends State<FavoriteAyahItem> {
               crossAxisAlignment: .stretch,
               children: [
                 Text(
-                  widget.ayahByAyahModel.ayahArabic,
+                  ayahByAyahModel.ayahArabic,
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
                     fontSize: appSettingsState.ayahArabicTextSize,
@@ -111,7 +79,7 @@ class _FavoriteAyahItemState extends State<FavoriteAyahItem> {
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  widget.ayahByAyahModel.ayahTranslation,
+                  ayahByAyahModel.ayahTranslation,
                   style: TextStyle(
                     fontSize: appSettingsState.ayahTranslationTextSize,
                     fontFamily: AppStrings.fontGilroy,
