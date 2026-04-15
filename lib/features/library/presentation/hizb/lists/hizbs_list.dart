@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../domain/entities/hizb_entity.dart';
+import '../../state/surah_name_state.dart';
 import '../items/hizb_item.dart';
 
 class HizbsList extends StatefulWidget {
   const HizbsList({
     super.key,
-    required this.hizbsList,
+    required this.allHizbs,
   });
 
-  final List<HizbEntity> hizbsList;
+  final List<HizbEntity> allHizbs;
 
   @override
   State<HizbsList> createState() => _HizbsListState();
@@ -23,6 +25,7 @@ class _HizbsListState extends State<HizbsList> {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
+    final SurahNameState surahNameState = context.read<SurahNameState>();
     return Column(
       children: [
         Container(
@@ -46,12 +49,14 @@ class _HizbsListState extends State<HizbsList> {
               controller: _scrollController,
               primary: false,
               padding: .zero,
-              itemCount: widget.hizbsList.length,
+              itemCount: widget.allHizbs.length,
               itemBuilder: (context, index) {
-                final HizbEntity hizbModel = widget.hizbsList[index];
+                final HizbEntity hizbModel = widget.allHizbs[index];
+                final String surahInfo = surahNameState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: hizbModel.firstVerseKey);
                 return HizbItem(
                   hizbModel: hizbModel,
                   index: index,
+                  surahInfo: surahInfo,
                 );
               },
               separatorBuilder: (_, _) => const Divider(height: 0.75),

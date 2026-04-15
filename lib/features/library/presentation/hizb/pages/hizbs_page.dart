@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../domain/entities/hizb_entity.dart';
 import '../../state/hizb_state.dart';
 import '../lists/hizbs_list.dart';
 
@@ -21,7 +22,7 @@ class HizbsPage extends StatelessWidget {
         builder: (BuildContext context, hizbState, _) {
           if (hizbState.isLoading) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             );
           }
 
@@ -55,8 +56,10 @@ class HizbsPage extends StatelessWidget {
             );
           }
 
+          final List<HizbEntity> allHizbs = hizbState.allHizbs;
+
           return HizbsList(
-            hizbsList: hizbState.allHizbs,
+            allHizbs: allHizbs,
           );
         },
       ),
