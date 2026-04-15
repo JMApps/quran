@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_constants.dart';
+import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/favorites_state.dart';
-import '../../library/presentation/state/mushaf_font_state.dart';
+import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../items/surah_detail_item.dart';
 
@@ -21,39 +22,29 @@ class SurahDetailList extends StatefulWidget {
   State<SurahDetailList> createState() => _SurahDetailListState();
 }
 
-class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingObserver {
-  late final FavoritesState _mushafPageMetaState;
-
-  int _currentPage = 1;
-
-  bool _isDirectionForward = true;
-
+class _SurahDetailListState extends State<SurahDetailList>
+    with WidgetsBindingObserver {
+  late final FavoritesState _favoritesState;
+  late final AyahByAyahState _ayahState;
+  late int _currentPage;
+  
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _currentPage = Provider.of<SurahNameState>(context, listen: false).currentPage;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MushafFontState>(context, listen: false).preloadRange(
-        _currentPage - 1,
-        _currentPage + 1,
-      );
-    });
-  }
+    _currentPage = Provider.of<MainState>(context, listen: false).currentPage;
+    _favoritesState = Provider.of<FavoritesState>(context, listen: false);
+    _ayahState = Provider.of<AyahByAyahState>(context, listen: false);
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _mushafPageMetaState = Provider.of<FavoritesState>(context, listen: false);
+    _ayahState.loadPageAyahs(pageNumber: _currentPage);
+    _ayahState.prefetchAround(_currentPage);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached) {
-      _mushafPageMetaState.addLastOpenedPage(_currentPage);
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      _favoritesState.addLastOpenedPage(_currentPage);
     }
   }
 
@@ -70,16 +61,14 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
       controller: widget.mushafPageController,
       itemCount: AppConstants.totalPagesCount,
       onPageChanged: (int index) {
-        final newPage = index + 1;
-        _isDirectionForward = newPage > _currentPage;
-        _currentPage = newPage;
-        Provider.of<SurahNameState>(context, listen: false).setCurrentPage(_currentPage);
+        _currentPage = index + 1;
+        context.read<MainState>().setCurrentPage(_currentPage);
+        _ayahState.prefetchAround(_currentPage);
       },
       itemBuilder: (context, index) {
         return SurahDetailItem(
           index: index,
           ayahPosition: widget.ayahPosition,
-          isDirectionForward: _isDirectionForward,
         );
       },
     );

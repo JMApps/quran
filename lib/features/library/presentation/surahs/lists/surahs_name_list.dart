@@ -6,11 +6,11 @@ class SurahsNameList extends StatelessWidget {
   const SurahsNameList({
     super.key,
     required this.scrollController,
-    required this.surahsList,
+    required this.allSurahs,
   });
 
   final ScrollController scrollController;
-  final List<SurahNameEntity> surahsList;
+  final List<SurahNameEntity> allSurahs;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class SurahsNameList extends StatelessWidget {
         primary: false,
         controller: scrollController,
         padding: .only(bottom: bottomHeight),
-        itemCount: surahsList.length,
+        itemCount: allSurahs.length,
         itemBuilder: (context, index) {
-          final surahModel = surahsList[index];
+          final surahModel = allSurahs[index];
           return SurahNameItem(
             surahModel: surahModel,
             index: index,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/domain/entities/page_meta_entity.dart';
+import 'package:quran/features/library/domain/entities/surah_name_entity.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/domain/entities/page_meta_entity.dart';
-import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/surah_detail_list.dart';
@@ -66,12 +67,12 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int currentPage = context.select<SurahNameState, int>((s) => s.currentPage);
-    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPage));
-    final surahModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahById(surahNumber: mushafPageMeta!.surahNumber));
+    final int? currentPageNumber = context.select<MainState, int?>((e) => e.currentPage);
+    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber!));
+    final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber));
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        Provider.of<FavoritesState>(context, listen: false).addLastOpenedPage(currentPage);
+        context.read<FavoritesState>().addLastOpenedPage(currentPageNumber!);
       },
       child: Scaffold(
         extendBody: true,
@@ -96,17 +97,17 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                         crossAxisAlignment: .stretch,
                         children: [
                           Text(
-                            '${AppStrings.surah} ${surahModel!.nameTranscription}',
+                            '${AppStrings.surah} ${surahNameModel!.nameTranscription}',
                             style: AppStyles.mainTextStyle18,
                           ),
                           Row(
                             children: [
                               Text(
-                                '${AppStrings.page} ${mushafPageMeta?.pageNumber}, ',
+                                '${AppStrings.page} ${pageMetaModel!.pageNumber}, ',
                                 style: AppStyles.mainTextStyle12,
                               ),
                               Text(
-                                '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
+                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel.juzNumber}',
                                 style: AppStyles.mainTextStyle12,
                               ),
                             ],
@@ -115,7 +116,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       ),
                       actions: [
                         const FavoriteMushafPageButton(),
-                        TranslateMushafPageButton(currentMushafPage: surahState.currentPage),
+                        TranslateMushafPageButton(currentMushafPage: currentPageNumber!),
                         ToMushafPageButton(mushafPageController: _mushafPageController),
                       ],
                     ),

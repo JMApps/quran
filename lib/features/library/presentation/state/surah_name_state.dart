@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:quran/core/strings/app_locale.dart';
 
+import '../../../../core/strings/app_locale.dart';
 import '../../../settings/state/app_settings_state.dart';
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/repositories/surah_name_repository.dart';
@@ -18,7 +18,6 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _pageNumber = 1;
   bool _showAppBar = true;
 
   List<SurahNameEntity> _allSurahs = const [];
@@ -27,8 +26,6 @@ class SurahNameState extends ChangeNotifier {
   bool _isLoading = false;
   bool _isLoaded = false;
   Object? _error;
-
-  int get currentPage => _pageNumber;
 
   bool get showAppBar => _showAppBar;
 
@@ -43,7 +40,7 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  SurahNameEntity? getSurahById({required int surahNumber}) {
+  SurahNameEntity? getSurahByNumber({required int surahNumber}) {
     return _surahMap[surahNumber];
   }
 
@@ -76,12 +73,6 @@ class SurahNameState extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  void setCurrentPage(int page) {
-    if (_pageNumber == page) return;
-    _pageNumber = page;
-    notifyListeners();
   }
 
   Future<void> refreshAllSurahs() => _loadData(force: true);
