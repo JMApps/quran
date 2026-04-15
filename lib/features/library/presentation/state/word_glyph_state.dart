@@ -15,25 +15,25 @@ class WordGlyphState extends ChangeNotifier {
     return _pageWordsCache[pageNumber] ?? const [];
   }
 
-  bool isPageLoaded(int pageNumber) {
-    return _pageWordsCache.containsKey(pageNumber);
-  }
+  bool isPageLoaded(int pageNumber) => _pageWordsCache.containsKey(pageNumber);
 
   Future<void> loadPageWords(int pageNumber, {bool prefetchNext = true}) async {
     if (_pageWordsCache.containsKey(pageNumber)) return;
     if (_inFlight.contains(pageNumber)) return;
 
     _inFlight.add(pageNumber);
-    notifyListeners();
+    // notifyListeners при старте убран: данных ещё нет, Selector вернёт тот же
+    // const [] — перерисовки не будет, зато лишних проходов по дереву не будет.
 
     try {
-      final result = await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
+      final result =
+      await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
       _pageWordsCache[pageNumber] = result;
     } catch (e) {
       debugPrint('ERROR loadPageWords($pageNumber): $e');
     } finally {
       _inFlight.remove(pageNumber);
-      notifyListeners();
+      notifyListeners(); // один вызов — когда данные реально появились
     }
 
     if (prefetchNext) {
@@ -49,18 +49,28 @@ class WordGlyphState extends ChangeNotifier {
     _inFlight.add(pageNumber);
 
     try {
-      final result = await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
+      final result =
+      await _wordGlyphRepository.getWordsByPage(pageNumber: pageNumber);
       _pageWordsCache[pageNumber] = result;
+    } catch (e) {
+      debugPrint('PREFETCH ERROR loadPageWords($pageNumber): $e');
     } finally {
       _inFlight.remove(pageNumber);
+      notifyListeners();
     }
   }
 
-  void trimCache({required int currentPage, int keepBefore = 1, int keepAfter = 2}) {
+  void trimCache({
+    required int currentPage,
+    int keepBefore = 1,
+    int keepAfter = 2,
+  }) {
     final minPage = currentPage - keepBefore;
     final maxPage = currentPage + keepAfter;
 
-    final keysToRemove = _pageWordsCache.keys.where((page) => page < minPage || page > maxPage).toList();
+    final keysToRemove = _pageWordsCache.keys
+        .where((page) => page < minPage || page > maxPage)
+        .toList();
 
     for (final page in keysToRemove) {
       _pageWordsCache.remove(page);

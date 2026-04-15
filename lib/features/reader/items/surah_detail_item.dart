@@ -16,11 +16,13 @@ import '../widgets/mushaf_page_widget.dart';
 /// Один элемент [PageView] — одна страница Мусхафа.
 ///
 /// Стратегия загрузки:
-/// - Шрифт, layout и words текущей страницы стартуют ПАРАЛЛЕЛЬНО ([Future.wait]).
-/// - Ayahs (для режима перевода) — тоже параллельно с остальными.
-/// - После загрузки текущей страницы — bidirectional prefetch: вперёд ±3,
-///   назад ±2 (не блокирует UI, fire-and-forget).
-/// - Кэши всех State'ов подрезаются после каждой загрузки.
+/// - Все данные текущей страницы запускаются СРАЗУ в [initState] (fire-and-forget).
+///   Provider.of(listen: false) работает в initState — откладывать не нужно.
+///   Это устраняет лишний пустой кадр при скролле.
+/// - Prefetch соседних страниц — через Future.microtask, тоже до первого build.
+/// - [MushafPageWidget] не получает allSurahs — он его не использует.
+/// - Selector<PageMetaState> вместо Consumer — ребилд только при смене
+///   translationEnabled, не на каждый notifyListeners PageMetaState.
 class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
@@ -40,53 +42,41 @@ class SurahDetailItem extends StatefulWidget {
   State<SurahDetailItem> createState() => _SurahDetailItemState();
 }
 
-class _SurahDetailItemState extends State<SurahDetailItem> {
+class _SurahDetailItemState extends State<SurahDetailItem> with AutomaticKeepAliveClientMixin {
   late final int _pageNumber;
+
+  @override
+  bool get wantKeepAlive => true;
+
 
   @override
   void initState() {
     super.initState();
     _pageNumber = widget.index + 1;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Сначала убедимся, что список сур загружен.
-      await Provider.of<SurahNameState>(context, listen: false).loadAllSurahNames();
-      if (!mounted) return;
+    // Загружаем данные сразу — без postFrameCallback.
+    // State-классы сами защищены от дублирования через _inFlight.
+    _loadCurrentPage();
 
-      // Параллельная загрузка текущей страницы.
-      await _loadCurrentPageParallel();
-      if (!mounted) return;
-
-      // Фоновый prefetch — не ждём.
-      _prefetchSurroundingPages();
-    });
+    // Prefetch — microtask: раньше первого build, но не блокирует initState.
+    Future.microtask(_prefetchSurroundingPages);
   }
 
   // ─────────────────────────────────────────────────────────────
   // Загрузка текущей страницы
   // ─────────────────────────────────────────────────────────────
 
-  /// Все данные страницы грузятся одновременно.
-  /// Шрифт, layout, glyphs и ayahs не зависят друг от друга на уровне данных —
-  /// нет смысла выстраивать их в цепочку.
-  Future<void> _loadCurrentPageParallel() async {
-    final fontState = Provider.of<MushafFontState>(context, listen: false);
-    final layoutState = Provider.of<PageLayoutState>(context, listen: false);
-    final glyphState = Provider.of<WordGlyphState>(context, listen: false);
-    final ayahState = Provider.of<AyahByAyahState>(context, listen: false);
-
-    await Future.wait([
-      fontState.onPageChanged(
-        _pageNumber,
-        isForward: widget.isDirectionForward,
-      ),
-      layoutState.loadPageLines(_pageNumber, prefetchNext: false),
-      glyphState.loadPageWords(_pageNumber, prefetchNext: false),
-      ayahState.loadPageAyahs(
-        pageNumber: _pageNumber,
-        prefetchNext: false,
-      ),
-    ], eagerError: false); // eagerError: false — не прерываем остальные при ошибке одного
+  /// Fire-and-forget: все четыре запроса стартуют параллельно.
+  /// Не await — UI не ждёт, данные придут и вызовут notifyListeners.
+  void _loadCurrentPage() {
+    Provider.of<MushafFontState>(context, listen: false)
+        .onPageChanged(_pageNumber, isForward: widget.isDirectionForward);
+    Provider.of<PageLayoutState>(context, listen: false)
+        .loadPageLines(_pageNumber, prefetchNext: false);
+    Provider.of<WordGlyphState>(context, listen: false)
+        .loadPageWords(_pageNumber, prefetchNext: false);
+    Provider.of<AyahByAyahState>(context, listen: false)
+        .loadPageAyahs(pageNumber: _pageNumber, prefetchNext: false);
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -95,21 +85,18 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
   /// Bidirectional prefetch: 3 страницы по направлению движения,
   /// 2 страницы против (пользователь может вернуться).
-  ///
-  /// Всё — fire and forget, не блокируем текущий рендер.
   void _prefetchSurroundingPages() {
-    // Вперёд по направлению листания — 3 страницы.
-    for (int delta = 1; delta <= 3; delta++) {
-      final page = widget.isDirectionForward
-          ? _pageNumber + delta
-          : _pageNumber - delta;
-      _prefetchPage(page);
-    }
+    if (!mounted) return;
 
-    // Назад (против направления) — 2 страницы.
+    for (int delta = 1; delta <= 3; delta++) {
+      _prefetchPage(
+        widget.isDirectionForward ? _pageNumber + delta : _pageNumber - delta,
+      );
+    }
     for (int delta = 1; delta <= 2; delta++) {
-      final page = widget.isDirectionForward ? _pageNumber - delta : _pageNumber + delta;
-      _prefetchPage(page);
+      _prefetchPage(
+        widget.isDirectionForward ? _pageNumber - delta : _pageNumber + delta,
+      );
     }
   }
 
@@ -117,19 +104,14 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     if (page < 1 || page > AppConstants.totalPagesCount) return;
     if (!mounted) return;
 
-    final fontState = Provider.of<MushafFontState>(context, listen: false);
-    final layoutState = Provider.of<PageLayoutState>(context, listen: false);
-    final glyphState = Provider.of<WordGlyphState>(context, listen: false);
-    final ayahState = Provider.of<AyahByAyahState>(context, listen: false);
-
-    // Все данные страницы стартуют параллельно, не ждём.
-    fontState.onPageChanged(page, isForward: widget.isDirectionForward);
-    layoutState.loadPageLines(page, prefetchNext: false);
-    glyphState.loadPageWords(page, prefetchNext: false);
-    ayahState.loadPageAyahs(
-      pageNumber: page,
-      prefetchNext: false,
-    );
+    Provider.of<MushafFontState>(context, listen: false)
+        .onPageChanged(page, isForward: widget.isDirectionForward);
+    Provider.of<PageLayoutState>(context, listen: false)
+        .loadPageLines(page, prefetchNext: false);
+    Provider.of<WordGlyphState>(context, listen: false)
+        .loadPageWords(page, prefetchNext: false);
+    Provider.of<AyahByAyahState>(context, listen: false)
+        .loadPageAyahs(pageNumber: page, prefetchNext: false);
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -138,26 +120,28 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
 
   @override
   Widget build(BuildContext context) {
-    final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
-          (s) => s.getPageAyahs(
-        pageNumber: _pageNumber,
-      ),
-    );
-    final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(
-          (s) => s.allSurahs,
+    super.build(context);
+    // Selector вместо Consumer — ребилд только при смене translationEnabled.
+    final translationEnabled = context.select<PageMetaState, bool>(
+          (s) => s.translationEnabled,
     );
 
-    return Consumer<PageMetaState>(
-      builder: (context, pageMetaState, _) {
-        if (pageMetaState.translationEnabled) {
-          return AyahByAyahList(
-            ayahsPage: ayahs,
-            allSurahs: allSurahs,
-            ayahPosition: widget.ayahPosition,
-          );
-        }
-        return MushafPageWidget(pageNumber: _pageNumber);
-      },
-    );
+    if (translationEnabled) {
+      // allSurahs нужен только для режима перевода (AyahByAyahList).
+      final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
+            (s) => s.getPageAyahs(pageNumber: _pageNumber),
+      );
+      final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(
+            (s) => s.allSurahs,
+      );
+      return AyahByAyahList(
+        ayahsPage: ayahs,
+        allSurahs: allSurahs,
+        ayahPosition: widget.ayahPosition,
+      );
+    }
+
+    // Режим мусхафа — allSurahs не нужен (MushafPageWidget его не использует).
+    return MushafPageWidget(pageNumber: _pageNumber);
   }
 }

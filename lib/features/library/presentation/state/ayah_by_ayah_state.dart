@@ -14,62 +14,46 @@ class AyahByAyahState extends ChangeNotifier {
     _appSettingsState.addListener(_onSettingsChanged);
   }
 
-  String get translationsColumn => AppStrings.ayahTranslations[_appSettingsState.translationNameIndex].column;
+  String get translationsColumn =>
+      AppStrings.ayahTranslations[_appSettingsState.translationNameIndex].column;
 
-  void _onSettingsChanged() {
-    clearCache();
-  }
+  void _onSettingsChanged() => clearCache();
 
-  final Map<String, List<AyahByAyahEntity>> _pagesCache = {};
-  final Map<String, bool> _loadingMap = {};
-  final Map<String, Object?> _errorMap = {};
-  final Set<String> _inFlight = {};
-
-  String _makeKey({required int pageNumber}) {
-    return '$pageNumber';
-  }
+  final Map<int, List<AyahByAyahEntity>> _pagesCache = {};
+  final Map<int, Object?> _errorMap = {};
+  final Set<int> _inFlight = {};
 
   List<AyahByAyahEntity> getPageAyahs({required int pageNumber}) {
-    final key = _makeKey(pageNumber: pageNumber);
-    return _pagesCache[key] ?? const [];
+    return _pagesCache[pageNumber] ?? const [];
   }
 
-  bool isPageLoaded({required int pageNumber}) {
-    final key = _makeKey(pageNumber: pageNumber);
-    return _pagesCache.containsKey(key);
-  }
+  bool isPageLoaded({required int pageNumber}) =>
+      _pagesCache.containsKey(pageNumber);
 
-  bool isPageLoading({required int pageNumber}) {
-    final key = _makeKey(pageNumber: pageNumber);
-    return _loadingMap[key] ?? false;
-  }
+  Object? getPageError({required int pageNumber}) => _errorMap[pageNumber];
 
-  Object? getPageError({required int pageNumber}) {
-    final key = _makeKey(pageNumber: pageNumber);
-    return _errorMap[key];
-  }
+  Future<void> loadPageAyahs({
+    required int pageNumber,
+    bool prefetchNext = true,
+  }) async {
+    if (_pagesCache.containsKey(pageNumber)) return;
+    if (_inFlight.contains(pageNumber)) return;
 
-  Future<void> loadPageAyahs({required int pageNumber, bool prefetchNext = true}) async {
-    final key = _makeKey(pageNumber: pageNumber);
-
-    if (_pagesCache.containsKey(key)) return;
-    if (_inFlight.contains(key)) return;
-
-    _inFlight.add(key);
-    _loadingMap[key] = true;
-    _errorMap[key] = null;
-    notifyListeners();
+    _inFlight.add(pageNumber);
+    // notifyListeners при старте убран: данных ещё нет, Selector вернёт тот же
+    // const [] — перерисовки не будет, зато лишних проходов по дереву не будет.
 
     try {
-      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, translationColumn: translationsColumn);
-
-      _pagesCache[key] = result;
+      final result = await _ayahByAyahRepository.getAyahsByPage(
+        pageNumber: pageNumber,
+        translationColumn: translationsColumn,
+      );
+      _pagesCache[pageNumber] = result;
     } catch (e) {
-      _errorMap[key] = e;
+      _errorMap[pageNumber] = e;
     } finally {
-      _inFlight.remove(key);
-      _loadingMap[key] = false;
-      notifyListeners();
+      _inFlight.remove(pageNumber);
+      notifyListeners(); // один вызов — когда данные реально появились
     }
 
     if (prefetchNext && pageNumber < AppConstants.totalPagesCount) {
@@ -78,32 +62,35 @@ class AyahByAyahState extends ChangeNotifier {
   }
 
   Future<void> _prefetchPage({required int pageNumber}) async {
-    final key = _makeKey(pageNumber: pageNumber);
-
     if (pageNumber > AppConstants.totalPagesCount) return;
-    if (_pagesCache.containsKey(key)) return;
-    if (_inFlight.contains(key)) return;
+    if (_pagesCache.containsKey(pageNumber)) return;
+    if (_inFlight.contains(pageNumber)) return;
 
-    _inFlight.add(key);
-    _errorMap.remove(key);
+    _inFlight.add(pageNumber);
 
     try {
-      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, translationColumn: translationsColumn);
-      _pagesCache[key] = result;
+      final result = await _ayahByAyahRepository.getAyahsByPage(
+        pageNumber: pageNumber,
+        translationColumn: translationsColumn,
+      );
+      _pagesCache[pageNumber] = result;
     } catch (_) {
-      //
+      // prefetch ошибку не пробрасываем
     } finally {
-      _inFlight.remove(key);
+      _inFlight.remove(pageNumber);
+      notifyListeners();
     }
   }
-  
+
   Future<List<AyahByAyahEntity>> searchAyahs({required String query}) {
-    return _ayahByAyahRepository.getSearchAyah(query: query, translationColumn: translationsColumn);
+    return _ayahByAyahRepository.getSearchAyah(
+      query: query,
+      translationColumn: translationsColumn,
+    );
   }
 
   void clearCache() {
     _pagesCache.clear();
-    _loadingMap.clear();
     _errorMap.clear();
     _inFlight.clear();
     notifyListeners();

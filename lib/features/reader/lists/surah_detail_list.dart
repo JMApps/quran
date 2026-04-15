@@ -21,14 +21,11 @@ class SurahDetailList extends StatefulWidget {
   State<SurahDetailList> createState() => _SurahDetailListState();
 }
 
-class _SurahDetailListState extends State<SurahDetailList>
-    with WidgetsBindingObserver {
+class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingObserver {
   late final FavoritesState _mushafPageMetaState;
 
   int _currentPage = 1;
 
-  /// Направление последнего листания (вперёд по тексту = true).
-  /// PageView reverse: true → увеличение index = движение вперёд по Корану.
   bool _isDirectionForward = true;
 
   @override
@@ -37,12 +34,10 @@ class _SurahDetailListState extends State<SurahDetailList>
     WidgetsBinding.instance.addObserver(this);
     _currentPage = Provider.of<SurahNameState>(context, listen: false).currentPage;
 
-    // При первом открытии ридера — параллельная preload-инициализация
-    // шрифтов в диапазоне ±3 от стартовой страницы.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<MushafFontState>(context, listen: false).preloadRange(
-        _currentPage - 3,
-        _currentPage + 3,
+        _currentPage - 1,
+        _currentPage + 1,
       );
     });
   }
@@ -50,8 +45,7 @@ class _SurahDetailListState extends State<SurahDetailList>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _mushafPageMetaState =
-        Provider.of<FavoritesState>(context, listen: false);
+    _mushafPageMetaState = Provider.of<FavoritesState>(context, listen: false);
   }
 
   @override
@@ -77,14 +71,9 @@ class _SurahDetailListState extends State<SurahDetailList>
       itemCount: AppConstants.totalPagesCount,
       onPageChanged: (int index) {
         final newPage = index + 1;
-
-        // Определяем направление: в reverse PageView увеличение index
-        // означает движение вперёд по тексту (следующая страница Корана).
         _isDirectionForward = newPage > _currentPage;
         _currentPage = newPage;
-
-        Provider.of<SurahNameState>(context, listen: false)
-            .setCurrentPage(_currentPage);
+        Provider.of<SurahNameState>(context, listen: false).setCurrentPage(_currentPage);
       },
       itemBuilder: (context, index) {
         return SurahDetailItem(

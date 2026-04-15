@@ -5,23 +5,13 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/line_type.dart';
-import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/domain/entities/word_glyph_entity.dart';
 import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/page_layout_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
-import '../../library/presentation/state/surah_name_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
 import 'mushaf_line_widget.dart';
 
-/// Рендер одной страницы Мусхафа.
-///
-/// Загрузка данных организована в [SurahDetailItem]: шрифт, layout и glyphs
-/// стартуют параллельно ещё до того, как этот виджет попадает в дерево.
-///
-/// Здесь — только fallback-проверка через [ensureFontLoaded]: если по какой-то
-/// причине шрифт ещё не готов при build, запросим его без лишней цепочки.
-/// Layout и glyphs параллельно тоже проверяются как fallback.
 class MushafPageWidget extends StatefulWidget {
   const MushafPageWidget({super.key, required this.pageNumber});
 
@@ -32,21 +22,18 @@ class MushafPageWidget extends StatefulWidget {
 }
 
 class _MushafPageWidgetState extends State<MushafPageWidget> {
+  List<LayoutEntity>? _cachedLines;
+  List<WordGlyphEntity>? _cachedGlyphs;
+  Map<int, List<WordGlyphEntity>> _wordsByLine = const {};
+
   @override
   void initState() {
     super.initState();
-    // Fallback: данные должны уже грузиться из SurahDetailItem.
-    // Запускаем параллельно на случай, если виджет попал в дерево
-    // раньше, чем SurahDetailItem успел отработать.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _ensureDataLoaded();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ensureDataLoaded());
   }
 
   void _ensureDataLoaded() {
     if (!mounted) return;
-
-    // Все три запускаются параллельно — не ждём друг друга.
     Provider.of<MushafFontState>(context, listen: false)
         .ensureFontLoaded(widget.pageNumber);
     Provider.of<PageLayoutState>(context, listen: false)
@@ -55,10 +42,44 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
         .loadPageWords(widget.pageNumber, prefetchNext: false);
   }
 
+  void _rebuildWordGroups(
+      List<LayoutEntity> lines,
+      List<WordGlyphEntity> glyphs,
+      ) {
+    if (identical(_cachedLines, lines) && identical(_cachedGlyphs, glyphs)) {
+      return;
+    }
+    _cachedLines = lines;
+    _cachedGlyphs = glyphs;
+
+    final result = <int, List<WordGlyphEntity>>{};
+    int gi = 0;
+
+    for (final line in lines) {
+      if (line.lineType != LineType.ayah ||
+          line.firstWordId == null ||
+          line.lastWordId == null) {
+        result[line.lineNumber] = const [];
+        continue;
+      }
+
+      while (gi < glyphs.length && glyphs[gi].id < line.firstWordId!) {
+        gi++;
+      }
+
+      final words = <WordGlyphEntity>[];
+      int i = gi;
+      while (i < glyphs.length && glyphs[i].id <= line.lastWordId!) {
+        words.add(glyphs[i++]);
+      }
+      result[line.lineNumber] = List.unmodifiable(words);
+    }
+
+    _wordsByLine = result;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final appColors = Theme.of(context).colorScheme;
-
     final lines = context.select<PageLayoutState, List<LayoutEntity>>(
           (s) => s.getPageLines(widget.pageNumber),
     );
@@ -68,25 +89,22 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
     final fontFamily = context.select<MushafFontState, String?>(
           (s) => s.fontFamilyForPage(widget.pageNumber),
     );
-    final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(
-          (s) => s.allSurahs,
-    );
-    final mushafPageMeta = Provider.of<PageMetaState>(
-      context,
-      listen: false,
-    ).getPageMeta(widget.pageNumber);
 
-    // Показываем индикатор, пока нет шрифта ИЛИ нет layout.
-    // Glyphs можно подождать — layout рендерится и без них (surah_name и basmallah).
+    _rebuildWordGroups(lines, glyphs);
+
     if (fontFamily == null || lines.isEmpty) {
       return const Center(
         child: CircularProgressIndicator.adaptive(strokeWidth: 2.5),
       );
     }
 
+    final mushafPageMeta =
+    context.read<PageMetaState>().getPageMeta(widget.pageNumber);
+
+    final appColors = Theme.of(context).colorScheme;
+    final textColor = appColors.onSurface;
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    final textColor = appColors.onSurface;
 
     final header = Padding(
       padding: AppStyles.withoutBottomBigPadding,
@@ -94,11 +112,11 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
+            '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber ?? ""}',
             textDirection: TextDirection.ltr,
           ),
           const Text(
-            '${AppStrings.surah}',
+            AppStrings.surah,
             textDirection: TextDirection.ltr,
           ),
         ],
@@ -113,20 +131,19 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
       ),
     );
 
-    final pageContent = _buildPageContent(
-      lines: lines,
-      glyphs: glyphs,
-      fontFamily: fontFamily,
-      allSurahs: allSurahs,
-      textColor: textColor,
-      endAyahColor: appColors.primary,
+    final pageContent = RepaintBoundary(
+      child: _buildPageContent(
+        lines: lines,
+        fontFamily: fontFamily,
+        textColor: textColor,
+        endAyahColor: appColors.primary,
+      ),
     );
 
     if (isLandscape) {
       final size = MediaQuery.of(context).size;
       final pageWidth = size.width - 14;
       final pageHeight = pageWidth * (20.5 / 13.5);
-
       return Directionality(
         textDirection: TextDirection.rtl,
         child: SingleChildScrollView(
@@ -158,9 +175,7 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
 
   Widget _buildPageContent({
     required List<LayoutEntity> lines,
-    required List<WordGlyphEntity> glyphs,
     required String fontFamily,
-    required List<SurahNameEntity> allSurahs,
     required Color textColor,
     required Color endAyahColor,
   }) {
@@ -172,9 +187,8 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
             fit: BoxFit.scaleDown,
             child: MushafLineWidget(
               line: line,
-              words: _getWordsForLine(line, glyphs),
+              words: _wordsByLine[line.lineNumber] ?? const [],
               fontFamily: fontFamily,
-              allSurahs: allSurahs,
               pageNumber: widget.pageNumber,
               textColor: textColor,
               endAyahColor: endAyahColor,
@@ -183,17 +197,5 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
         );
       }).toList(),
     );
-  }
-
-  List<WordGlyphEntity> _getWordsForLine(
-      LayoutEntity line,
-      List<WordGlyphEntity> allGlyphs,
-      ) {
-    if (line.lineType != LineType.ayah) return const [];
-    if (line.firstWordId == null || line.lastWordId == null) return const [];
-
-    return allGlyphs
-        .where((w) => w.id >= line.firstWordId! && w.id <= line.lastWordId!)
-        .toList(growable: false);
   }
 }

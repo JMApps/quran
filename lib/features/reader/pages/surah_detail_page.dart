@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/theme/app_styles.dart';
-import 'package:quran/features/library/presentation/state/page_meta_state.dart';
 
 import '../../../../core/strings/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
+import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/surah_detail_list.dart';
 import '../widgets/favorite_mushaf_page_button.dart';
@@ -44,7 +45,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
   }
 
   Future<void> _showSystemUiWithDelay() async {
-    await Future<void>.delayed(const Duration(milliseconds: 125));
+    await Future<void>.delayed(const Duration(milliseconds: 250));
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -65,13 +66,12 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int page = context.select<SurahNameState, int>((s) => s.currentPage);
-    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>(
-      (s) => s.getPageMeta(page),
-    );
+    final int currentPage = context.select<SurahNameState, int>((s) => s.currentPage);
+    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPage));
+    final surahModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahById(surahNumber: mushafPageMeta!.surahNumber));
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        Provider.of<FavoritesState>(context, listen: false).addLastOpenedPage(page);
+        Provider.of<FavoritesState>(context, listen: false).addLastOpenedPage(currentPage);
       },
       child: Scaffold(
         extendBody: true,
@@ -95,8 +95,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       title: Column(
                         crossAxisAlignment: .stretch,
                         children: [
-                          const Text(
-                            '${AppStrings.surah}',
+                          Text(
+                            '${AppStrings.surah} ${surahModel!.nameTranscription}',
                             style: AppStyles.mainTextStyle18,
                           ),
                           Row(

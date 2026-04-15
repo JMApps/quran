@@ -9,7 +9,6 @@ class PageLayoutState extends ChangeNotifier {
   PageLayoutState(this._pageLayoutRepository);
 
   final Map<int, List<LayoutEntity>> _pagesCache = {};
-  final Map<int, bool> _loadingMap = {};
   final Map<int, Object?> _errorMap = {};
   final Set<int> _inFlight = {};
 
@@ -17,40 +16,29 @@ class PageLayoutState extends ChangeNotifier {
     return _pagesCache[pageNumber] ?? const [];
   }
 
-  bool isPageLoaded(int pageNumber) {
-    return _pagesCache.containsKey(pageNumber);
-  }
+  bool isPageLoaded(int pageNumber) => _pagesCache.containsKey(pageNumber);
 
-  bool isPageLoading(int pageNumber) {
-    return _loadingMap[pageNumber] ?? false;
-  }
-
-  Object? getPageError(int pageNumber) {
-    return _errorMap[pageNumber];
-  }
+  Object? getPageError(int pageNumber) => _errorMap[pageNumber];
 
   Future<void> loadPageLines(int pageNumber, {bool prefetchNext = true}) async {
     if (_pagesCache.containsKey(pageNumber)) return;
     if (_inFlight.contains(pageNumber)) return;
 
     _inFlight.add(pageNumber);
-    _loadingMap[pageNumber] = true;
-    _errorMap[pageNumber] = null;
-    notifyListeners();
+    // notifyListeners при старте убран: данных ещё нет, Selector вернёт тот же
+    // const [] — перерисовки не будет, зато лишних проходов по дереву не будет.
 
     try {
       final result = await _pageLayoutRepository.getLinesByPage(
         pageNumber: pageNumber,
       );
-
       _pagesCache[pageNumber] = result;
     } catch (e) {
       _errorMap[pageNumber] = e;
       debugPrint('ERROR loadPageLines($pageNumber): $e');
     } finally {
       _inFlight.remove(pageNumber);
-      _loadingMap[pageNumber] = false;
-      notifyListeners();
+      notifyListeners(); // один вызов — когда данные реально появились
     }
 
     if (prefetchNext) {
@@ -69,24 +57,30 @@ class PageLayoutState extends ChangeNotifier {
       final result = await _pageLayoutRepository.getLinesByPage(
         pageNumber: pageNumber,
       );
-
       _pagesCache[pageNumber] = result;
     } catch (e) {
       debugPrint('PREFETCH ERROR loadPageLines($pageNumber): $e');
     } finally {
       _inFlight.remove(pageNumber);
+      // Prefetch тоже уведомляет — виджет соседней страницы ждёт данных.
+      notifyListeners();
     }
   }
 
-  void trimCache({required int currentPage, int keepBefore = 1, int keepAfter = 2}) {
+  void trimCache({
+    required int currentPage,
+    int keepBefore = 1,
+    int keepAfter = 2,
+  }) {
     final minPage = currentPage - keepBefore;
     final maxPage = currentPage + keepAfter;
 
-    final keysToRemove = _pagesCache.keys.where((page) => page < minPage || page > maxPage).toList();
+    final keysToRemove = _pagesCache.keys
+        .where((page) => page < minPage || page > maxPage)
+        .toList();
 
     for (final page in keysToRemove) {
       _pagesCache.remove(page);
-      _loadingMap.remove(page);
       _errorMap.remove(page);
       _inFlight.remove(page);
     }
@@ -96,7 +90,6 @@ class PageLayoutState extends ChangeNotifier {
 
   void clearCache() {
     _pagesCache.clear();
-    _loadingMap.clear();
     _errorMap.clear();
     _inFlight.clear();
     notifyListeners();

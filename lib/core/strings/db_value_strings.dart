@@ -2,7 +2,7 @@ class DbValueStrings {
 
   static const Map<String, ({String transcription, String translation})> surahNamesColum = {
     'ru': (transcription: 'name_transcription_ru', translation: 'name_translation_ru'),
-    'en': (transcription: 'name_transcription_en', translation: 'name_translation_en'),
+    // 'en': (transcription: 'name_transcription_en', translation: 'name_translation_en'),
   };
 
   static const String tableOfTranslationsAyahsFts = 'Table_of_translations_fts';

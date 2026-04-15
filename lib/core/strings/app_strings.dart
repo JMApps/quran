@@ -93,12 +93,12 @@ class AppStrings {
   static const List<({String name, String column})> ayahTranslations = [
     (name: 'Кулиев', column: 'kuliev'),
     (name: 'Абу Адель', column: 'adel'),
-    (name: 'Eng intl', column: 'intl'),
+    // (name: 'Eng intl', column: 'intl'),
   ];
 
   static const Map<String, int> defaultTranslationIndex = {
     'ru': 0,
-    'en': 2,
+    // 'en': 2,
   };
 
   static bool containsArabic(String value) {
