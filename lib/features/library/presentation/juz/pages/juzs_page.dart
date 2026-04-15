@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/domain/entities/juz_entity.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
@@ -30,7 +31,7 @@ class JuzsPage extends StatelessWidget {
         builder: (context, juzState, _) {
           if (juzState.isLoading) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             );
           }
 
@@ -64,9 +65,11 @@ class JuzsPage extends StatelessWidget {
             );
           }
 
+          final List<JuzEntity> allJuzs = juzState.allJuzs;
+
           return JuzsList(
             scrollController: scrollController,
-            juzsList: juzState.allJuzs,
+            allJuzs: allJuzs,
           );
         },
       ),
