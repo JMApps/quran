@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:quran/core/strings/app_locale.dart';
 
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/repositories/surah_name_repository.dart';
@@ -56,7 +57,8 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _allSurahs = await _surahNameRepository.getAllSurahs();
+      /* TODO передать индекс языка */
+      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[0].languageCode);
       _surahMap..clear()..addEntries(_allSurahs.map((s) => MapEntry(s.surahNumber, s)));
       _isLoaded = true;
     } catch (e) {

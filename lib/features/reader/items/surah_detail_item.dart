@@ -25,13 +25,11 @@ class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
     required this.index,
-    required this.tableName,
     required this.ayahPosition,
     required this.isDirectionForward,
   });
 
   final int index;
-  final String tableName;
   final int ayahPosition;
 
   /// Направление листания: true = вперёд по тексту (→ меньший номер в UI,
@@ -86,7 +84,6 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
       glyphState.loadPageWords(_pageNumber, prefetchNext: false),
       ayahState.loadPageAyahs(
         pageNumber: _pageNumber,
-        tableName: widget.tableName,
         prefetchNext: false,
       ),
     ], eagerError: false); // eagerError: false — не прерываем остальные при ошибке одного
@@ -131,7 +128,6 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     glyphState.loadPageWords(page, prefetchNext: false);
     ayahState.loadPageAyahs(
       pageNumber: page,
-      tableName: widget.tableName,
       prefetchNext: false,
     );
   }
@@ -145,7 +141,6 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
     final ayahs = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
           (s) => s.getPageAyahs(
         pageNumber: _pageNumber,
-        tableName: widget.tableName,
       ),
     );
     final allSurahs = context.select<SurahNameState, List<SurahNameEntity>>(

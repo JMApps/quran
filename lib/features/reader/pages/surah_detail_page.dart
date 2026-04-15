@@ -95,8 +95,8 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       title: Column(
                         crossAxisAlignment: .stretch,
                         children: [
-                          Text(
-                            '${AppStrings.surah} ${mushafPageMeta?.nameTranscription}',
+                          const Text(
+                            '${AppStrings.surah}',
                             style: AppStyles.mainTextStyle18,
                           ),
                           Row(

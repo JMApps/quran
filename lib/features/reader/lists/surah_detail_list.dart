@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/core/strings/app_constants.dart';
 
-import '../../../../core/strings/app_strings.dart';
-import '../../library/domain/entities/translation_type.dart';
-import '../../library/presentation/state/mushaf_font_state.dart';
+import '../../../core/strings/app_constants.dart';
 import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/mushaf_font_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
-import '../../settings/state/app_settings_state.dart';
 import '../items/surah_detail_item.dart';
 
 class SurahDetailList extends StatefulWidget {
@@ -74,14 +71,6 @@ class _SurahDetailListState extends State<SurahDetailList>
 
   @override
   Widget build(BuildContext context) {
-    final appSettingsState =
-    Provider.of<AppSettingsState>(context, listen: false);
-
-    final tableName = AppStrings.resolveTranslation(
-      locale: Localizations.localeOf(context).languageCode,
-      userSelected: appSettingsState.translationType == TranslationType.defaultTranslation ? null : appSettingsState.translationType,
-    ).table;
-
     return PageView.builder(
       reverse: true,
       controller: widget.mushafPageController,
@@ -101,7 +90,6 @@ class _SurahDetailListState extends State<SurahDetailList>
         return SurahDetailItem(
           index: index,
           ayahPosition: widget.ayahPosition,
-          tableName: tableName,
           isDirectionForward: _isDirectionForward,
         );
       },
