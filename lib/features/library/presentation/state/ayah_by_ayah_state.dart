@@ -1,45 +1,56 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/strings/app_constants.dart';
+import '../../../../core/strings/app_strings.dart';
+import '../../../settings/state/app_settings_state.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/repositories/ayah_by_ayah_repository.dart';
 
 class AyahByAyahState extends ChangeNotifier {
   final AyahByAyahRepository _ayahByAyahRepository;
+  final AppSettingsState _appSettingsState;
 
-  AyahByAyahState(this._ayahByAyahRepository);
+  AyahByAyahState(this._ayahByAyahRepository, this._appSettingsState) {
+    _appSettingsState.addListener(_onSettingsChanged);
+  }
+
+  String get translationsColumn => AppStrings.ayahTranslations[_appSettingsState.translationNameIndex].column;
+
+  void _onSettingsChanged() {
+    clearCache();
+  }
 
   final Map<String, List<AyahByAyahEntity>> _pagesCache = {};
   final Map<String, bool> _loadingMap = {};
   final Map<String, Object?> _errorMap = {};
   final Set<String> _inFlight = {};
 
-  String _makeKey({required int pageNumber, required String tableName}) {
-    return '$tableName:$pageNumber';
+  String _makeKey({required int pageNumber}) {
+    return '$pageNumber';
   }
 
-  List<AyahByAyahEntity> getPageAyahs({required int pageNumber, required String tableName}) {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  List<AyahByAyahEntity> getPageAyahs({required int pageNumber}) {
+    final key = _makeKey(pageNumber: pageNumber);
     return _pagesCache[key] ?? const [];
   }
 
-  bool isPageLoaded({required int pageNumber, required String tableName}) {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  bool isPageLoaded({required int pageNumber}) {
+    final key = _makeKey(pageNumber: pageNumber);
     return _pagesCache.containsKey(key);
   }
 
-  bool isPageLoading({required int pageNumber, required String tableName}) {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  bool isPageLoading({required int pageNumber}) {
+    final key = _makeKey(pageNumber: pageNumber);
     return _loadingMap[key] ?? false;
   }
 
-  Object? getPageError({required int pageNumber, required String tableName}) {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  Object? getPageError({required int pageNumber}) {
+    final key = _makeKey(pageNumber: pageNumber);
     return _errorMap[key];
   }
 
-  Future<void> loadPageAyahs({required int pageNumber, required String tableName, bool prefetchNext = true}) async {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  Future<void> loadPageAyahs({required int pageNumber, bool prefetchNext = true}) async {
+    final key = _makeKey(pageNumber: pageNumber);
 
     if (_pagesCache.containsKey(key)) return;
     if (_inFlight.contains(key)) return;
@@ -50,7 +61,7 @@ class AyahByAyahState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
+      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, translationColumn: translationsColumn);
 
       _pagesCache[key] = result;
     } catch (e) {
@@ -62,12 +73,12 @@ class AyahByAyahState extends ChangeNotifier {
     }
 
     if (prefetchNext && pageNumber < AppConstants.totalPagesCount) {
-      _prefetchPage(pageNumber: pageNumber + 1, tableName: tableName);
+      _prefetchPage(pageNumber: pageNumber + 1);
     }
   }
 
-  Future<void> _prefetchPage({required int pageNumber, required String tableName}) async {
-    final key = _makeKey(pageNumber: pageNumber, tableName: tableName);
+  Future<void> _prefetchPage({required int pageNumber}) async {
+    final key = _makeKey(pageNumber: pageNumber);
 
     if (pageNumber > AppConstants.totalPagesCount) return;
     if (_pagesCache.containsKey(key)) return;
@@ -77,8 +88,7 @@ class AyahByAyahState extends ChangeNotifier {
     _errorMap.remove(key);
 
     try {
-      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, tableName: tableName);
-
+      final result = await _ayahByAyahRepository.getAyahsByPage(pageNumber: pageNumber, translationColumn: translationsColumn);
       _pagesCache[key] = result;
     } catch (_) {
       //
@@ -87,8 +97,8 @@ class AyahByAyahState extends ChangeNotifier {
     }
   }
   
-  Future<List<AyahByAyahEntity>> searchAyahs({required String query, required String dataTable, required String ftsTable}) {
-    return _ayahByAyahRepository.getSearchAyah(query: query, dataTable: dataTable, ftsTable: ftsTable);
+  Future<List<AyahByAyahEntity>> searchAyahs({required String query}) {
+    return _ayahByAyahRepository.getSearchAyah(query: query, translationColumn: translationsColumn);
   }
 
   void clearCache() {
@@ -99,18 +109,9 @@ class AyahByAyahState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearCacheByTable(String tableName) {
-    final prefix = '$tableName:';
-
-    final keys = _pagesCache.keys.where((key) => key.startsWith(prefix)).toList(growable: false);
-
-    for (final key in keys) {
-      _pagesCache.remove(key);
-      _loadingMap.remove(key);
-      _errorMap.remove(key);
-      _inFlight.remove(key);
-    }
-
-    notifyListeners();
+  @override
+  void dispose() {
+    _appSettingsState.removeListener(_onSettingsChanged);
+    super.dispose();
   }
 }

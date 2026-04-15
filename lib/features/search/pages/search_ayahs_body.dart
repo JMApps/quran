@@ -12,13 +12,9 @@ class SearchAyahsBody extends StatelessWidget {
   const SearchAyahsBody({
     super.key,
     required this.query,
-    required this.dataTable,
-    required this.ftsTable,
   });
 
   final String query;
-  final String dataTable;
-  final String ftsTable;
 
   List<String> _extractTokens(String value) {
     final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -81,8 +77,6 @@ class SearchAyahsBody extends StatelessWidget {
     return FutureBuilder<List<AyahByAyahEntity>>(
       future: Provider.of<AyahByAyahState>(context, listen: false).searchAyahs(
         query: trimmedQuery,
-        dataTable: dataTable,
-        ftsTable: ftsTable,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

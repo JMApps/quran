@@ -1,7 +1,4 @@
-import 'package:quran/core/strings/db_value_strings.dart';
-
 import '../../features/library/domain/entities/line_type.dart';
-import '../../features/library/domain/entities/translation_type.dart';
 
 class AppStrings {
   static const String basmaLlah = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيم';
@@ -93,6 +90,17 @@ class AppStrings {
   static const String mecca = 'Мекка';
   static const String medina = 'Медина';
 
+  static const List<({String name, String column})> ayahTranslations = [
+    (name: 'Кулиев', column: 'kuliev'),
+    (name: 'Абу Адель', column: 'adel'),
+    (name: 'Eng intl', column: 'intl'),
+  ];
+
+  static const Map<String, int> defaultTranslationIndex = {
+    'ru': 0,
+    'en': 2,
+  };
+
   static bool containsArabic(String value) {
     return RegExp(
       r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]',
@@ -118,26 +126,6 @@ class AppStrings {
       default:
         return many;
     }
-  }
-
-  static const List<String> semanticTranslationNames = [
-    'По умолчанию',
-    'Эльмир Кулиев',
-    'Абу Адель',
-  ];
-
-  static const Map<String, TranslationType> _defaultTranslationByLocale = {
-    'ru': TranslationType.kuliev,
-  };
-
-  static const Map<TranslationType, ({String table, String fts})> _translationColumns = {
-    TranslationType.kuliev: (table: DbValueStrings.tableOfKuliev, fts: 'translation_kuliev_fts'),
-    TranslationType.adel: (table: DbValueStrings.tableOfAdel, fts: 'translation_adel_fts'),
-  };
-
-  static ({String table, String fts}) resolveTranslation({required String locale, TranslationType? userSelected}) {
-    final type = userSelected ?? _defaultTranslationByLocale[locale] ?? TranslationType.kuliev;
-    return _translationColumns[type]!;
   }
 
   static LineType lineTypeFromDb(String value) {

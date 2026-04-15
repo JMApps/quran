@@ -1,56 +1,56 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/strings/app_strings.dart';
+import '../../../settings/state/app_settings_state.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/repositories/ayah_by_ayah_repository.dart';
 
 class AyahMetaState extends ChangeNotifier {
-  AyahMetaState(this._ayahByAyahRepository);
-
   final AyahByAyahRepository _ayahByAyahRepository;
+  final AppSettingsState _appSettingsState;
+
+  AyahMetaState(this._ayahByAyahRepository, this._appSettingsState) {
+    _appSettingsState.addListener(_onSettingsChanged);
+  }
+
+  String get translationsColumn => AppStrings.ayahTranslations[_appSettingsState.translationNameIndex].column;
+
+  void _onSettingsChanged() {
+    _ayahMetaById = const {};
+    notifyListeners();
+  }
 
   Map<int, AyahByAyahEntity> _ayahMetaById = const {};
-  String? _loadedTableName;
 
   bool _isLoading = false;
-  bool _isLoaded = false;
   Object? _error;
 
   bool get isLoading => _isLoading;
   Object? get error => _error;
 
-  Future<void> loadAyahsMeta({required String tableName, required List<int> ayahIds}) async {
+  Future<void> loadAyahsMeta({required List<int> ayahIds}) async {
     if (_isLoading) return;
-    if (_isLoaded && _loadedTableName == tableName) return;
 
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(
-        tableName: tableName,
-        ayahIds: ayahIds,
-      );
+      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(ayahIds: ayahIds, translationColumn: translationsColumn);
       _ayahMetaById = {
         for (final item in result) item.ayahId: item,
       };
-      _loadedTableName = tableName;
-      _isLoaded = true;
     } catch (e) {
       _error = e;
-      _isLoaded = false;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> reloadIfTableChanged({required String tableName, required List<int> ayahIds}) async {
-    if (_loadedTableName == tableName && _isLoaded) return;
-    _isLoaded = false;
-    _loadedTableName = null;
+  Future<void> reloadIfTableChanged({required List<int> ayahIds}) async {
     _ayahMetaById = const {};
-    await loadAyahsMeta(tableName: tableName, ayahIds: ayahIds);
+    await loadAyahsMeta(ayahIds: ayahIds);
   }
 
   List<AyahByAyahEntity> resolveAyahs(List<int> ayahIds) {
@@ -62,15 +62,7 @@ class AyahMetaState extends ChangeNotifier {
     ]);
   }
 
-  Future<void> syncFavoriteAyahs({required String tableName, required List<int> ayahIds}) async {
-    if (_loadedTableName != tableName) {
-      _isLoaded = false;
-      _loadedTableName = null;
-      _ayahMetaById = const {};
-      await loadAyahsMeta(tableName: tableName, ayahIds: ayahIds);
-      return;
-    }
-
+  Future<void> syncFavoriteAyahs({required List<int> ayahIds}) async {
     if (ayahIds.isEmpty) {
       _ayahMetaById = const {};
       notifyListeners();
@@ -91,10 +83,7 @@ class AyahMetaState extends ChangeNotifier {
     if (missingIds.isEmpty) return;
 
     try {
-      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(
-        tableName: tableName,
-        ayahIds: missingIds,
-      );
+      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(ayahIds: missingIds, translationColumn: translationsColumn);
       _ayahMetaById = {
         ..._ayahMetaById,
         for (final item in result) item.ayahId: item,
@@ -106,20 +95,9 @@ class AyahMetaState extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndCacheAyah({required int ayahId, required String tableName}) async {
-    if (_ayahMetaById.containsKey(ayahId)) return;
-
-    try {
-      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(
-        tableName: tableName,
-        ayahIds: [ayahId],
-      );
-      if (result.isEmpty) return;
-      _ayahMetaById = {
-        ..._ayahMetaById,
-        for (final item in result) item.ayahId: item,
-      };
-      notifyListeners();
-    } catch (_) {}
+  @override
+  void dispose() {
+    _appSettingsState.removeListener(_onSettingsChanged);
+    super.dispose();
   }
 }

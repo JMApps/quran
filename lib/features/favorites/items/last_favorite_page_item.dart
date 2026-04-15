@@ -23,6 +23,9 @@ class LastFavoritePageItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(25);
     final itemEvenColor = appColors.secondary.withAlpha(05);
+    final surahModel = context.read<SurahNameState>().getSurahById(
+      surahNumber: mushafPageMetaModel.surahNumber,
+    );
     return InkWell(
       onTap: () {
         final surahState = Provider.of<SurahNameState>(context, listen: false);
@@ -61,7 +64,7 @@ class LastFavoritePageItem extends StatelessWidget {
                 crossAxisAlignment: .stretch,
                 children: [
                   Text(
-                    '${AppStrings.surah} ${mushafPageMetaModel.nameTranscription}',
+                    '${AppStrings.surah} ${surahModel!.nameTranscription}',
                     textAlign: .start,
                   ),
                   Text(

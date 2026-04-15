@@ -4,7 +4,7 @@ import '../models/page_meta_model.dart';
 extension PageMetaMapperX on PageMetaModel {
   PageMetaEntity toEntity() => PageMetaEntity(
     pageNumber: pageNumber,
-    nameTranscription: nameTranscription,
+    surahNumber: surahNumber,
     juzNumber: juzNumber,
     hizbNumber: hizbNumber,
   );

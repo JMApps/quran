@@ -9,12 +9,7 @@ import '../../library/presentation/state/favorites_state.dart';
 import '../items/favorite_ayah_item.dart';
 
 class FavoriteAyahsList extends StatefulWidget {
-  const FavoriteAyahsList({
-    super.key,
-    required this.tableName,
-  });
-
-  final String tableName;
+  const FavoriteAyahsList({super.key});
 
   @override
   State<FavoriteAyahsList> createState() => _FavoriteAyahsListState();
@@ -32,14 +27,6 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
   }
 
   @override
-  void didUpdateWidget(FavoriteAyahsList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.tableName != widget.tableName) {
-      Future.microtask(() => _load());
-    }
-  }
-
-  @override
   void dispose() {
     _favoritesState.removeListener(_onFavoritesChanged);
     super.dispose();
@@ -54,8 +41,8 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
     final ayahIds = _favoritesState.favoriteAyahIds;
 
     await Provider.of<AyahMetaState>(context, listen: false).syncFavoriteAyahs(
-      tableName: widget.tableName,
       ayahIds: ayahIds,
+
     );
   }
 

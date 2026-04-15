@@ -25,7 +25,7 @@ class AppSettingsPage extends StatelessWidget {
             return Column(
               crossAxisAlignment: .stretch,
               children: [
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 SettingListTileItem(
                   value: appSettingsState.arabicNameSurah,
                   title: AppStrings.arabicSurahName,
@@ -40,7 +40,7 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.translationNameSurah = onChanged;
                   },
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 SettingListTileItem(
                   value: appSettingsState.displayAlwaysOn,
                   title: AppStrings.alwaysDisplayOn,
@@ -48,7 +48,7 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.setDisplayAlwaysOn(onChanged);
                   },
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 ThemeModeDropDown(
                   value: appSettingsState.appThemeModeIndex,
                   title: AppStrings.appTheme,
@@ -56,7 +56,7 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.appThemeModeIndex = index!;
                   },
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 ThemeColorPicker(
                   color: appSettingsState.themeColor,
                   onChanged: (Color? color) {
@@ -64,14 +64,14 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.themeColor = color!;
                   },
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 TranslationDropDown(
-                  value: appSettingsState.translationType,
+                  value: AppStrings.ayahTranslations[appSettingsState.translationNameIndex].name,
                   onChanged: (value) {
-                    appSettingsState.translationType = value;
+                    appSettingsState.translationNameIndex = value;
                   },
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
                 const Padding(
                   padding: AppStyles.mainPadding,
                   child: Text(
@@ -89,7 +89,7 @@ class AppSettingsPage extends StatelessWidget {
                   size: appSettingsState.ayahTranslationTextSize,
                   onChanged: (double value) => appSettingsState.ayahTranslationTextSize = value,
                 ),
-                const Divider(indent: 16, endIndent: 16),
+                const Divider(indent: 14, endIndent: 14),
               ],
             );
           },

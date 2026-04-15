@@ -1,12 +1,16 @@
 class DbValueStrings {
 
-  static const String tableOfKuliev = 'Table_of_translation_kuliev';
-  static const String tableOfAdel = 'Table_of_translation_adel';
+  static const Map<String, ({String transcription, String translation})> surahNamesColum = {
+    'ru': (transcription: 'name_transcription_ru', translation: 'name_translation_ru'),
+    'en': (transcription: 'name_transcription_en', translation: 'name_translation_en'),
+  };
+
+  static const String tableOfTranslationsAyahsFts = 'Table_of_translations_fts';
 
   static const String tableOfSurahs = 'Table_of_surahs';
   static const String dbLocale = 'locale';
-  static const String dbNameTranslation = 'name_translation';
   static const String dbNameTranscription = 'name_transcription';
+  static const String dbNameTranslation = 'name_translation';
   static const String dbRevelationOrder = 'revelation_order';
   static const String dbRevelationPlace = 'revelation_place';
   static const String dbAyahCount = 'ayahs_count';

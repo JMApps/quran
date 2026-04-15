@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 class AppLocale {
-  static const supportedAppLocales = {'ru'};
-  static const fallback = 'ru';
+  static const List<Locale> appLocales = [
+    Locale('ru'),
+    Locale('en'),
+  ];
 }

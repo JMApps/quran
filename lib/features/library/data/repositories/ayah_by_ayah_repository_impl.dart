@@ -11,117 +11,110 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
   const AyahByAyahRepositoryImpl(this._quranDatabaseService);
 
   @override
-  Future<List<AyahByAyahEntity>> getAyahsByPage({
-    required int pageNumber, required String tableName}) async {
+  Future<List<AyahByAyahEntity>> getAyahsByPage({required int pageNumber, required String translationColumn}) async {
     final db = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> result = await db.rawQuery(
       '''
-      WITH page_ayahs AS (
-        SELECT DISTINCT
-          w.surah AS ${DbValueStrings.dbSurahNumber},
-          w.ayah AS ${DbValueStrings.dbAyahNumber}
-        FROM ${DbValueStrings.tableOfLayouts} l
-        JOIN ${DbValueStrings.tableOfWordsGlyph} w
-          ON w.id BETWEEN
-             CAST(l.${DbValueStrings.dbFirstWordId} AS INTEGER)
-             AND
-             CAST(l.${DbValueStrings.dbLastWordId} AS INTEGER)
-        WHERE l.${DbValueStrings.dbPageNumber} = ?
-          AND l.${DbValueStrings.dbLineType} = 'ayah'
-          AND l.${DbValueStrings.dbFirstWordId} IS NOT NULL
-          AND l.${DbValueStrings.dbLastWordId} IS NOT NULL
-      )
-      SELECT
-        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
-        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
-        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
-        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
-        m.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
-        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
-        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
-        t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
-        NULL AS highlighted_arabic,
-        NULL AS highlighted_translation
-      FROM page_ayahs p
-      JOIN ${DbValueStrings.tableOfAyahs} m
-        ON m.${DbValueStrings.dbSurahNumber} = p.${DbValueStrings.dbSurahNumber}
-       AND m.${DbValueStrings.dbAyahNumber} = p.${DbValueStrings.dbAyahNumber}
-      JOIN $tableName t
-        ON t.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
-      ORDER BY
-        m.${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC},
-        m.${DbValueStrings.dbAyahNumber} ${DbValueStrings.dbOrderASC}
-      ''',
-      <Object>[pageNumber],
+    WITH page_ayahs AS (
+      SELECT DISTINCT
+        w.surah AS ${DbValueStrings.dbSurahNumber},
+        w.ayah  AS ${DbValueStrings.dbAyahNumber}
+      FROM ${DbValueStrings.tableOfLayouts} l
+      JOIN ${DbValueStrings.tableOfWordsGlyph} w
+        ON w.id BETWEEN
+           CAST(l.${DbValueStrings.dbFirstWordId} AS INTEGER)
+           AND
+           CAST(l.${DbValueStrings.dbLastWordId} AS INTEGER)
+      WHERE l.${DbValueStrings.dbPageNumber} = ?
+        AND l.${DbValueStrings.dbLineType} = 'ayah'
+        AND l.${DbValueStrings.dbFirstWordId} IS NOT NULL
+        AND l.${DbValueStrings.dbLastWordId} IS NOT NULL
+    )
+    SELECT
+      m.${DbValueStrings.dbAyahId},
+      m.${DbValueStrings.dbVerseKey},
+      m.${DbValueStrings.dbSurahNumber},
+      m.${DbValueStrings.dbAyahNumber},
+      m.${DbValueStrings.dbAyahArabic},
+      m.${DbValueStrings.dbAyahPageNumber},
+      m.${DbValueStrings.dbAyahPosition},
+      t.$translationColumn AS ${DbValueStrings.dbAyahTranslation}
+    FROM page_ayahs p
+    JOIN ${DbValueStrings.tableOfAyahs} m
+      ON m.${DbValueStrings.dbSurahNumber} = p.${DbValueStrings.dbSurahNumber}
+     AND m.${DbValueStrings.dbAyahNumber}  = p.${DbValueStrings.dbAyahNumber}
+    JOIN ${DbValueStrings.tableOfTranslationsAyahsFts} t
+      ON t.rowid = m.${DbValueStrings.dbAyahId}
+    ORDER BY
+      m.${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC},
+      m.${DbValueStrings.dbAyahNumber}  ${DbValueStrings.dbOrderASC}
+    ''',
+      [pageNumber],
     );
 
     return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
   @override
-  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String dataTable, required String ftsTable}) async {
+  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String translationColumn}) async {
     final db = await _quranDatabaseService.db;
     final String trimmedQuery = query.trim();
 
-    if (trimmedQuery.isEmpty) return const <AyahByAyahEntity>[];
+    if (trimmedQuery.isEmpty) return const [];
 
     final bool isArabicQuery = _containsArabic(trimmedQuery);
-
     final String matchQuery = isArabicQuery ? _buildArabicMatchQuery(trimmedQuery) : _buildTextMatchQuery(trimmedQuery);
 
-    if (matchQuery.isEmpty) return const <AyahByAyahEntity>[];
+    if (matchQuery.isEmpty) return const [];
+
     final String sql = isArabicQuery
         ? '''
-      SELECT
-        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
-        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
-        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
-        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
-        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
-        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
-        m.${DbValueStrings.dbAyahArabicNormalized} AS ${DbValueStrings.dbAyahArabicNormalized},
-        tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
-        NULL AS highlighted_arabic,
-        NULL AS highlighted_translation
-      FROM ayahs_fts
-      JOIN ${DbValueStrings.tableOfAyahs} m
-        ON m.${DbValueStrings.dbAyahId} = ayahs_fts.rowid
-      JOIN $dataTable tr
-        ON tr.${DbValueStrings.dbAyahId} = m.${DbValueStrings.dbAyahId}
-      WHERE ayahs_fts MATCH ?
-      ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
-    '''
+        SELECT
+          m.${DbValueStrings.dbAyahId},
+          m.${DbValueStrings.dbVerseKey},
+          m.${DbValueStrings.dbSurahNumber},
+          m.${DbValueStrings.dbAyahNumber},
+          m.${DbValueStrings.dbAyahArabic},
+          m.${DbValueStrings.dbAyahPageNumber},
+          m.${DbValueStrings.dbAyahPosition},
+          t.$translationColumn AS ${DbValueStrings.dbAyahTranslation}
+        FROM ayahs_fts
+        JOIN ${DbValueStrings.tableOfAyahs} m
+          ON m.${DbValueStrings.dbAyahId} = ayahs_fts.rowid
+        JOIN ${DbValueStrings.tableOfTranslationsAyahsFts} t
+          ON t.rowid = m.${DbValueStrings.dbAyahId}
+        WHERE ayahs_fts MATCH ?
+        ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
+      '''
         : '''
-      SELECT
-        m.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
-        m.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
-        m.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
-        m.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
-        m.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
-        m.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
-        m.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
-        tr.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation},
-        NULL AS highlighted_arabic,
-        NULL AS highlighted_translation
-      FROM $ftsTable
-      JOIN $dataTable tr
-        ON tr.${DbValueStrings.dbAyahId} = $ftsTable.rowid
-      JOIN ${DbValueStrings.tableOfAyahs} m
-        ON m.${DbValueStrings.dbAyahId} = tr.${DbValueStrings.dbAyahId}
-      WHERE $ftsTable MATCH ?
-      ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
-    ''';
+        SELECT
+          m.${DbValueStrings.dbAyahId},
+          m.${DbValueStrings.dbVerseKey},
+          m.${DbValueStrings.dbSurahNumber},
+          m.${DbValueStrings.dbAyahNumber},
+          m.${DbValueStrings.dbAyahArabic},
+          m.${DbValueStrings.dbAyahPageNumber},
+          m.${DbValueStrings.dbAyahPosition},
+          t.$translationColumn AS ${DbValueStrings.dbAyahTranslation}
+        FROM ${DbValueStrings.tableOfTranslationsAyahsFts} t
+        JOIN ${DbValueStrings.tableOfAyahs} m
+          ON m.${DbValueStrings.dbAyahId} = t.rowid
+        WHERE ${DbValueStrings.tableOfTranslationsAyahsFts} MATCH ?
+        ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
+      ''';
+
+    final String finalMatchQuery = isArabicQuery ? matchQuery : '$translationColumn:$matchQuery';
 
     final List<Map<String, Object?>> result =
-    await db.rawQuery(sql, <Object>[matchQuery]);
+    await db.rawQuery(sql, [finalMatchQuery]);
 
     return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
 
   @override
-  Future<List<AyahByAyahEntity>> getAyahsByIds({required String tableName, required List<int> ayahIds}) async {
+  Future<List<AyahByAyahEntity>> getAyahsByIds({required List<int> ayahIds, required String translationColumn}) async {
     if (ayahIds.isEmpty) return const [];
 
     final db = await _quranDatabaseService.db;
@@ -130,35 +123,26 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
     final List<Map<String, Object?>> result = await db.rawQuery(
       '''
     SELECT
-      a.${DbValueStrings.dbAyahId} AS ${DbValueStrings.dbAyahId},
-      a.${DbValueStrings.dbVerseKey} AS ${DbValueStrings.dbVerseKey},
-      a.${DbValueStrings.dbSurahNumber} AS ${DbValueStrings.dbSurahNumber},
-      a.${DbValueStrings.dbAyahNumber} AS ${DbValueStrings.dbAyahNumber},
-      a.${DbValueStrings.dbAyahArabic} AS ${DbValueStrings.dbAyahArabic},
-      a.${DbValueStrings.dbAyahPageNumber} AS ${DbValueStrings.dbAyahPageNumber},
-      a.${DbValueStrings.dbAyahPosition} AS ${DbValueStrings.dbAyahPosition},
-      t.${DbValueStrings.dbAyahTranslation} AS ${DbValueStrings.dbAyahTranslation}
+      a.${DbValueStrings.dbAyahId},
+      a.${DbValueStrings.dbVerseKey},
+      a.${DbValueStrings.dbSurahNumber},
+      a.${DbValueStrings.dbAyahNumber},
+      a.${DbValueStrings.dbAyahArabic},
+      a.${DbValueStrings.dbAyahPageNumber},
+      a.${DbValueStrings.dbAyahPosition},
+      t.$translationColumn AS ${DbValueStrings.dbAyahTranslation}
     FROM ${DbValueStrings.tableOfAyahs} a
-    LEFT JOIN $tableName t
-      ON t.${DbValueStrings.dbAyahId} = a.${DbValueStrings.dbAyahId}
+    LEFT JOIN ${DbValueStrings.tableOfTranslationsAyahsFts} t
+      ON t.rowid = a.${DbValueStrings.dbAyahId}
     WHERE a.${DbValueStrings.dbAyahId} IN ($placeholders)
     ''',
       ayahIds,
     );
 
-    final ayahs = result.map((json) => AyahByAyahModel.fromMap(json).toEntity()).toList(growable: false);
-
-    final orderMap = <int, int>{
-      for (int i = 0; i < ayahIds.length; i++) ayahIds[i]: i,
-    };
-
-    ayahs.sort((a, b) {
-      final aIndex = orderMap[a.ayahId] ?? 1 << 30;
-      final bIndex = orderMap[b.ayahId] ?? 1 << 30;
-      return aIndex.compareTo(bIndex);
-    });
-
-    return List.unmodifiable(ayahs);
+    final ayahs = result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
+    final orderMap = {for (int i = 0; i < ayahIds.length; i++) ayahIds[i]: i};
+    return List.unmodifiable(ayahs..sort((a, b) => (orderMap[a.ayahId] ?? 1 << 30).compareTo(orderMap[b.ayahId] ?? 1 << 30)),
+    );
   }
 
   bool _containsArabic(String value) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/domain/entities/translation_type.dart';
 
 class TranslationDropDown extends StatelessWidget {
   const TranslationDropDown({
@@ -11,29 +10,31 @@ class TranslationDropDown extends StatelessWidget {
     required this.onChanged,
   });
 
-  final TranslationType value;
-  final Function(TranslationType) onChanged;
+  final String value;
+  final Function(int) onChanged;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: const Text(AppStrings.semanticTranslation),
-      trailing: DropdownButton<TranslationType>(
+      trailing: DropdownButton<String>(
         borderRadius: AppStyles.mainBorder,
         elevation: 1,
         padding: AppStyles.withoutRightPaddingMini,
         alignment: Alignment.center,
         value: value,
         items: List.generate(
-          TranslationType.values.length,
+          AppStrings.ayahTranslations.length,
               (index) {
-            final type = TranslationType.values[index];
-            return DropdownMenuItem<TranslationType>(
-              value: type,
+            final translation = AppStrings.ayahTranslations[index];
+            return DropdownMenuItem<String>(
+              value: translation.name,
               child: Text(
-                AppStrings.semanticTranslationNames[index],
+                translation.name,
                 style: TextStyle(
-                  fontWeight: value == type ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: value == translation.name
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -41,8 +42,10 @@ class TranslationDropDown extends StatelessWidget {
           },
         ),
         underline: const SizedBox(),
-        onChanged: (TranslationType? newValue) {
-          if (newValue != null) onChanged(newValue);
+        onChanged: (String? newValue) {
+          if (newValue == null) return;
+          final index = AppStrings.ayahTranslations.indexWhere((t) => t.name == newValue);
+          if (index != -1) onChanged(index);
         },
       ),
     );

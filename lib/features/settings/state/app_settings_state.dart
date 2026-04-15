@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../core/strings/app_keys.dart';
-import '../../library/domain/entities/translation_type.dart';
+import '../../../core/strings/app_locale.dart';
+import '../../../core/strings/app_strings.dart';
 
 class AppSettingsState extends ChangeNotifier {
   AppSettingsState() {
@@ -14,14 +16,28 @@ class AppSettingsState extends ChangeNotifier {
 
   final Box<dynamic> _appSettingsBox = Hive.box(AppKeys.mainAppSettingsBox);
 
-  TranslationType _translationType = TranslationType.defaultTranslation;
-  TranslationType get translationType => _translationType;
+  late int _appLocaleIndex;
 
-  set translationType(TranslationType value) {
-    if (_translationType == value) return;
-    _translationType = value;
-    _appSettingsBox.put(AppKeys.keyTranslationType, value.name);
-    notifyListeners();
+  int get getAppLocaleIndex => _appLocaleIndex;
+
+  set setAppLocaleIndex(int index) {
+    if (_appLocaleIndex != index) {
+      _appLocaleIndex = index;
+      _appSettingsBox.put(AppKeys.keyAppLocaleIndex, index);
+      notifyListeners();
+    }
+  }
+
+  late int _translationNameIndex;
+
+  int get translationNameIndex => _translationNameIndex;
+
+  set translationNameIndex(int index) {
+    if (_translationNameIndex != index) {
+      _translationNameIndex = index;
+      _appSettingsBox.put(AppKeys.keyTranslationNameIndex, index);
+      notifyListeners();
+    }
   }
 
   bool _arabicNameSurah = true;
@@ -112,11 +128,12 @@ class AppSettingsState extends ChangeNotifier {
   }
 
   void _loadSettings() {
-    final savedTranslation = _appSettingsBox.get(AppKeys.keyTranslationType);
+    _appLocaleIndex = _appSettingsBox.get(AppKeys.keyAppLocaleIndex, defaultValue: _defaultLocaleIndex());
 
-    _translationType = savedTranslation != null ? TranslationType.values.firstWhere((e) => e.name == savedTranslation,
-      orElse: () => TranslationType.defaultTranslation,
-    ) : TranslationType.defaultTranslation;
+    final languageCode = AppLocale.appLocales[_appLocaleIndex].languageCode;
+    final defaultIndex = AppStrings.defaultTranslationIndex[languageCode] ?? 0;
+
+    _translationNameIndex = _appSettingsBox.get(AppKeys.keyTranslationNameIndex, defaultValue: defaultIndex);
 
     _arabicNameSurah = _appSettingsBox.get(
       AppKeys.keySurahArabicName,
@@ -149,5 +166,17 @@ class AppSettingsState extends ChangeNotifier {
 
     _ayahArabicTextSize = _appSettingsBox.get(AppKeys.keyAyahArabicTextSize, defaultValue: 19.0);
     _ayahTranslationTextSize = _appSettingsBox.get(AppKeys.keyAyahTranslationTextSize, defaultValue: 17.0);
+  }
+
+  int _defaultLocaleIndex() {
+    final deviceLocale = PlatformDispatcher.instance.locale;
+    switch (deviceLocale.languageCode) {
+      case 'ru':
+        return 0;
+      case 'en':
+        return 1;
+      default:
+        return 0;
+    }
   }
 }

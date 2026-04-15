@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:quran/features/library/presentation/state/ayah_meta_state.dart';
 
 import '../../features/library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../features/library/data/repositories/hizb_repository_impl.dart';
@@ -10,6 +9,7 @@ import '../../features/library/data/repositories/page_meta_repository_impl.dart'
 import '../../features/library/data/repositories/surah_name_repository_impl.dart';
 import '../../features/library/data/repositories/word_glyph_repository_impl.dart';
 import '../../features/library/presentation/state/ayah_by_ayah_state.dart';
+import '../../features/library/presentation/state/ayah_meta_state.dart';
 import '../../features/library/presentation/state/hizb_state.dart';
 import '../../features/library/presentation/state/juz_state.dart';
 import '../../features/library/presentation/state/main_state.dart';
@@ -77,6 +77,7 @@ class AppProviders {
     ChangeNotifierProvider<AyahByAyahState>(
       create: (context) => AyahByAyahState(
         context.read<AyahByAyahRepositoryImpl>(),
+          context.read<AppSettingsState>(),
       ),
     ),
     ChangeNotifierProvider<JuzState>(
@@ -86,6 +87,7 @@ class AppProviders {
       )..loadAllJuzs(),
     ),
     ChangeNotifierProvider<HizbState>(
+      lazy: false,
       create: (context) => HizbState(
         context.read<HizbRepositoryImpl>(),
       )..loadAllHizbs(),
@@ -98,6 +100,7 @@ class AppProviders {
     ChangeNotifierProvider<AyahMetaState>(
       create: (context) => AyahMetaState(
         context.read<AyahByAyahRepositoryImpl>(),
+        context.read<AppSettingsState>(),
       ),
     ),
     ChangeNotifierProvider<FavoritesState>(

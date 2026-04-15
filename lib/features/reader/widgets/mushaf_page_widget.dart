@@ -97,8 +97,8 @@ class _MushafPageWidgetState extends State<MushafPageWidget> {
             '${AppStrings.juz.toLowerCase()} ${mushafPageMeta?.juzNumber}',
             textDirection: TextDirection.ltr,
           ),
-          Text(
-            '${AppStrings.surah} ${mushafPageMeta?.nameTranscription}',
+          const Text(
+            '${AppStrings.surah}',
             textDirection: TextDirection.ltr,
           ),
         ],
