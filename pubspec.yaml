@@ -19,12 +19,13 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   hive_ce: ^2.19.3
   path_provider: ^2.1.5
-  wakelock_plus: ^1.5.1
+  wakelock_plus: ^1.6.0
   flutter_material_color_picker: ^1.2.0
   scrollable_positioned_list: ^0.3.8
-  share_plus: ^12.0.2
+  share_plus: ^13.0.0
   pasteboard: ^0.5.0
   arabic_justified_text: ^1.0.2
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:

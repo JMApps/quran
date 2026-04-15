@@ -17,47 +17,87 @@ class PageMetaRepositoryImpl implements PageMetaRepository {
   Future<List<PageMetaEntity>> getAllPagesMeta() async {
     final Database database = await _quranDatabaseService.db;
 
-    final List<Map<String, Object?>> result = await database.rawQuery(
+    // 1. Три лёгких запроса по индексу start_page_number.
+    final List<Map<String, Object?>> surahRows = await database.rawQuery(
       '''
-    WITH RECURSIVE pages(${DbValueStrings.dbPageNumber}) AS (
-      SELECT 1
-      UNION ALL
-      SELECT ${DbValueStrings.dbPageNumber} + 1
-      FROM pages
-      WHERE ${DbValueStrings.dbPageNumber} < ?
-    )
-    SELECT
-      p.${DbValueStrings.dbPageNumber},
-
-      (
-        SELECT s.${DbValueStrings.dbSurahNumber}
-        FROM ${DbValueStrings.tableOfSurahs} s
-        WHERE s.${DbValueStrings.dbStartNumberPage} <= p.${DbValueStrings.dbPageNumber}
-        ORDER BY s.${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderDESC}
-        LIMIT 1
-      ) AS ${DbValueStrings.dbSurahNumber},
-
-      (
-        SELECT j.${DbValueStrings.dbJuzNumber}
-        FROM ${DbValueStrings.tableOfJuzs} j
-        WHERE j.${DbValueStrings.dbStartNumberPage} <= p.${DbValueStrings.dbPageNumber}
-        ORDER BY j.${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderDESC}
-        LIMIT 1
-      ) AS ${DbValueStrings.dbJuzNumber},
-
-      (
-        SELECT h.${DbValueStrings.dbHizbNumber}
-        FROM ${DbValueStrings.tableOfHizbs} h
-        WHERE h.${DbValueStrings.dbStartNumberPage} = p.${DbValueStrings.dbPageNumber}
-        LIMIT 1
-      ) AS ${DbValueStrings.dbHizbNumber}
-
-    FROM pages p
-    ORDER BY p.${DbValueStrings.dbPageNumber} ${DbValueStrings.dbOrderASC}
-    ''',
-      [AppConstants.totalPagesCount],
+      SELECT ${DbValueStrings.dbSurahNumber}, ${DbValueStrings.dbStartNumberPage}
+      FROM ${DbValueStrings.tableOfSurahs}
+      ORDER BY ${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderASC}
+      ''',
     );
 
-    return result.where((row) => row[DbValueStrings.dbSurahNumber] != null && row[DbValueStrings.dbJuzNumber] != null,).map((row) => PageMetaModel.fromMap(row).toEntity()).toList(growable: false);
+    final List<Map<String, Object?>> juzRows = await database.rawQuery(
+      '''
+      SELECT ${DbValueStrings.dbJuzNumber}, ${DbValueStrings.dbStartNumberPage}
+      FROM ${DbValueStrings.tableOfJuzs}
+      ORDER BY ${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderASC}
+      ''',
+    );
+
+    final List<Map<String, Object?>> hizbRows = await database.rawQuery(
+      '''
+      SELECT ${DbValueStrings.dbHizbNumber}, ${DbValueStrings.dbStartNumberPage}
+      FROM ${DbValueStrings.tableOfHizbs}
+      ''',
+    );
+
+    final int totalPages = AppConstants.totalPagesCount;
+
+    final List<int> surahPerPage = _expandRanges(
+      rows: surahRows,
+      numberKey: DbValueStrings.dbSurahNumber,
+      startPageKey: DbValueStrings.dbStartNumberPage,
+      totalPages: totalPages,
+    );
+
+    final List<int> juzPerPage = _expandRanges(
+      rows: juzRows,
+      numberKey: DbValueStrings.dbJuzNumber,
+      startPageKey: DbValueStrings.dbStartNumberPage,
+      totalPages: totalPages,
+    );
+
+    final Map<int, int> hizbByPage = {
+      for (final row in hizbRows)
+        row[DbValueStrings.dbStartNumberPage] as int:
+        row[DbValueStrings.dbHizbNumber] as int,
+    };
+
+    // 3. Собираем метаданные по каждой странице.
+    final List<PageMetaEntity> pagesMeta = List<PageMetaEntity>.generate(
+      totalPages,
+          (int i) {
+        final int pageNumber = i + 1;
+        final PageMetaModel model = PageMetaModel(
+          pageNumber: pageNumber,
+          surahNumber: surahPerPage[i],
+          juzNumber: juzPerPage[i],
+          hizbNumber: hizbByPage[pageNumber],
+        );
+        return model.toEntity();
+      },
+      growable: false,
+    );
+
+    return pagesMeta;
+  }
+
+  List<int> _expandRanges({required List<Map<String, Object?>> rows, required String numberKey, required String startPageKey, required int totalPages}) {
+    final List<int> result = List<int>.filled(totalPages, 0);
+    if (rows.isEmpty) return result;
+
+    int currentNumber = rows.first[numberKey] as int;
+    int rowIndex = 0;
+
+    for (int page = 1; page <= totalPages; page++) {
+      while (rowIndex + 1 < rows.length &&
+          (rows[rowIndex + 1][startPageKey] as int) <= page) {
+        rowIndex++;
+        currentNumber = rows[rowIndex][numberKey] as int;
+      }
+      result[page - 1] = currentNumber;
+    }
+
+    return result;
   }
 }

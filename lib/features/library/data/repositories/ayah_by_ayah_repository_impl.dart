@@ -100,7 +100,7 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
         FROM ${DbValueStrings.tableOfTranslationsAyahsFts} t
         JOIN ${DbValueStrings.tableOfAyahs} m
           ON m.${DbValueStrings.dbAyahId} = t.rowid
-        WHERE ${DbValueStrings.tableOfTranslationsAyahsFts} MATCH ?
+        WHERE t.$translationColumn MATCH ?
         ORDER BY m.${DbValueStrings.dbSurahNumber} ASC, m.${DbValueStrings.dbAyahNumber} ASC
       ''';
 
@@ -130,7 +130,7 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       a.${DbValueStrings.dbAyahArabic},
       a.${DbValueStrings.dbAyahPageNumber},
       a.${DbValueStrings.dbAyahPosition},
-      t.$translationColumn AS ${DbValueStrings.dbAyahTranslation}
+      COALESCE(t.$translationColumn, '') AS ${DbValueStrings.dbAyahTranslation}
     FROM ${DbValueStrings.tableOfAyahs} a
     LEFT JOIN ${DbValueStrings.tableOfTranslationsAyahsFts} t
       ON t.rowid = a.${DbValueStrings.dbAyahId}

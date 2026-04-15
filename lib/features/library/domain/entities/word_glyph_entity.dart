@@ -1,4 +1,6 @@
-class WordGlyphEntity {
+import 'package:equatable/equatable.dart';
+
+class WordGlyphEntity extends Equatable {
   final int id;
   final String location;
   final int surah;
@@ -18,4 +20,7 @@ class WordGlyphEntity {
   });
 
   bool get isAyahEnd => charType == 1;
+
+  @override
+  List<Object?> get props => [id];
 }

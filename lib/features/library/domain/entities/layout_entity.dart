@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'line_type.dart';
 
-class LayoutEntity {
+class LayoutEntity extends Equatable {
   final int pageNumber;
   final int lineNumber;
   final LineType lineType;
@@ -18,4 +19,7 @@ class LayoutEntity {
     required this.lastWordId,
     required this.surahNumber,
   });
+
+  @override
+  List<Object?> get props => [pageNumber, lineNumber];
 }

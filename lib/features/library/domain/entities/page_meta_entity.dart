@@ -1,4 +1,6 @@
-class PageMetaEntity {
+import 'package:equatable/equatable.dart';
+
+class PageMetaEntity extends Equatable {
   final int pageNumber;
   final int surahNumber;
   final int juzNumber;
@@ -10,4 +12,7 @@ class PageMetaEntity {
     required this.juzNumber,
     required this.hizbNumber,
   });
+
+  @override
+  List<Object?> get props => [pageNumber, surahNumber, juzNumber, hizbNumber];
 }

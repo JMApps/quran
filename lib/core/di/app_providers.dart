@@ -72,6 +72,7 @@ class AppProviders {
       lazy: false,
       create: (context) => SurahNameState(
         context.read<SurahNameRepositoryImpl>(),
+        context.read<AppSettingsState>(),
       )..loadAllSurahNames(),
     ),
     ChangeNotifierProvider<AyahByAyahState>(

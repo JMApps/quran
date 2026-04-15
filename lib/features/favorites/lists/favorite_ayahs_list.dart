@@ -16,7 +16,7 @@ class FavoriteAyahsList extends StatefulWidget {
 }
 
 class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
-  late FavoritesState _favoritesState;
+  late final FavoritesState _favoritesState;
 
   @override
   void initState() {
@@ -42,16 +42,14 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
 
     await Provider.of<AyahMetaState>(context, listen: false).syncFavoriteAyahs(
       ayahIds: ayahIds,
-
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final bottomHeight = kBottomNavigationBarHeight + 14;
-
-    return Consumer2<FavoritesState, AyahMetaState>(
-      builder: (context, bookmarksState, ayahMetaState, _) {
+    return Consumer<AyahMetaState>(
+      builder: (context, ayahMetaState, _) {
         if (ayahMetaState.isLoading) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
@@ -69,7 +67,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
           );
         }
 
-        final favoriteAyahsList = ayahMetaState.resolveAyahs(bookmarksState.favoriteAyahIds);
+        final favoriteAyahsList = ayahMetaState.resolveAyahs(_favoritesState.favoriteAyahIds);
 
         if (favoriteAyahsList.isEmpty) {
           return const Center(

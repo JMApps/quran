@@ -66,9 +66,9 @@ class AppSettingsPage extends StatelessWidget {
                 ),
                 const Divider(indent: 14, endIndent: 14),
                 TranslationDropDown(
-                  value: AppStrings.ayahTranslations[appSettingsState.translationNameIndex].name,
-                  onChanged: (value) {
-                    appSettingsState.translationNameIndex = value;
+                  selectedIndex: appSettingsState.translationNameIndex,
+                  onChanged: (index) {
+                    appSettingsState.translationNameIndex = index;
                   },
                 ),
                 const Divider(indent: 14, endIndent: 14),

@@ -1,4 +1,6 @@
-class SurahNameEntity {
+import 'package:equatable/equatable.dart';
+
+class SurahNameEntity extends Equatable {
   final int surahNumber;
   final String nameTranslation;
   final String nameTranscription;
@@ -18,4 +20,7 @@ class SurahNameEntity {
     required this.basmallaPre,
     required this.startPageNumber,
   });
+
+  @override
+  List<Object?> get props => [surahNumber, nameTranslation, nameTranscription];
 }

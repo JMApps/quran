@@ -1,4 +1,6 @@
-class AyahByAyahEntity {
+import 'package:equatable/equatable.dart';
+
+class AyahByAyahEntity extends Equatable {
   final int ayahId;
   final String verseKey;
   final int surahNumber;
@@ -18,4 +20,16 @@ class AyahByAyahEntity {
     required this.ayahPageNumber,
     required this.ayahPosition,
   });
+
+  @override
+  List<Object?> get props => [
+    ayahId,
+    verseKey,
+    surahNumber,
+    ayahNumber,
+    ayahArabic,
+    ayahTranslation,
+    ayahPageNumber,
+    ayahPosition,
+  ];
 }

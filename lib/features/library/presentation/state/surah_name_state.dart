@@ -1,13 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:quran/core/strings/app_locale.dart';
 
+import '../../../settings/state/app_settings_state.dart';
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/repositories/surah_name_repository.dart';
 
 class SurahNameState extends ChangeNotifier {
   final SurahNameRepository _surahNameRepository;
+  final AppSettingsState _appSettingsState;
 
-  SurahNameState(this._surahNameRepository);
+  SurahNameState(this._surahNameRepository, this._appSettingsState) {
+    _appSettingsState.addListener(_onSettingsChanged);
+  }
+
+  void _onSettingsChanged() {
+    refreshAllSurahs();
+    notifyListeners();
+  }
 
   int _pageNumber = 1;
   bool _showAppBar = true;
@@ -57,8 +66,7 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      /* TODO передать индекс языка */
-      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[0].languageCode);
+      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[_appSettingsState.getAppLocaleIndex].languageCode);
       _surahMap..clear()..addEntries(_allSurahs.map((s) => MapEntry(s.surahNumber, s)));
       _isLoaded = true;
     } catch (e) {
@@ -77,4 +85,10 @@ class SurahNameState extends ChangeNotifier {
   }
 
   Future<void> refreshAllSurahs() => _loadData(force: true);
+
+  @override
+  void dispose() {
+    _appSettingsState.removeListener(_onSettingsChanged);
+    super.dispose();
+  }
 }
