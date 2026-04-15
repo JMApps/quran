@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
+import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../items/favorite_page_item.dart';
 
 class FavoritePagesList extends StatelessWidget {
@@ -14,7 +16,7 @@ class FavoritePagesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomHeight = kBottomNavigationBarHeight + 14;
-
+    final SurahNameState surahNameState = context.read<SurahNameState>();
     return Consumer2<FavoritesState, PageMetaState>(
       builder: (context, bookmarksState, pageMetaState, _) {
         if (pageMetaState.isLoading) {
@@ -55,9 +57,11 @@ class FavoritePagesList extends StatelessWidget {
             itemCount: favoritePagesList.length,
             itemBuilder: (context, index) {
               final PageMetaEntity pageMetaModel = favoritePagesList[index];
+              final SurahNameEntity? surahInfo = surahNameState.getSurahByNumber(surahNumber: pageMetaModel.surahNumber);
               return FavoritePageItem(
                 mushafPageMetaModel: pageMetaModel,
                 index: index,
+                surahNameTranscription: surahInfo!.nameTranscription,
               );
             },
           ),

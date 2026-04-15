@@ -34,7 +34,7 @@ class CleanFavoritesButton extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  Provider.of<FavoritesState>(context, listen: false).clearAllFavorites();
+                                  context.read<FavoritesState>().clearAllFavorites();
                                 },
                                 child: const Text(
                                   AppStrings.delete,
@@ -75,6 +75,7 @@ class CleanFavoritesButton extends StatelessWidget {
           },
         );
       },
+      tooltip: AppStrings.deleteAllFavorites,
       icon: const Icon(Icons.delete_rounded),
     );
   }

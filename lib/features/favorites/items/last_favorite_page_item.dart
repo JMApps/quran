@@ -6,33 +6,32 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
-import '../../library/presentation/state/surah_name_state.dart';
+import '../../library/presentation/state/main_state.dart';
 
 class LastFavoritePageItem extends StatelessWidget {
   const LastFavoritePageItem({
     super.key,
     required this.mushafPageMetaModel,
     required this.index,
+    required this.surahNameTranscription,
   });
 
   final PageMetaEntity mushafPageMetaModel;
   final int index;
+  final String surahNameTranscription;
 
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     final itemOddColor = appColors.secondary.withAlpha(25);
     final itemEvenColor = appColors.secondary.withAlpha(05);
-    final surahModel = context.read<SurahNameState>().getSurahById(
-      surahNumber: mushafPageMetaModel.surahNumber,
-    );
     return InkWell(
       onTap: () {
-        final surahState = Provider.of<SurahNameState>(context, listen: false);
+        final mainState = context.read<MainState>();
+        mainState.setCurrentPage(mushafPageMetaModel.pageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: mushafPageMetaModel.pageNumber,
         );
-        surahState.setCurrentPage(mushafPageMetaModel.pageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
@@ -64,7 +63,7 @@ class LastFavoritePageItem extends StatelessWidget {
                 crossAxisAlignment: .stretch,
                 children: [
                   Text(
-                    '${AppStrings.surah} ${surahModel!.nameTranscription}',
+                    '${AppStrings.surah} $surahNameTranscription',
                     textAlign: .start,
                   ),
                   Text(

@@ -6,6 +6,7 @@ import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/ayah_meta_state.dart';
 import '../../library/presentation/state/favorites_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../items/favorite_ayah_item.dart';
 
 class FavoriteAyahsList extends StatefulWidget {
@@ -39,7 +40,6 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
   Future<void> _load() async {
     if (!mounted) return;
     final ayahIds = _favoritesState.favoriteAyahIds;
-
     await Provider.of<AyahMetaState>(context, listen: false).syncFavoriteAyahs(
       ayahIds: ayahIds,
     );
@@ -48,6 +48,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
   @override
   Widget build(BuildContext context) {
     final bottomHeight = kBottomNavigationBarHeight + 14;
+    final SurahNameState surahNameState = context.read<SurahNameState>();
     return Consumer<AyahMetaState>(
       builder: (context, ayahMetaState, _) {
         if (ayahMetaState.isLoading) {
@@ -88,9 +89,11 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
             itemCount: favoriteAyahsList.length,
             itemBuilder: (context, index) {
               final AyahByAyahEntity ayahByAyahModel = favoriteAyahsList[index];
+              final String surahInfo = surahNameState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey);
               return FavoriteAyahItem(
                 ayahByAyahModel: ayahByAyahModel,
                 index: index,
+                surahInfo: surahInfo,
               );
             },
           ),
