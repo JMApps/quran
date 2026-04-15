@@ -34,7 +34,7 @@ class ToHizbsPageButton extends StatelessWidget {
               useSafeArea: true,
               isScrollControlled: true,
               builder: (context) {
-                return HizbsList(hizbsList: hizbState.allHizbs);
+                return HizbsList(allHizbs: hizbState.allHizbs);
               },
             );
           },

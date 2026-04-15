@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../../search/pages/search_ayahs_delegate.dart';
+import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/surah_name_state.dart';
 import '../lists/surahs_name_list.dart';
 
@@ -75,9 +76,11 @@ class SurahNamePage extends StatelessWidget {
             );
           }
 
+          final List<SurahNameEntity> allSurahs = surahState.allSurahs;
+
           return SurahsNameList(
             scrollController: scrollController,
-            surahsList: surahState.allSurahs,
+            allSurahs: allSurahs,
           );
         },
       ),

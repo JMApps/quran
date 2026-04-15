@@ -16,42 +16,23 @@ class SearchAyahsBody extends StatelessWidget {
 
   final String query;
 
-  List<String> _extractTokens(String value) {
-    final String cleaned = value.replaceAll('\u00A0', ' ').replaceAll(RegExp(r'[^\p{L}\p{N}\s]', unicode: true), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-    if (cleaned.isEmpty) return const <String>[];
-    return cleaned.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false);
-  }
-
-  int _countOccurrencesInText({required String text, required List<String> tokens, required bool caseSensitive}) {
-    if (text.isEmpty || tokens.isEmpty) return 0;
-
-    int total = 0;
-    for (final token in tokens) {
-      total += RegExp(
-        RegExp.escape(token),
-        caseSensitive: caseSensitive,
-        unicode: true,
-      ).allMatches(text).length;
-    }
-    return total;
-  }
-
   int _countSearchMatches({required List<AyahByAyahEntity> result, required String query}) {
     final String trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) return 0;
 
     final bool isArabicQuery = AppStrings.containsArabic(trimmedQuery);
     final String effectiveQuery = isArabicQuery ? AyahByAyahRepositoryImpl.normalizeArabic(trimmedQuery) : trimmedQuery;
-    final List<String> tokens = _extractTokens(effectiveQuery);
-    if (tokens.isEmpty) return 0;
+
+    if (effectiveQuery.isEmpty) return 0;
 
     int total = 0;
     for (final ayah in result) {
-      total += _countOccurrencesInText(
-        text: isArabicQuery ? ayah.ayahArabic : ayah.ayahTranslation,
-        tokens: tokens,
+      final text = isArabicQuery ? ayah.ayahArabic : ayah.ayahTranslation;
+      total += RegExp(
+        RegExp.escape(effectiveQuery),
         caseSensitive: isArabicQuery,
-      );
+        unicode: true,
+      ).allMatches(text).length;
     }
     return total;
   }

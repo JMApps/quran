@@ -7,7 +7,6 @@ import '../../../../../core/theme/app_styles.dart';
 import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/main_state.dart';
-import '../../state/surah_name_state.dart';
 
 class SurahNameItem extends StatelessWidget {
   const SurahNameItem({

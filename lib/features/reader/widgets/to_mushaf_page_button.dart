@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../library/presentation/state/surah_name_state.dart';
+import '../../library/presentation/state/main_state.dart';
 
 class ToMushafPageButton extends StatelessWidget {
   const ToMushafPageButton({
@@ -24,8 +24,8 @@ class ToMushafPageButton extends StatelessWidget {
               margin: AppStyles.topMiniPadding,
               padding: AppStyles.withoutTopPadding,
               height: 65,
-              child: Consumer<SurahNameState>(
-                builder: (context, surahState, _) {
+              child: Consumer<MainState>(
+                builder: (context, mainState, _) {
                   return SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       trackHeight: 1.75,
@@ -35,16 +35,16 @@ class ToMushafPageButton extends StatelessWidget {
                       textDirection: .rtl,
                       child: Slider(
                         showValueIndicator: .alwaysVisible,
-                        value: surahState.currentPage.toDouble(),
-                        label: '${surahState.currentPage}',
+                        value: mainState.currentPage.toDouble(),
+                        label: '${mainState.currentPage}',
                         min: 1,
                         max: 604,
                         divisions: 604,
                         onChanged: (double value) {
-                          surahState.setCurrentPage(value.round());
+                          mainState.setCurrentPage(value.round());
                         },
                         onChangeEnd: (double value) {
-                          surahState.setCurrentPage(value.round());
+                          mainState.setCurrentPage(value.round());
                           if (mushafPageController.hasClients) {
                             mushafPageController.jumpToPage(value.toInt() - 1);
                           }

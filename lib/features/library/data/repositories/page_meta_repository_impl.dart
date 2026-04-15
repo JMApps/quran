@@ -17,7 +17,6 @@ class PageMetaRepositoryImpl implements PageMetaRepository {
   Future<List<PageMetaEntity>> getAllPagesMeta() async {
     final Database database = await _quranDatabaseService.db;
 
-    // 1. Три лёгких запроса по индексу start_page_number.
     final List<Map<String, Object?>> surahRows = await database.rawQuery(
       '''
       SELECT ${DbValueStrings.dbSurahNumber}, ${DbValueStrings.dbStartNumberPage}
@@ -38,6 +37,7 @@ class PageMetaRepositoryImpl implements PageMetaRepository {
       '''
       SELECT ${DbValueStrings.dbHizbNumber}, ${DbValueStrings.dbStartNumberPage}
       FROM ${DbValueStrings.tableOfHizbs}
+      ORDER BY ${DbValueStrings.dbStartNumberPage} ${DbValueStrings.dbOrderASC}
       ''',
     );
 
@@ -65,8 +65,7 @@ class PageMetaRepositoryImpl implements PageMetaRepository {
 
     // 3. Собираем метаданные по каждой странице.
     final List<PageMetaEntity> pagesMeta = List<PageMetaEntity>.generate(
-      totalPages,
-          (int i) {
+      totalPages, (int i) {
         final int pageNumber = i + 1;
         final PageMetaModel model = PageMetaModel(
           pageNumber: pageNumber,
@@ -90,8 +89,7 @@ class PageMetaRepositoryImpl implements PageMetaRepository {
     int rowIndex = 0;
 
     for (int page = 1; page <= totalPages; page++) {
-      while (rowIndex + 1 < rows.length &&
-          (rows[rowIndex + 1][startPageKey] as int) <= page) {
+      while (rowIndex + 1 < rows.length && (rows[rowIndex + 1][startPageKey] as int) <= page) {
         rowIndex++;
         currentNumber = rows[rowIndex][numberKey] as int;
       }

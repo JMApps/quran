@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/presentation/state/main_state.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -65,7 +66,8 @@ class SearchAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        surahState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
+        final mainState = context.read<MainState>();
+        mainState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition,

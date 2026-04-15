@@ -14,5 +14,10 @@ class PageMetaEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [pageNumber, surahNumber, juzNumber, hizbNumber];
+  List<Object?> get props => [
+    pageNumber,
+    surahNumber,
+    juzNumber,
+    hizbNumber,
+  ];
 }

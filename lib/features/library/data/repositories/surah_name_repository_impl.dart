@@ -18,18 +18,18 @@ class SurahNameRepositoryImpl implements SurahNameRepository {
     final Database database = await _quranDatabaseService.db;
 
     final List<Map<String, Object?>> allSurahs = await database.rawQuery('''
-    SELECT
-      ${DbValueStrings.dbSurahNumber},
-      ${cols.transcription} AS ${DbValueStrings.dbNameTranscription},
-      ${cols.translation}  AS ${DbValueStrings.dbNameTranslation},
-      ${DbValueStrings.dbRevelationOrder},
-      ${DbValueStrings.dbRevelationPlace},
-      ${DbValueStrings.dbAyahCount},
-      ${DbValueStrings.dbBismillahPre},
-      ${DbValueStrings.dbStartNumberPage}
-    FROM ${DbValueStrings.tableOfSurahs}
-    ORDER BY ${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC}
-  ''');
+        SELECT
+          ${DbValueStrings.dbSurahNumber},
+          ${cols.transcription} AS ${DbValueStrings.dbNameTranscription},
+          ${cols.translation} AS ${DbValueStrings.dbNameTranslation},
+          ${DbValueStrings.dbRevelationOrder},
+          ${DbValueStrings.dbRevelationPlace},
+          ${DbValueStrings.dbAyahCount},
+          ${DbValueStrings.dbBismillahPre},
+          ${DbValueStrings.dbStartNumberPage}
+        FROM ${DbValueStrings.tableOfSurahs}
+        ORDER BY ${DbValueStrings.dbSurahNumber} ${DbValueStrings.dbOrderASC}
+     ''');
 
     return allSurahs.map((row) => SurahNameModel.fromMap(row).toEntity()).toList(growable: false);
   }

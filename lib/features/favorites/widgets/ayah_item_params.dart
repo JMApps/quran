@@ -21,11 +21,7 @@ class AyahItemParams extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
     final surahState = Provider.of<SurahNameState>(context, listen: false);
-    final String surahInfo = surahState.getSurahNameWithAyah(
-      surah: AppStrings.surah,
-      ayah: AppStrings.ayah,
-      verseKey: ayahByAyahModel.verseKey,
-    );
+    final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey);
     return Column(
       mainAxisSize: .min,
       crossAxisAlignment: .stretch,

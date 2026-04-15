@@ -94,6 +94,7 @@ class AppProviders {
       )..loadAllHizbs(),
     ),
     ChangeNotifierProvider<PageMetaState>(
+      lazy: false,
       create: (context) => PageMetaState(
         context.read<PageMetaRepositoryImpl>(),
       )..loadAllPagesMeta(),

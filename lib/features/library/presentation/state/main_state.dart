@@ -10,4 +10,14 @@ class MainState extends ChangeNotifier {
     _mainNavigatorIndex = index;
     notifyListeners();
   }
+
+  int _pageNumber = 1;
+
+  int get currentPage => _pageNumber;
+
+  void setCurrentPage(int page) {
+    if (_pageNumber == page) return;
+    _pageNumber = page;
+    notifyListeners();
+  }
 }

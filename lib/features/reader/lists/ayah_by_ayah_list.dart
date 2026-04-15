@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../library/data/mappers/ayah_list_row_builder.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/domain/entities/ayah_list_row.dart';
 import '../../library/domain/entities/ayah_list_row_type.dart';
+import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
+import '../../library/presentation/state/main_state.dart';
+import '../../library/presentation/state/page_meta_state.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 import '../items/ayah_by_ayah_item.dart';
 import '../items/basmallah_item.dart';
 import '../items/surah_header_item.dart';
@@ -15,12 +20,10 @@ class AyahByAyahList extends StatefulWidget {
   const AyahByAyahList({
     super.key,
     required this.ayahsPage,
-    required this.allSurahs,
     required this.ayahPosition,
   });
 
   final List<AyahByAyahEntity> ayahsPage;
-  final List<SurahNameEntity> allSurahs;
   final int ayahPosition;
 
   @override
@@ -55,20 +58,20 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
 
   @override
   Widget build(BuildContext context) {
+    final int currentPage = context.select<MainState, int>((s) => s.currentPage);
+    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPage));
+    final surahModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: mushafPageMeta!.surahNumber));
     final rows = const AyahListRowBuilder().build(widget.ayahsPage);
-    final surahNamesMap = <int, String>{
-      for (final surah in widget.allSurahs) surah.surahNumber: surah.nameTranscription,
-    };
     return ScrollablePositionedList.builder(
       itemScrollController: _itemScrollController,
       padding: AppStyles.vrMainPadding,
       itemCount: rows.length,
       itemBuilder: (context, index) {
-        final row = rows[index];
+        final AyahListRow row = rows[index];
         switch (row.type) {
           case AyahListRowType.surahHeader:
             return SurahHeaderItem(
-              surahName: surahNamesMap[row.surahNumber] ?? '${AppStrings.surah} ${row.surahNumber}',
+              surahName: surahModel!.nameTranscription,
               surahNumber: row.surahNumber!,
             );
 

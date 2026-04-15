@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/core/strings/app_strings.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
@@ -11,10 +12,16 @@ class SurahDetailItem extends StatefulWidget {
   const SurahDetailItem({
     super.key,
     required this.index,
+    required this.surahNameTranscription,
+    required this.pageNumber,
+    required this.juzNumber,
     required this.ayahPosition,
   });
 
   final int index;
+  final String surahNameTranscription;
+  final int pageNumber;
+  final int juzNumber;
   final int ayahPosition;
 
   @override
@@ -39,9 +46,15 @@ class _SurahDetailItemState extends State<SurahDetailItem> with AutomaticKeepAli
     super.build(context);
 
     final translationEnabled = context.select<PageMetaState, bool>((s) => s.translationEnabled);
-    final isLoaded = context.select<AyahByAyahState, bool>((s) => s.isPageLoaded(pageNumber: _pageNumber));
-    final error = context.select<AyahByAyahState, Object?>((s) => s.getPageError(pageNumber: _pageNumber));
-    final ayahsPage = context.select<AyahByAyahState, List<AyahByAyahEntity>>((s) => s.getPageAyahs(pageNumber: _pageNumber));
+    final isLoaded = context.select<AyahByAyahState, bool>(
+      (s) => s.isPageLoaded(pageNumber: _pageNumber),
+    );
+    final error = context.select<AyahByAyahState, Object?>(
+      (s) => s.getPageError(pageNumber: _pageNumber),
+    );
+    final ayahsPage = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
+      (s) => s.getPageAyahs(pageNumber: _pageNumber),
+    );
 
     if (error != null) {
       return const Center(child: Icon(Icons.error_rounded));
@@ -60,14 +73,32 @@ class _SurahDetailItemState extends State<SurahDetailItem> with AutomaticKeepAli
       );
     }
 
-    return const Center(
-      child: Padding(
-        padding: AppStyles.mainPadding,
-        child: Text(
-          'Рендер страницы мусхафа на стадии разработки',
-          style: AppStyles.mainTextStyle18,
-          textAlign: TextAlign.center,
-        ),
+    return Container(
+      padding: AppStyles.mainPadding,
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text('${AppStrings.surah} ${widget.surahNameTranscription}'),
+              Text('${AppStrings.juz} ${widget.juzNumber}'),
+            ],
+          ),
+          const Expanded(
+            child: Center(
+              child: Text(
+                'Рендер страницы мусхафа на стадии разработки',
+                style: AppStyles.mainTextStyle18,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Text(
+            widget.pageNumber.toString(),
+            textAlign: .center,
+          ),
+        ],
       ),
     );
   }

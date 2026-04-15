@@ -6,6 +6,8 @@ class DbValueStrings {
   };
 
   static const String tableOfTranslationsAyahsFts = 'Table_of_translations_fts';
+  static const String tableOfAyahsFts = 'ayahs_fts';
+  static const String tableOfTranslations = 'Table_of_translations';
 
   static const String tableOfSurahs = 'Table_of_surahs';
   static const String dbLocale = 'locale';
