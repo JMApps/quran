@@ -42,12 +42,15 @@ class DbValueStrings {
   static const String dbFirstWordId = 'first_word_id';
   static const String dbLastWordId = 'last_word_id';
 
-  static const String tableOfWordsGlyph = 'Table_of_words_glyph';
+  static const String tableOfGlyphsWords = 'Table_of_glyphs_words';
   static const String dbId = 'id';
   static const String dbLocation = 'location';
   static const String dbSurah = 'surah';
   static const String dbAyah = 'ayah';
   static const String dbWord = 'word';
+  static const String dbWholeWord = 'whole_word';
+  static const String dbWordNumber = 'word_number';
+  static const String dbGlyph = 'glyph';
   static const String dbText = 'text';
   static const String dbCharType = 'char_type';
 

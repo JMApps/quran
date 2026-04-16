@@ -1,4 +1,5 @@
 import '../../features/library/domain/entities/line_type.dart';
+import 'app_constants.dart';
 
 class AppStrings {
   static const String basmaLlah = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيم';
@@ -67,7 +68,7 @@ class AppStrings {
   static const String fontGilroyMedium = 'Gilroy Medium';
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
-  static const String fontSurahName = 'Surah name';
+  static const String fontSurahName = 'SurahName';
 
   static const String foundOne = 'найден';
   static const String foundFew = 'найдено';
@@ -144,9 +145,9 @@ class AppStrings {
   }
 
   static String surahNameByNumber(int surahNumber) {
-    if (surahNumber < 1 || surahNumber > 114) {
+    if (surahNumber < 1 || surahNumber > AppConstants.totalSurahsCount) {
       throw StateError('Invalid surah number: $surahNumber');
     }
-    return 'surah${surahNumber.toString().padLeft(3, '0')}';
+    return String.fromCharCode(0xE000 + surahNumber);
   }
 }

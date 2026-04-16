@@ -10,7 +10,6 @@ class BasmallahItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = Theme.of(context).colorScheme;
     return Padding(
       padding: AppStyles.bottomMainPadding,
       child: Consumer<AppSettingsState>(
@@ -21,7 +20,6 @@ class BasmallahItem extends StatelessWidget {
             style: TextStyle(
               fontSize: appSettingsState.ayahArabicTextSize,
               fontFamily: AppStrings.fontUthmanicHafs,
-              color: appColors.primary,
             ),
             textAlign: .center,
           );

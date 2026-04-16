@@ -1,4 +1,4 @@
-name: Quran
+name: quran
 description: "Quran"
 
 publish_to: 'none'
@@ -57,3 +57,33 @@ flutter:
     - family: 'Surah name'
       fonts:
         - asset: assets/fonts/surah_name_v2.ttf
+    - family: 'P1'
+      fonts:
+        - asset: assets/pagefonts/p1.ttf
+    - family: 'P2'
+      fonts:
+        - asset: assets/pagefonts/p2.ttf
+    - family: 'P3'
+      fonts:
+        - asset: assets/pagefonts/p3.ttf
+    - family: 'P4'
+      fonts:
+        - asset: assets/pagefonts/p4.ttf
+    - family: 'P5'
+      fonts:
+        - asset: assets/pagefonts/p5.ttf
+    - family: 'P6'
+      fonts:
+        - asset: assets/pagefonts/p6.ttf
+    - family: 'P7'
+      fonts:
+        - asset: assets/pagefonts/p7.ttf
+    - family: 'P8'
+      fonts:
+        - asset: assets/pagefonts/p8.ttf
+    - family: 'P9'
+      fonts:
+        - asset: assets/pagefonts/p9.ttf
+    - family: 'P10'
+      fonts:
+        - asset: assets/pagefonts/p10.ttf

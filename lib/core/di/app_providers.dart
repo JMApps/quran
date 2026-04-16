@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:quran/features/library/data/repositories/word_glyph_repository_impl.dart';
+import 'package:quran/features/library/presentation/state/word_glyph_state.dart';
 
 import '../../features/library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../features/library/data/repositories/hizb_repository_impl.dart';
@@ -36,6 +38,9 @@ class AppProviders {
   ];
 
   static List<SingleChildWidget> _repositoryProviders(QuranDatabaseService databaseService) => [
+    Provider<WordGlyphRepositoryImpl>(
+      create: (_) => WordGlyphRepositoryImpl(databaseService),
+    ),
     Provider<SurahNameRepositoryImpl>(
       create: (_) => SurahNameRepositoryImpl(databaseService),
     ),
@@ -54,6 +59,12 @@ class AppProviders {
   ];
 
   static List<SingleChildWidget> _stateProviders() => [
+    ChangeNotifierProvider<WordGlyphState>(
+      lazy: false,
+      create: (context) => WordGlyphState(
+        context.read<WordGlyphRepositoryImpl>(),
+      ),
+    ),
     ChangeNotifierProvider<SurahNameState>(
       lazy: false,
       create: (context) => SurahNameState(

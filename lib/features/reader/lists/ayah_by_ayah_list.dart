@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -7,11 +6,6 @@ import '../../library/data/mappers/ayah_list_row_builder.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/domain/entities/ayah_list_row.dart';
 import '../../library/domain/entities/ayah_list_row_type.dart';
-import '../../library/domain/entities/page_meta_entity.dart';
-import '../../library/domain/entities/surah_name_entity.dart';
-import '../../library/presentation/state/main_state.dart';
-import '../../library/presentation/state/page_meta_state.dart';
-import '../../library/presentation/state/surah_name_state.dart';
 import '../items/ayah_by_ayah_item.dart';
 import '../items/basmallah_item.dart';
 import '../items/surah_header_item.dart';

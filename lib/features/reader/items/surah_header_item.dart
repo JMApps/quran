@@ -25,22 +25,27 @@ class SurahHeaderItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: appColors.secondaryContainer.withAlpha(120),
         borderRadius: AppStyles.mainBorder,
+        border: Border.all(
+          width: 1.15,
+          color: appColors.primary,
+        ),
       ),
       child: Column(
         children: [
           Text(
             AppStrings.surahNameByNumber(surahNumber),
-            style: const TextStyle(
-                fontSize: 35.0,
-                fontFamily: AppStrings.fontSurahName,
-                height: 1
+            style: TextStyle(
+              fontSize: 35.0,
+              fontFamily: AppStrings.fontSurahName,
+              height: 1,
+              color: appColors.primary,
             ),
             textDirection: .ltr,
             textAlign: .center,
           ),
           Text(
             '${AppStrings.surah} ${surahModel!.nameTranscription}',
-            style: AppStyles.mainTextStyle18,
+            style: AppStyles.mainTextStyle16,
             textAlign: .center,
           ),
         ],

@@ -21,23 +21,36 @@ class LayoutModel {
     this.surahNumber,
   });
 
-  static bool _asBool01(Object? v) {
-    if (v is bool) return v;
-    if (v is int) return v == 1;
-    if (v is num) return v.toInt() == 1;
-    if (v is String) return v == '1' || v.toLowerCase() == 'true';
+  static bool _asBool01(Object? value) {
+    if (value is bool) return value;
+    if (value is int) return value == 1;
+    if (value is num) return value.toInt() == 1;
+    if (value is String) {
+      final normalized = value.trim().toLowerCase();
+      return normalized == '1' || normalized == 'true';
+    }
     return false;
+  }
+
+  static int? _asNullableInt(Object? value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 
   factory LayoutModel.fromMap(Map<String, Object?> map) {
     return LayoutModel(
       pageNumber: map[DbValueStrings.dbPageNumber] as int,
       lineNumber: map[DbValueStrings.dbLineNumber] as int,
-      lineType: AppStrings.lineTypeFromDb((map[DbValueStrings.dbLineType]).toString()),
+      lineType: AppStrings.lineTypeFromDb(
+        map[DbValueStrings.dbLineType].toString(),
+      ),
       isCentered: _asBool01(map[DbValueStrings.dbIsCentered]),
-      firstWordId: map[DbValueStrings.dbFirstWordId] as int?,
-      lastWordId: map[DbValueStrings.dbLastWordId] as int?,
-      surahNumber: map[DbValueStrings.dbSurahNumber] != null ? map[DbValueStrings.dbSurahNumber] as int : null,
+      firstWordId: _asNullableInt(map[DbValueStrings.dbFirstWordId]),
+      lastWordId: _asNullableInt(map[DbValueStrings.dbLastWordId]),
+      surahNumber: _asNullableInt(map[DbValueStrings.dbSurahNumber]),
     );
   }
 }

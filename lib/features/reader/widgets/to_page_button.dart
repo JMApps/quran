@@ -1,9 +1,9 @@
-import 'package:Quran/core/strings/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../core/strings/app_constants.dart';
 import '../../library/presentation/state/main_state.dart';
 
 class ToPageButton extends StatelessWidget {
