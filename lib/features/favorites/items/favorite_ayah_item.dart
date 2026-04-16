@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/presentation/state/main_state.dart';
 
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/arguments/surah_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
+import '../../library/presentation/state/main_state.dart';
 import '../../settings/state/app_settings_state.dart';
 import '../widgets/ayah_item_params.dart';
 

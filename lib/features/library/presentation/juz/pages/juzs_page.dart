@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/domain/entities/juz_entity.dart';
 
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../domain/entities/juz_entity.dart';
 import '../../state/juz_state.dart';
 import '../lists/juzs_list.dart';
 import '../widgets/to_hizbs_page_button.dart';

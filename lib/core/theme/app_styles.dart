@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/strings/app_strings.dart';
+
+import '../strings/app_strings.dart';
 
 class AppStyles {
   static const mainPadding = EdgeInsets.all(14);

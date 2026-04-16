@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/domain/entities/surah_name_entity.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
+import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';

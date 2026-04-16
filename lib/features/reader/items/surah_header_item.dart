@@ -29,9 +29,9 @@ class SurahHeaderItem extends StatelessWidget {
           Text(
             AppStrings.surahNameByNumber(surahNumber),
             style: const TextStyle(
-              fontSize: 35.0,
-              fontFamily: AppStrings.fontSurahName,
-              height: 1
+                fontSize: 35.0,
+                fontFamily: AppStrings.fontSurahName,
+                height: 1
             ),
             textDirection: .ltr,
             textAlign: .center,

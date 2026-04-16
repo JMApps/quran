@@ -1,4 +1,4 @@
-name: quran
+name: Quran
 description: "Quran"
 
 publish_to: 'none'
@@ -26,6 +26,7 @@ dependencies:
   pasteboard: ^0.5.0
   arabic_justified_text: ^1.0.2
   equatable: ^2.0.8
+  qcf_quran_plus: ^0.0.7
 
 dev_dependencies:
   flutter_test:
@@ -40,7 +41,6 @@ flutter:
   assets:
     - assets/databases/
     - assets/fonts/
-    - assets/fontpages/
 
   fonts:
     - family: 'Gilroy'

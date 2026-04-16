@@ -20,11 +20,9 @@ class AyahByAyahList extends StatefulWidget {
   const AyahByAyahList({
     super.key,
     required this.ayahsPage,
-    required this.ayahPosition,
   });
 
   final List<AyahByAyahEntity> ayahsPage;
-  final int ayahPosition;
 
   @override
   State<AyahByAyahList> createState() => _AyahByAyahListState();
@@ -37,10 +35,7 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
   void initState() {
     super.initState();
     _itemScrollController = ItemScrollController();
-
-    if (widget.ayahPosition >= 0) {
-      _scrollToIndex(widget.ayahPosition);
-    }
+    _scrollToIndex(0);
   }
 
   void _scrollToIndex(int index) {

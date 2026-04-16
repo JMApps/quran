@@ -1,51 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 
 import '../../../core/strings/app_constants.dart';
-import '../../library/domain/entities/page_meta_entity.dart';
-import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
-import '../../library/presentation/state/surah_name_state.dart';
 import '../items/surah_detail_item.dart';
 
 class SurahDetailList extends StatefulWidget {
   const SurahDetailList({
     super.key,
-    required this.mushafPageController,
+    required this.pageNumber,
     required this.ayahPosition,
   });
 
-  final PageController mushafPageController;
+  final int pageNumber;
   final int ayahPosition;
 
   @override
   State<SurahDetailList> createState() => _SurahDetailListState();
 }
 
-class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingObserver {
+class _SurahDetailListState extends State<SurahDetailList>
+    with WidgetsBindingObserver {
   late final FavoritesState _favoritesState;
   late final AyahByAyahState _ayahState;
-  late int _currentPage;
-  
+
+  late final PageController _mushafController;
+  late final PageController _translationController;
+
+  final List<HighlightVerse> _activeHighlights = [];
+  bool _isInternalJump = false;
+
+  int get _currentPage => context.read<MainState>().currentPage;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _currentPage = Provider.of<MainState>(context, listen: false).currentPage;
-    _favoritesState = Provider.of<FavoritesState>(context, listen: false);
-    _ayahState = Provider.of<AyahByAyahState>(context, listen: false);
+    _favoritesState = context.read<FavoritesState>();
+    _ayahState = context.read<AyahByAyahState>();
+
+    final initialIndex = _currentPage - 1;
+
+    _mushafController = PageController(initialPage: initialIndex);
+    _translationController = PageController(initialPage: initialIndex);
 
     _ayahState.loadPageAyahs(pageNumber: _currentPage);
     _ayahState.prefetchAround(_currentPage);
   }
 
+  Future<void> _handlePageChanged(
+      int index, {
+        required bool fromTranslation,
+      }) async {
+    if (_isInternalJump) return;
+
+    final pageNumber = index + 1;
+    final mainState = context.read<MainState>();
+
+    if (mainState.currentPage != pageNumber) {
+      mainState.setCurrentPage(pageNumber);
+    }
+
+    _ayahState.loadPageAyahs(pageNumber: pageNumber);
+    _ayahState.prefetchAround(pageNumber);
+
+    final targetController =
+    fromTranslation ? _mushafController : _translationController;
+
+    if (!targetController.hasClients) return;
+
+    final targetIndex =
+        targetController.page?.round() ?? targetController.initialPage;
+
+    if (targetIndex == index) return;
+
+    _isInternalJump = true;
+    try {
+      targetController.jumpToPage(index);
+    } finally {
+      _isInternalJump = false;
+    }
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       _favoritesState.addLastOpenedPage(_currentPage);
     }
   }
@@ -53,32 +99,52 @@ class _SurahDetailListState extends State<SurahDetailList> with WidgetsBindingOb
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _mushafController.dispose();
+    _translationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final int? currentPageNumber = context.select<MainState, int?>((e) => e.currentPage);
-    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber!));
-    final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber));
-    return PageView.builder(
-      reverse: true,
-      controller: widget.mushafPageController,
-      itemCount: AppConstants.totalPagesCount,
-      onPageChanged: (int index) {
-        _currentPage = index + 1;
-        context.read<MainState>().setCurrentPage(_currentPage);
-        _ayahState.prefetchAround(_currentPage);
-      },
-      itemBuilder: (context, index) {
-        return SurahDetailItem(
-          index: index,
-          surahNameTranscription: surahNameModel!.nameTranscription,
-          pageNumber: pageMetaModel!.pageNumber,
-          juzNumber: pageMetaModel.juzNumber,
-          ayahPosition: widget.ayahPosition,
-        );
-      },
+    final translationEnabled = context.select<PageMetaState, bool>((s) => s.translationEnabled);
+    return Stack(
+      children: [
+        IgnorePointer(
+          ignoring: translationEnabled,
+          child: Opacity(
+            opacity: translationEnabled ? 0 : 1,
+            child: QuranPageView(
+              pageController: _mushafController,
+              highlights: _activeHighlights,
+              isDarkMode: Theme.of(context).brightness == Brightness.dark,
+              isTajweed: false,
+              onPageChanged: (pageNumber) {
+                _handlePageChanged(pageNumber, fromTranslation: false);
+              },
+              onLongPress: (surahNumber, verseNumber, details) {},
+            ),
+          ),
+        ),
+        IgnorePointer(
+          ignoring: !translationEnabled,
+          child: Opacity(
+            opacity: translationEnabled ? 1 : 0,
+            child: PageView.builder(
+              controller: _translationController,
+              reverse: true,
+              itemCount: AppConstants.totalPagesCount,
+              onPageChanged: (pageNumber) {
+                _handlePageChanged(pageNumber, fromTranslation: true);
+              },
+              itemBuilder: (context, index) {
+                return SurahDetailItem(
+                  index: index,
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

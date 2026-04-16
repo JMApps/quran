@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../../settings/state/app_settings_state.dart';
 import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/main_state.dart';
@@ -56,6 +57,16 @@ class SurahNameItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: .stretch,
                 children: [
+                  if (context.watch<AppSettingsState>().arabicNameSurah)
+                    Text(
+                      AppStrings.surahNameByNumber(surahModel.surahNumber),
+                      style: TextStyle(
+                        color: appColors.primary,
+                        fontFamily: AppStrings.fontSurahName,
+                        fontSize: 27.5,
+                        height: 1,
+                      ),
+                    ),
                   Row(
                     children: [
                       Text(
@@ -63,12 +74,13 @@ class SurahNameItem extends StatelessWidget {
                         style: AppStyles.mediumTextStyle16,
                         maxLines: 1,
                       ),
-                      Text(
-                        ' (${surahModel.nameTranslation})',
-                        style: AppStyles.mainTextStyle16,
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                      ),
+                      if (context.watch<AppSettingsState>().translationNameSurah)
+                        Text(
+                          ' (${surahModel.nameTranslation})',
+                          style: AppStyles.mainTextStyle16,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                        ),
                     ],
                   ),
                   Text(
