@@ -10,6 +10,7 @@ class CleanFavoritesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).colorScheme;
     return IconButton(
       onPressed: () {
         showModalBottomSheet(
@@ -36,9 +37,9 @@ class CleanFavoritesButton extends StatelessWidget {
                                   Navigator.pop(context);
                                   context.read<FavoritesState>().clearAllFavorites();
                                 },
-                                child: const Text(
+                                child: Text(
                                   AppStrings.delete,
-                                  style: AppStyles.mainTextStyle18,
+                                  style: AppStyles.mainTextStyle18.copyWith(color: appColors.error),
                                 ),
                               ),
                               TextButton(
@@ -55,9 +56,9 @@ class CleanFavoritesButton extends StatelessWidget {
                         },
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       AppStrings.deleteAllFavorites,
-                      style: AppStyles.mainTextStyle18,
+                      style: AppStyles.mainTextStyle18.copyWith(color: appColors.error),
                     ),
                   ),
                   TextButton(

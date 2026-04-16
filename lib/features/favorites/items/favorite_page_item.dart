@@ -29,7 +29,7 @@ class FavoritePageItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         final mainState = context.read<MainState>();
-        mainState.setCurrentPage(mushafPageMetaModel.pageNumber);
+        mainState.onMainPageChanged(mushafPageMetaModel.pageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: mushafPageMetaModel.pageNumber,
         );

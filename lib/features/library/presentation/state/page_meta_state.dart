@@ -17,7 +17,7 @@ class PageMetaState extends ChangeNotifier {
   bool get isLoading => _isLoading;
   Object? get error => _error;
 
-  bool _translationEnabled = false;
+  bool _translationEnabled = true;
 
   bool get translationEnabled => _translationEnabled;
 

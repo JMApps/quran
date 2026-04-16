@@ -53,9 +53,6 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
 
   @override
   Widget build(BuildContext context) {
-    final int currentPage = context.select<MainState, int>((s) => s.currentPage);
-    final mushafPageMeta = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPage));
-    final surahModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: mushafPageMeta!.surahNumber));
     final rows = const AyahListRowBuilder().build(widget.ayahsPage);
     return ScrollablePositionedList.builder(
       itemScrollController: _itemScrollController,
@@ -66,7 +63,6 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
         switch (row.type) {
           case AyahListRowType.surahHeader:
             return SurahHeaderItem(
-              surahName: surahModel!.nameTranscription,
               surahNumber: row.surahNumber!,
             );
 

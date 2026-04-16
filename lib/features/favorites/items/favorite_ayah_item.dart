@@ -28,7 +28,7 @@ class FavoriteAyahItem extends StatelessWidget {
     return InkWell(
       onTap: () async {
         final mainState = context.read<MainState>();
-        mainState.setCurrentPage(ayahByAyahModel.ayahPageNumber);
+        mainState.onMainPageChanged(ayahByAyahModel.ayahPageNumber);
         final arguments = SurahDetailArgs(
           currentMushafPage: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition - 1,

@@ -5,7 +5,6 @@ import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../../settings/state/app_settings_state.dart';
-import '../../../data/arguments/surah_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/main_state.dart';
 
@@ -29,14 +28,10 @@ class SurahNameItem extends StatelessWidget {
       focusColor: appColors.inversePrimary.withAlpha(55),
       onTap: () {
         final mainState = context.read<MainState>();
-        mainState.setCurrentPage(surahModel.startPageNumber);
-        final arguments = SurahDetailArgs(
-          currentMushafPage: surahModel.startPageNumber,
-        );
+        mainState.onMainPageChanged(surahModel.startPageNumber);
         Navigator.pushNamed(
           context,
-          NamesRouter.pageSurahDetail,
-          arguments: arguments,
+          NamesRouter.pageSurahDetail
         );
       },
       child: Container(

@@ -12,36 +12,21 @@ import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/surah_detail_list.dart';
 import '../widgets/favorite_page_button.dart';
-import '../widgets/to_mushaf_page_button.dart';
+import '../widgets/to_page_button.dart';
 import '../widgets/translate_mushaf_page_button.dart';
 
 class SurahDetailPage extends StatefulWidget {
-  const SurahDetailPage({
-    super.key,
-    required this.currentMushafPage,
-    required this.ayahPosition,
-  });
+  const SurahDetailPage({super.key});
 
-  final int currentMushafPage;
-  final int ayahPosition;
 
   @override
   State<SurahDetailPage> createState() => _SurahDetailPageState();
 }
 
 class _SurahDetailPageState extends State<SurahDetailPage> {
-  late final PageController _mushafPageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _mushafPageController = PageController(initialPage: widget.currentMushafPage - 1);
-  }
-
   @override
   void dispose() {
     _showSystemUiWithDelay();
-    _mushafPageController.dispose();
     super.dispose();
   }
 
@@ -70,14 +55,13 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
     final int? currentPageNumber = context.select<MainState, int?>((e) => e.currentPage);
     final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber!));
     final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber));
-    final translationEnabled = context.select<PageMetaState, bool>((s) => s.translationEnabled);
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        context.read<FavoritesState>().addLastOpenedPage(currentPageNumber!);
+        context.read<FavoritesState>().addLastOpenedPage(currentPageNumber);
       },
       child: Scaffold(
         extendBody: true,
-        extendBodyBehindAppBar: translationEnabled,
+        extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Consumer<SurahNameState>(
@@ -104,11 +88,11 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                           Row(
                             children: [
                               Text(
-                                '${AppStrings.page} ${pageMetaModel!.pageNumber}, ',
+                                '${AppStrings.page} $currentPageNumber, ',
                                 style: AppStyles.mainTextStyle12,
                               ),
                               Text(
-                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel.juzNumber}',
+                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel!.juzNumber}',
                                 style: AppStyles.mainTextStyle12,
                               ),
                             ],
@@ -118,7 +102,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
                       actions: [
                         const FavoritePageButton(),
                         TranslateMushafPageButton(currentMushafPage: currentPageNumber!),
-                        ToMushafPageButton(mushafPageController: _mushafPageController),
+                        const ToPageButton(),
                       ],
                     ),
                   ),
@@ -135,8 +119,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
           },
           child: SurahDetailList(
-            pageNumber: widget.currentMushafPage,
-            ayahPosition: widget.ayahPosition,
+            currentPage: currentPageNumber!,
           ),
         ),
       ),

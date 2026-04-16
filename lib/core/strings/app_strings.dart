@@ -90,6 +90,8 @@ class AppStrings {
   static const String mecca = 'Мекка';
   static const String medina = 'Медина';
 
+  static const String jumpToPage = 'Переход к странице';
+
   static const List<({String name, String column})> ayahTranslations = [
     (name: 'Кулиев', column: 'kuliev'),
     (name: 'Абу Адель', column: 'adel'),

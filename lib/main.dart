@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:quran_library/quran.dart';
 
 import 'core/database/quran_database_service.dart';
 import 'core/di/app_providers.dart';
@@ -11,7 +10,6 @@ import 'features/library/presentation/main/root_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await QuranLibrary.init();
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 

@@ -105,7 +105,7 @@ class AppSettingsState extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _ayahArabicTextSize = 20.0;
+  double _ayahArabicTextSize = 21.0;
 
   double get ayahArabicTextSize => _ayahArabicTextSize;
 
@@ -116,7 +116,7 @@ class AppSettingsState extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _ayahTranslationTextSize = 18.0;
+  double _ayahTranslationTextSize = 17.0;
 
   double get ayahTranslationTextSize => _ayahTranslationTextSize;
 
@@ -164,8 +164,8 @@ class AppSettingsState extends ChangeNotifier {
       defaultValue: 0,
     );
 
-    _ayahArabicTextSize = _appSettingsBox.get(AppKeys.keyAyahArabicTextSize, defaultValue: 20.0);
-    _ayahTranslationTextSize = _appSettingsBox.get(AppKeys.keyAyahTranslationTextSize, defaultValue: 18.0);
+    _ayahArabicTextSize = _appSettingsBox.get(AppKeys.keyAyahArabicTextSize, defaultValue: 21.0);
+    _ayahTranslationTextSize = _appSettingsBox.get(AppKeys.keyAyahTranslationTextSize, defaultValue: 17.0);
   }
 
   int _defaultLocaleIndex() {
