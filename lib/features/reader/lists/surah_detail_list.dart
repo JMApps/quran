@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qcf_quran_plus/qcf_quran_plus.dart';
+import 'package:quran_library/quran.dart';
 
 import '../../../core/strings/app_constants.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
@@ -31,7 +31,6 @@ class _SurahDetailListState extends State<SurahDetailList>
   late final PageController _mushafController;
   late final PageController _translationController;
 
-  final List<HighlightVerse> _activeHighlights = [];
   bool _isInternalJump = false;
 
   int get _currentPage => context.read<MainState>().currentPage;
@@ -113,15 +112,13 @@ class _SurahDetailListState extends State<SurahDetailList>
           ignoring: translationEnabled,
           child: Opacity(
             opacity: translationEnabled ? 0 : 1,
-            child: QuranPageView(
-              pageController: _mushafController,
-              highlights: _activeHighlights,
-              isDarkMode: Theme.of(context).brightness == Brightness.dark,
-              isTajweed: false,
-              onPageChanged: (pageNumber) {
-                _handlePageChanged(pageNumber, fromTranslation: false);
-              },
-              onLongPress: (surahNumber, verseNumber, details) {},
+            child: QuranLibraryScreen(
+              parentContext: context,
+              useDefaultAppBar: false,
+              isShowAudioSlider: false,
+              showAyahBookmarkedIcon: false,
+              isShowTabBar: false,
+              topBarStyle: null,
             ),
           ),
         ),

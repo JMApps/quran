@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../../core/strings/app_strings.dart';
@@ -10,28 +9,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../settings/state/app_settings_state.dart';
 import 'main_page.dart';
 
-class RootPage extends StatefulWidget {
+class RootPage extends StatelessWidget {
   const RootPage({super.key});
-
-  @override
-  State<RootPage> createState() => _RootPageState();
-}
-
-class _RootPageState extends State<RootPage> {
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeFonts();
-  }
-
-  void _initializeFonts() async {
-    await QcfFontLoader.setupFontsAtStartup(
-      onProgress: (double progress) {
-        print('Font Loading Progress: ${(progress * 100).toStringAsFixed(1)}%');
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
