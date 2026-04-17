@@ -22,9 +22,12 @@ class AppStrings {
   static const String errorLoadSurahsList = 'Ошибка загрузки списка сур: ';
   static const String errorLoadJuzsList = 'Ошибка загрузки списка джузов: ';
   static const String errorLoadHizbsList = 'Ошибка загрузки списка хизбов: ';
-  static const String errorAyahFavoritesList = 'Ошибка загрузки избранных аятов: ';
-  static const String errorPageFavoritesList = 'Ошибка загрузки избранных страниц: ';
-  static const String errorMushafLastFavoritesList = 'Ошибка загрузки недавних страниц: ';
+  static const String errorAyahFavoritesList =
+      'Ошибка загрузки избранных аятов: ';
+  static const String errorPageFavoritesList =
+      'Ошибка загрузки избранных страниц: ';
+  static const String errorMushafLastFavoritesList =
+      'Ошибка загрузки недавних страниц: ';
   static const String errorLoad = 'Ошибка загрузки: ';
   static const String errorSearch = 'Ошибка поиска: ';
   static const String searchNoResults = 'Ничего не найдено';
@@ -63,12 +66,11 @@ class AppStrings {
   static const String copied = 'Скопировано';
   static const String share = 'Поделиться';
 
-
   static const String fontGilroy = 'Gilroy';
   static const String fontGilroyMedium = 'Gilroy Medium';
   static const String fontUthmanicHafs = 'Uthmanic Hafs';
   static const String fontSFPro = 'SF Pro';
-  static const String fontSurahName = 'SurahName';
+  static const String fontSurahName = 'Surah name';
 
   static const String foundOne = 'найден';
   static const String foundFew = 'найдено';
@@ -77,7 +79,6 @@ class AppStrings {
   static const String resultOne = 'результат';
   static const String resultFew = 'результата';
   static const String resultMany = 'результатов';
-
 
   static const String ayahOne = 'аят';
   static const String ayahFew = 'аята';

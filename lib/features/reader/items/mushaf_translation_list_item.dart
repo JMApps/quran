@@ -5,8 +5,8 @@ import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../lists/ayah_by_ayah_list.dart';
 
-class SurahDetailItem extends StatefulWidget {
-  const SurahDetailItem({
+class MushafTranslationListItem extends StatefulWidget {
+  const MushafTranslationListItem({
     super.key,
     required this.index,
   });
@@ -14,10 +14,10 @@ class SurahDetailItem extends StatefulWidget {
   final int index;
 
   @override
-  State<SurahDetailItem> createState() => _SurahDetailItemState();
+  State<MushafTranslationListItem> createState() => _MushafTranslationListItemState();
 }
 
-class _SurahDetailItemState extends State<SurahDetailItem> {
+class _MushafTranslationListItemState extends State<MushafTranslationListItem> {
   @override
   void initState() {
     super.initState();
@@ -28,17 +28,9 @@ class _SurahDetailItemState extends State<SurahDetailItem> {
   Widget build(BuildContext context) {
     final pageNumber = widget.index + 1;
 
-    final isLoaded = context.select<AyahByAyahState, bool>(
-          (s) => s.isPageLoaded(pageNumber: pageNumber),
-    );
-
-    final error = context.select<AyahByAyahState, Object?>(
-          (s) => s.getPageError(pageNumber: pageNumber),
-    );
-
-    final ayahsPage = context.select<AyahByAyahState, List<AyahByAyahEntity>>(
-          (s) => s.getPageAyahs(pageNumber: pageNumber),
-    );
+    final isLoaded = context.select<AyahByAyahState, bool>((s) => s.isPageLoaded(pageNumber: pageNumber));
+    final error = context.select<AyahByAyahState, Object?>((s) => s.getPageError(pageNumber: pageNumber));
+    final ayahsPage = context.select<AyahByAyahState, List<AyahByAyahEntity>>((s) => s.getPageAyahs(pageNumber: pageNumber));
 
     if (error != null) {
       return const Center(

@@ -16,10 +16,7 @@ class WordGlyphItem extends StatelessWidget {
 
   bool get _isSpecialPage => layoutModel.pageNumber == 1 || layoutModel.pageNumber == 2;
 
-  bool get _isFixedRender =>
-      _isSpecialPage ||
-      layoutModel.lineType == LineType.surahName ||
-      layoutModel.lineType == LineType.basmallah;
+  bool get _isFixedRender => _isSpecialPage || layoutModel.lineType == LineType.surahName || layoutModel.lineType == LineType.basmallah;
 
   bool get _isSurah9 => layoutModel.surahNumber == 9;
 
@@ -55,9 +52,9 @@ class WordGlyphItem extends StatelessWidget {
       case LineType.surahName:
         return 35;
       case LineType.basmallah:
-        return 25;
+        return 30;
       default:
-        if (_isSpecialPage) return 22;
+        if (_isSpecialPage) return 28;
         return 250;
     }
   }
@@ -74,38 +71,38 @@ class WordGlyphItem extends StatelessWidget {
   }
 
   double _lineHeight(LayoutEntity layout) {
-    if (_isSpecialPage) return 1.35;
+    if (_isSpecialPage) return 1.65;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 1.5;
+        return 1.15;
       case LineType.basmallah:
-        return 1.5;
+        return 1.45;
       default:
         return 1.85;
     }
   }
 
   double _topPadding(LayoutEntity layout) {
-    if (_isSpecialPage) return 4;
+    if (_isSpecialPage) return 0;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 8;
+        return 3.5;
       case LineType.basmallah:
-        return 6;
+        return 3.5;
       default:
-        return 3;
+        return 0;
     }
   }
 
   double _bottomPadding(LayoutEntity layout) {
-    if (_isSpecialPage) return 4;
+    if (_isSpecialPage) return 0;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 8;
+        return 3.5;
       case LineType.basmallah:
-        return 6;
+        return 3.5;
       default:
-        return 3;
+        return 0;
     }
   }
 
@@ -120,49 +117,56 @@ class WordGlyphItem extends StatelessWidget {
       fontSize: _fontSize(layoutModel),
       height: _lineHeight(layoutModel),
       color: appColors.onSurface,
+      letterSpacing: _isSpecialPage ? 0 : -75
     );
 
     return Padding(
       padding: EdgeInsets.only(
         top: _topPadding(layoutModel),
         bottom: _bottomPadding(layoutModel),
+        left: _isFixedRender ? 0 : 14,
+        right: _isFixedRender ? 0 : 14,
       ),
       child: SizedBox(
         width: double.infinity,
         child: Align(
           alignment: _alignment,
-          child: _isFixedRender ? layoutModel.lineType == LineType.basmallah ? IntrinsicWidth(
+          child: _isFixedRender? layoutModel.lineType == LineType.basmallah ? IntrinsicWidth(
             child: Text(
               lineText,
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.center,
+              textDirection: .rtl,
+              textAlign: .center,
               style: style,
             ),
           ) : layoutModel.lineType == LineType.surahName ? Text(
             lineText,
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.center,
+            textDirection: .rtl,
+            textAlign: .center,
             style: style,
           ) : Text(
             lineText,
-            textDirection: TextDirection.rtl,
+            textDirection: .rtl,
             textAlign: _textAlign,
             style: style,
-          ) : FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: _alignment,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Text(
-                lineText,
-                textDirection: TextDirection.rtl,
-                textAlign: _textAlign,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.visible,
-                style: style,
-              ),
-            ),
+          ) : LayoutBuilder(
+            builder: (context, constraints) {
+              return FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: _alignment,
+                child: Directionality(
+                  textDirection: .rtl,
+                  child: Text(
+                    lineText,
+                    textDirection: .rtl,
+                    textAlign: _textAlign,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.visible,
+                    style: style,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

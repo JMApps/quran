@@ -29,10 +29,7 @@ class SurahNameItem extends StatelessWidget {
       onTap: () {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(surahModel.startPageNumber);
-        Navigator.pushNamed(
-          context,
-          NamesRouter.pageSurahDetail
-        );
+        Navigator.pushNamed(context, NamesRouter.pageSurahDetail);
       },
       child: Container(
         padding: AppStyles.hrMiniVrBigPadding,
@@ -90,7 +87,9 @@ class SurahNameItem extends StatelessWidget {
             const SizedBox(width: 14),
             Text(
               surahModel.startPageNumber.toString(),
-              style: AppStyles.mainTextStyle12.copyWith(color: appColors.secondary),
+              style: AppStyles.mainTextStyle12.copyWith(
+                color: appColors.secondary,
+              ),
             ),
             const SizedBox(width: 7),
           ],

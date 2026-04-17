@@ -40,6 +40,8 @@ flutter:
   assets:
     - assets/databases/
     - assets/fonts/
+    - assets/pagefonts/
+    - assets/pictures/
 
   fonts:
     - family: 'Gilroy'

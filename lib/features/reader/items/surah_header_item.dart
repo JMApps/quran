@@ -17,17 +17,19 @@ class SurahHeaderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final surahModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: surahNumber));
+    final surahModel = context.select<SurahNameState, SurahNameEntity?>(
+      (s) => s.getSurahByNumber(surahNumber: surahNumber),
+    );
     return Container(
       padding: AppStyles.miniPadding,
-      margin: AppStyles.vrBigHrMiniPadding,
+      margin: AppStyles.miniPadding,
+      width: double.infinity,
       alignment: .center,
       decoration: BoxDecoration(
-        color: appColors.secondaryContainer.withAlpha(120),
-        borderRadius: AppStyles.mainBorder,
-        border: Border.all(
-          width: 1.15,
-          color: appColors.primary,
+        image: DecorationImage(
+          colorFilter: .mode(appColors.primary, .srcIn),
+          image: const AssetImage('assets/pictures/s_header.png'),
+          fit: .scaleDown
         ),
       ),
       child: Column(
@@ -37,7 +39,6 @@ class SurahHeaderItem extends StatelessWidget {
             style: TextStyle(
               fontSize: 35.0,
               fontFamily: AppStrings.fontSurahName,
-              height: 1,
               color: appColors.primary,
             ),
             textDirection: .ltr,
@@ -48,6 +49,7 @@ class SurahHeaderItem extends StatelessWidget {
             style: AppStyles.mainTextStyle16,
             textAlign: .center,
           ),
+          const SizedBox(height: 7),
         ],
       ),
     );

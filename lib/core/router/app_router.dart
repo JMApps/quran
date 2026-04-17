@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/library/presentation/hizb/pages/hizbs_page.dart';
-import '../../features/reader/pages/surah_detail_page.dart';
+import '../../features/reader/pages/mushaf_page_detail.dart';
 import 'names_router.dart';
 
 class AppRouter {
@@ -19,7 +19,7 @@ class AppRouter {
   }
 
   static Map<String, Widget Function(BuildContext, dynamic)> routes = {
-    NamesRouter.pageSurahDetail: (context, args) => const SurahDetailPage(),
+    NamesRouter.pageSurahDetail: (context, args) => const MushafPageDetail(),
     NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
   };
 }

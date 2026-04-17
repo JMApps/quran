@@ -10,20 +10,20 @@ import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
-import '../lists/surah_detail_list.dart';
+import '../lists/mushaf_page_detail_list.dart';
 import '../widgets/favorite_page_button.dart';
 import '../widgets/to_page_button.dart';
 import '../widgets/translate_mushaf_page_button.dart';
 
-class SurahDetailPage extends StatefulWidget {
-  const SurahDetailPage({super.key});
+class MushafPageDetail extends StatefulWidget {
+  const MushafPageDetail({super.key});
 
 
   @override
-  State<SurahDetailPage> createState() => _SurahDetailPageState();
+  State<MushafPageDetail> createState() => _MushafPageDetailState();
 }
 
-class _SurahDetailPageState extends State<SurahDetailPage> {
+class _MushafPageDetailState extends State<MushafPageDetail> {
   @override
   void dispose() {
     _showSystemUiWithDelay();
@@ -118,7 +118,7 @@ class _SurahDetailPageState extends State<SurahDetailPage> {
             surahState.toggleShowAppBar();
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
           },
-          child: SurahDetailList(
+          child: MushafPageDetailList(
             currentPage: currentPageNumber!,
           ),
         ),

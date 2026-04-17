@@ -1,80 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/layout_entity.dart';
 import '../items/word_glyph_item.dart';
 
-class WordGlyphList extends StatefulWidget {
+class WordGlyphList extends StatelessWidget {
   const WordGlyphList({
     super.key,
+    required this.surahNameTranscription,
+    required this.juzNumber,
     required this.layoutsPage,
   });
 
+  final String surahNameTranscription;
+  final int juzNumber;
   final List<LayoutEntity> layoutsPage;
 
   @override
-  State<WordGlyphList> createState() => _WordGlyphListState();
-}
-
-class _WordGlyphListState extends State<WordGlyphList> {
-  late final ItemScrollController _itemScrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _itemScrollController = ItemScrollController();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (_itemScrollController.isAttached) {
-        _itemScrollController.jumpTo(
-          index: 0,
-          alignment: 0.0,
-        );
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ScrollablePositionedList.builder(
-      itemScrollController: _itemScrollController,
-      padding: AppStyles.hrMiniVrBigPadding,
-      itemCount: widget.layoutsPage.length,
-        itemBuilder: (context, index) {
-          final layoutModel = widget.layoutsPage[index];
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final headerHeight = screenHeight * 0.075;
+    final footerHeight = screenHeight * 0.035;
 
-          if (index == 0) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                final screenHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    final isSpecialPage = layoutsPage.first.pageNumber == 1 || layoutsPage.first.pageNumber == 2;
 
-                return SizedBox(
-                  height: screenHeight,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: widget.layoutsPage.map((layout) => WordGlyphItem(
-                          layoutModel: layout,
-                          index: widget.layoutsPage.indexOf(layout),
-                        )).toList(),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+    final items = layoutsPage.map((layout) => WordGlyphItem(
+      layoutModel: layout,
+      index: layoutsPage.indexOf(layout)),
+    ).toList();
 
-          if (index != 0) return const SizedBox.shrink();
-
-          return WordGlyphItem(
-            layoutModel: layoutModel,
-            index: index,
-          );
-        },
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: screenHeight,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: AppStyles.hrMainPadding,
+              child: SizedBox(
+                height: headerHeight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${AppStrings.surah} $surahNameTranscription'),
+                    Text('${AppStrings.juz} $juzNumber'),
+                  ],
+                ),
+              ),
+            ),
+            isSpecialPage ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: items,
+              ),
+            ) : Column(
+              children: items,
+            ),
+            Padding(
+              padding: AppStyles.hrMainPadding,
+              child: SizedBox(
+                height: footerHeight,
+                child: Text(
+                  layoutsPage.first.pageNumber.toString(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
