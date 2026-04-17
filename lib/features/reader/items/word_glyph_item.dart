@@ -51,18 +51,20 @@ class WordGlyphItem extends StatelessWidget {
   }
 
   double _fontSize(LayoutEntity layout, BuildContext context) {
-    final deviceWidth = MediaQuery.sizeOf(context).width;
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final deviceTh = isLandscape ? mediaQuery.size.width : mediaQuery.size.height;
 
     switch (layout.lineType) {
       case LineType.surahName:
-        if (_isFixedRender) return deviceWidth * 0.0625;
-        return deviceWidth * 0.065;
+        if (_isFixedRender) return deviceTh * 0.025;
+        return deviceTh * 0.065;
       case LineType.basmallah:
-        if (_isFixedRender) return deviceWidth * 0.0625;
-        return deviceWidth *  0.065;
+        if (_isFixedRender) return deviceTh * 0.025;
+        return deviceTh *  0.065;
       default:
-        if (_isFixedRender) return deviceWidth * 0.0625;
-        return deviceWidth * 0.065;
+        if (_isFixedRender) return deviceTh * 0.025;
+        return deviceTh * 0.065;
     }
   }
 
@@ -81,7 +83,7 @@ class WordGlyphItem extends StatelessWidget {
     if (_isSpecialPage) return 1.65;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 1.0;
+        return 0.25;
       case LineType.basmallah:
         return 1.45;
       default:
