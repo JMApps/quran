@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/layout_entity.dart';
@@ -9,10 +10,12 @@ class WordGlyphItem extends StatelessWidget {
     super.key,
     required this.layoutModel,
     required this.index,
+    this.itemHeight,
   });
 
   final LayoutEntity layoutModel;
   final int index;
+  final double? itemHeight;
 
   bool get _isSpecialPage => layoutModel.pageNumber == 1 || layoutModel.pageNumber == 2;
 
@@ -47,15 +50,19 @@ class WordGlyphItem extends StatelessWidget {
     }
   }
 
-  double _fontSize(LayoutEntity layout) {
+  double _fontSize(LayoutEntity layout, BuildContext context) {
+    final deviceWidth = MediaQuery.sizeOf(context).width;
+
     switch (layout.lineType) {
       case LineType.surahName:
-        return 35;
+        if (_isFixedRender) return deviceWidth * 0.0625;
+        return deviceWidth * 0.065;
       case LineType.basmallah:
-        return 30;
+        if (_isFixedRender) return deviceWidth * 0.0625;
+        return deviceWidth *  0.065;
       default:
-        if (_isSpecialPage) return 28;
-        return 250;
+        if (_isFixedRender) return deviceWidth * 0.0625;
+        return deviceWidth * 0.065;
     }
   }
 
@@ -66,7 +73,7 @@ class WordGlyphItem extends StatelessWidget {
       case LineType.basmallah:
         return '\uFDFD';
       default:
-        return layout.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join(' ');
+        return layout.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
     }
   }
 
@@ -74,11 +81,11 @@ class WordGlyphItem extends StatelessWidget {
     if (_isSpecialPage) return 1.65;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 1.15;
+        return 1.0;
       case LineType.basmallah:
         return 1.45;
       default:
-        return 1.85;
+        return 2.0;
     }
   }
 
@@ -86,9 +93,9 @@ class WordGlyphItem extends StatelessWidget {
     if (_isSpecialPage) return 0;
     switch (layout.lineType) {
       case LineType.surahName:
-        return 3.5;
+        return 0;
       case LineType.basmallah:
-        return 3.5;
+        return 0;
       default:
         return 0;
     }
@@ -114,10 +121,9 @@ class WordGlyphItem extends StatelessWidget {
 
     final style = TextStyle(
       fontFamily: _fontFamily(layoutModel),
-      fontSize: _fontSize(layoutModel),
+      fontSize: _fontSize(layoutModel, context),
       height: _lineHeight(layoutModel),
       color: appColors.onSurface,
-      letterSpacing: _isSpecialPage ? 0 : -75
     );
 
     return Padding(
@@ -138,11 +144,21 @@ class WordGlyphItem extends StatelessWidget {
               textAlign: .center,
               style: style,
             ),
-          ) : layoutModel.lineType == LineType.surahName ? Text(
-            lineText,
-            textDirection: .rtl,
-            textAlign: .center,
-            style: style,
+          ) : layoutModel.lineType == LineType.surahName ? Container(
+            padding: AppStyles.miniPadding,
+            width: .maxFinite,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: .mode(appColors.primary, .srcIn),
+                image: const AssetImage('assets/pictures/s_header.png'),
+              )
+            ),
+            child: Text(
+              lineText,
+              textDirection: .rtl,
+              textAlign: .center,
+              style: style,
+            ),
           ) : Text(
             lineText,
             textDirection: .rtl,
@@ -151,7 +167,7 @@ class WordGlyphItem extends StatelessWidget {
           ) : LayoutBuilder(
             builder: (context, constraints) {
               return FittedBox(
-                fit: BoxFit.scaleDown,
+                fit: .scaleDown,
                 alignment: _alignment,
                 child: Directionality(
                   textDirection: .rtl,
