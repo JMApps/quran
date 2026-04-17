@@ -17,7 +17,7 @@ class JuzsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 14;
+    final bottomHeight = kBottomNavigationBarHeight + 7;
     final SurahNameState surahNameState = context.read<SurahNameState>();
     return Scrollbar(
       controller: scrollController,

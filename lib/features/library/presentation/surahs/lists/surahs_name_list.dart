@@ -14,7 +14,7 @@ class SurahsNameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double bottomHeight = kBottomNavigationBarHeight + 14;
+    final double bottomHeight = kBottomNavigationBarHeight + 7;
     return Scrollbar(
       controller: scrollController,
       child: ListView.separated(

@@ -47,7 +47,7 @@ class _FavoriteAyahsListState extends State<FavoriteAyahsList> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomHeight = kBottomNavigationBarHeight + 14;
+    final bottomHeight = kBottomNavigationBarHeight + 7;
     final SurahNameState surahNameState = context.read<SurahNameState>();
     return Consumer<AyahMetaState>(
       builder: (context, ayahMetaState, _) {
