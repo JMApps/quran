@@ -31,7 +31,6 @@ class WordGlyphList extends StatelessWidget {
 
         final items = layoutsPage.map((layout) => WordGlyphItem(
           layoutModel: layout,
-          index: layoutsPage.indexOf(layout),
         )).toList();
 
         return SingleChildScrollView(

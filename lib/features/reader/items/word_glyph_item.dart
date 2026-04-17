@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/layout_entity.dart';
@@ -9,23 +8,23 @@ class WordGlyphItem extends StatelessWidget {
   const WordGlyphItem({
     super.key,
     required this.layoutModel,
-    required this.index,
-    this.itemHeight,
   });
 
   final LayoutEntity layoutModel;
-  final int index;
-  final double? itemHeight;
 
+  // TODO: убрать хардкод страниц 1-2 — определять режим по структуре данных
   bool get _isSpecialPage => layoutModel.pageNumber == 1 || layoutModel.pageNumber == 2;
 
   bool get _isFixedRender => _isSpecialPage || layoutModel.lineType == LineType.surahName || layoutModel.lineType == LineType.basmallah;
 
+  // TODO: убрать хардкод суры 9 — в БД не должно быть basmallah для at-Tawba
   bool get _isSurah9 => layoutModel.surahNumber == 9;
 
   bool get _shouldHide {
     if (_isSurah9 && layoutModel.lineType == LineType.basmallah) return true;
-    if (layoutModel.pageNumber == 1 && layoutModel.lineType == LineType.surahName) return true;
+    if (layoutModel.pageNumber == 1 && layoutModel.lineType == LineType.surahName) {
+      return true;
+    }
     return false;
   }
 
@@ -39,153 +38,148 @@ class WordGlyphItem extends StatelessWidget {
     return layoutModel.isCentered ? TextAlign.center : TextAlign.start;
   }
 
-  String _fontFamily(LayoutEntity layout) {
-    switch (layout.lineType) {
+  String get _fontFamily => switch (layoutModel.lineType) {
+    LineType.surahName => AppStrings.fontSurahName,
+    LineType.basmallah => AppStrings.fontUthmanicHafs,
+    _ => 'P${layoutModel.pageNumber}',
+  };
+
+  double _fontSize(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final deviceTh = isLandscape ? size.width : size.height;
+
+    switch (layoutModel.lineType) {
       case LineType.surahName:
-        return AppStrings.fontSurahName;
+        if (_isSpecialPage) return deviceTh * 0.035;
+        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.040;
       case LineType.basmallah:
-        return AppStrings.fontUthmanicHafs;
+        if (_isSpecialPage) return deviceTh * 0.035;
+        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.035;
       default:
-        return 'P${layout.pageNumber}';
+        if (_isSpecialPage) return deviceTh * 0.030;
+        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.030;
     }
   }
 
-  double _fontSize(LayoutEntity layout, BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final deviceTh = isLandscape ? mediaQuery.size.width : mediaQuery.size.height;
+  String get _lineText => switch (layoutModel.lineType) {
+    LineType.surahName =>
+        AppStrings.surahNameByNumber(layoutModel.surahNumber!),
+    LineType.basmallah => '\uFDFD',
+    _ => layoutModel.words
+        .map((e) => e.glyph)
+        .where((e) => e.isNotEmpty)
+        .join('\u200A'),
+  };
 
-    switch (layout.lineType) {
-      case LineType.surahName:
-        if (_isFixedRender) return deviceTh * 0.025;
-        return deviceTh * 0.065;
-      case LineType.basmallah:
-        if (_isFixedRender) return deviceTh * 0.025;
-        return deviceTh *  0.065;
-      default:
-        if (_isFixedRender) return deviceTh * 0.025;
-        return deviceTh * 0.065;
-    }
+  double get _lineHeight {
+    if (_isSpecialPage) return 1.75;
+    return switch (layoutModel.lineType) {
+      LineType.surahName => 1.35,
+      LineType.basmallah => 1.45,
+      _ => 2.0,
+    };
   }
 
-  String _lineText(LayoutEntity layout) {
-    switch (layout.lineType) {
-      case LineType.surahName:
-        return AppStrings.surahNameByNumber(layoutModel.surahNumber!);
-      case LineType.basmallah:
-        return '\uFDFD';
-      default:
-        return layout.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
-    }
-  }
-
-  double _lineHeight(LayoutEntity layout) {
-    if (_isSpecialPage) return 1.65;
-    switch (layout.lineType) {
-      case LineType.surahName:
-        return 0.25;
-      case LineType.basmallah:
-        return 1.45;
-      default:
-        return 2.0;
-    }
-  }
-
-  double _topPadding(LayoutEntity layout) {
+  double get _bottomPadding {
     if (_isSpecialPage) return 0;
-    switch (layout.lineType) {
-      case LineType.surahName:
-        return 0;
+    final t = layoutModel.lineType;
+    return (t == LineType.surahName || t == LineType.basmallah) ? 3.5 : 0;
+  }
+
+  Widget _buildChild(TextStyle style, ColorScheme appColors) {
+    if (!_isFixedRender) return _buildScaledText(style);
+
+    switch (layoutModel.lineType) {
       case LineType.basmallah:
-        return 0;
+        return _buildBasmallah(style);
+      case LineType.surahName:
+        return _buildSurahName(style, appColors);
       default:
-        return 0;
+        return _buildFixedText(style);
     }
   }
 
-  double _bottomPadding(LayoutEntity layout) {
-    if (_isSpecialPage) return 0;
-    switch (layout.lineType) {
-      case LineType.surahName:
-        return 3.5;
-      case LineType.basmallah:
-        return 3.5;
-      default:
-        return 0;
-    }
+  Widget _buildBasmallah(TextStyle style) {
+    return IntrinsicWidth(
+      child: Text(
+        _lineText,
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.center,
+        style: style,
+      ),
+    );
+  }
+
+  Widget _buildSurahName(TextStyle style, ColorScheme appColors) {
+    return Container(
+      width: double.maxFinite,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          colorFilter: ColorFilter.mode(appColors.primary, BlendMode.srcIn),
+          image: const AssetImage('assets/pictures/s_header.png'),
+        ),
+      ),
+      child: Text(
+        _lineText,
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.center,
+        style: style,
+      ),
+    );
+  }
+
+  Widget _buildFixedText(TextStyle style) {
+    return Text(
+      _lineText,
+      textDirection: TextDirection.rtl,
+      textAlign: _textAlign,
+      style: style,
+    );
+  }
+
+  Widget _buildScaledText(TextStyle style) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: _alignment,
+      child: Text(
+        _lineText,
+        textDirection: TextDirection.rtl,
+        textAlign: _textAlign,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.visible,
+        style: style,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     if (_shouldHide) return const SizedBox.shrink();
+
     final appColors = Theme.of(context).colorScheme;
-    final lineText = _lineText(layoutModel);
+    final isFixed = _isFixedRender;
 
     final style = TextStyle(
-      fontFamily: _fontFamily(layoutModel),
-      fontSize: _fontSize(layoutModel, context),
-      height: _lineHeight(layoutModel),
+      fontFamily: _fontFamily,
+      fontSize: _fontSize(context),
+      height: _lineHeight,
       color: appColors.onSurface,
     );
 
     return Padding(
       padding: EdgeInsets.only(
-        top: _topPadding(layoutModel),
-        bottom: _bottomPadding(layoutModel),
-        left: _isFixedRender ? 0 : 14,
-        right: _isFixedRender ? 0 : 14,
+        bottom: _bottomPadding,
+        left: isFixed ? 0 : 14,
+        right: isFixed ? 0 : 14,
       ),
       child: SizedBox(
         width: double.infinity,
         child: Align(
           alignment: _alignment,
-          child: _isFixedRender? layoutModel.lineType == LineType.basmallah ? IntrinsicWidth(
-            child: Text(
-              lineText,
-              textDirection: .rtl,
-              textAlign: .center,
-              style: style,
-            ),
-          ) : layoutModel.lineType == LineType.surahName ? Container(
-            padding: AppStyles.miniPadding,
-            width: .maxFinite,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                colorFilter: .mode(appColors.primary, .srcIn),
-                image: const AssetImage('assets/pictures/s_header.png'),
-              )
-            ),
-            child: Text(
-              lineText,
-              textDirection: .rtl,
-              textAlign: .center,
-              style: style,
-            ),
-          ) : Text(
-            lineText,
-            textDirection: .rtl,
-            textAlign: _textAlign,
-            style: style,
-          ) : LayoutBuilder(
-            builder: (context, constraints) {
-              return FittedBox(
-                fit: .scaleDown,
-                alignment: _alignment,
-                child: Directionality(
-                  textDirection: .rtl,
-                  child: Text(
-                    lineText,
-                    textDirection: .rtl,
-                    textAlign: _textAlign,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                    style: style,
-                  ),
-                ),
-              );
-            },
-          ),
+          child: _buildChild(style, appColors),
         ),
       ),
     );
