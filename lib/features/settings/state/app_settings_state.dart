@@ -198,8 +198,17 @@ class AppSettingsState extends ChangeNotifier {
       defaultValue: 0,
     );
 
+    _isArabicAyahShow = _appSettingsBox.get(AppKeys.keyShowArabicAyah, defaultValue: true);
+    _isTranslationAyahShow = _appSettingsBox.get(AppKeys.keyShowTranslationAyah, defaultValue: true);
+
     _ayahArabicTextSize = _appSettingsBox.get(AppKeys.keyAyahArabicTextSize, defaultValue: 21.0);
     _ayahTranslationTextSize = _appSettingsBox.get(AppKeys.keyAyahTranslationTextSize, defaultValue: 17.0);
+  }
+
+  void setDefaultSettings() async {
+    await _appSettingsBox.clear();
+    _loadSettings();
+    notifyListeners();
   }
 
   int _defaultLocaleIndex() {

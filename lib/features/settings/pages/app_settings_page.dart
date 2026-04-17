@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/settings/widgets/default_settings_button.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
@@ -18,8 +19,12 @@ class AppSettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppStrings.settings),
+        actions: const [
+          DefaultSettingsButton(),
+        ],
       ),
       body: SingleChildScrollView(
+        padding: const .only(bottom: kBottomNavigationBarHeight),
         child: Consumer<AppSettingsState>(
           builder: (context, appSettingsState, _) {
             return Column(
@@ -71,8 +76,16 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.translationNameIndex = index;
                   },
                 ),
-                SettingListTileItem(value: appSettingsState.isArabicAyahShow, title: AppStrings.arabicAyah, onChanged: (onChanged) => appSettingsState.isArabicAyahShow = onChanged),
-                SettingListTileItem(value: appSettingsState.isTranslationAyahShow, title: AppStrings.translationAyah, onChanged: (onChanged) => appSettingsState.isTranslationAyahShow = onChanged),
+                SettingListTileItem(
+                  value: appSettingsState.isArabicAyahShow,
+                  title: AppStrings.arabicAyah,
+                  onChanged: (onChanged) => appSettingsState.isArabicAyahShow = onChanged,
+                ),
+                SettingListTileItem(
+                  value: appSettingsState.isTranslationAyahShow,
+                  title: AppStrings.translationAyah,
+                  onChanged: (onChanged) => appSettingsState.isTranslationAyahShow = onChanged,
+                ),
                 const Divider(indent: 14, endIndent: 14),
                 const Padding(
                   padding: AppStyles.mainPadding,

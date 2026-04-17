@@ -19,6 +19,7 @@ class AyahTextSizeSlider extends StatelessWidget {
     return ListTile(
       visualDensity: .adaptivePlatformDensity,
       contentPadding: .zero,
+      horizontalTitleGap: 0,
       title: Padding(
         padding: AppStyles.hrMainPadding,
         child: Row(
@@ -29,13 +30,17 @@ class AyahTextSizeSlider extends StatelessWidget {
             ),
             Expanded(
               child: Slider(
-                showValueIndicator: .alwaysVisible,
+                showValueIndicator: .onDrag,
                 value: size,
                 label: size.round().toString(),
                 min: 14.0,
                 max: 120.0,
                 onChanged: onChanged,
               ),
+            ),
+            Text(
+              size.round().toString(),
+              style: AppStyles.mediumTextStyle16,
             ),
           ],
         ),

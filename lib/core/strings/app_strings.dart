@@ -49,6 +49,8 @@ class AppStrings {
   static const String strDefault = 'По умолчанию';
 
   static const String deleteAllFavorites = 'Удалить все избарнные';
+  static const String resetSettings = 'Сброс настроек';
+  static const String reset = 'Сбросить';
   static const String delete = 'Удалить';
   static const String cancel = 'Отмена';
 
