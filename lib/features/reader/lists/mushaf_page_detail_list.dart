@@ -14,16 +14,17 @@ class MushafPageDetailList extends StatefulWidget {
   const MushafPageDetailList({
     super.key,
     required this.currentPage,
+    required this.translationController,
   });
 
   final int currentPage;
+  final PageController translationController;
 
   @override
   State<MushafPageDetailList> createState() => _MushafPageDetailListState();
 }
 
 class _MushafPageDetailListState extends State<MushafPageDetailList> with WidgetsBindingObserver {
-  late final PageController _translationController;
   late final AyahByAyahState _ayahState;
   late final WordGlyphState _wordGlyphState;
 
@@ -31,10 +32,6 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    _translationController = PageController(
-      initialPage: widget.currentPage - 1,
-    );
 
     _ayahState = context.read<AyahByAyahState>();
     _wordGlyphState = context.read<WordGlyphState>();
@@ -59,17 +56,10 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _translationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final translationEnabled = context.select<PageMetaState, bool>((s) => s.translationEnabled);
     return PageView.builder(
-      controller: _translationController,
+      controller: widget.translationController,
       reverse: true,
       physics: const ClampingScrollPhysics(),
       itemCount: AppConstants.totalPagesCount,

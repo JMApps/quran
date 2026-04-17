@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/hizb_entity.dart';
 import '../../state/main_state.dart';
 
@@ -30,9 +31,11 @@ class HizbItem extends StatelessWidget {
       onTap: () {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(hizbModel.startPageNumber);
+        final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: hizbModel.startPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
+          arguments: args,
         );
       },
       child: Container(

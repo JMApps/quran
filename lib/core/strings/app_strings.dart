@@ -100,6 +100,10 @@ class AppStrings {
     // (name: 'Eng intl', column: 'intl'),
   ];
 
+  static const String showAyahs = 'Отображать в переводе:';
+  static const String arabicAyah = 'Аят на арабском';
+  static const String translationAyah = 'Перевод аята';
+
   static const Map<String, int> defaultTranslationIndex = {
     'ru': 0,
     // 'en': 2,

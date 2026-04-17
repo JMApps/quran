@@ -7,7 +7,12 @@ import '../../../core/strings/app_constants.dart';
 import '../../library/presentation/state/main_state.dart';
 
 class ToPageButton extends StatelessWidget {
-  const ToPageButton({super.key});
+  const ToPageButton({
+    super.key,
+    required this.translationController,
+  });
+
+  final PageController translationController;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,9 @@ class ToPageButton extends StatelessWidget {
                               mainState.onMainPageChanged(value.round());
                             },
                             onChangeEnd: (double value) {
-                              mainState.onMainPageChangedEnd(value.round());
+                              if (translationController.hasClients) {
+                                translationController.jumpToPage(value.round() - 1);
+                              }
                             },
                           ),
                         ),

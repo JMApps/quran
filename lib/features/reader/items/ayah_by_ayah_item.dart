@@ -64,23 +64,29 @@ class AyahByAyahItem extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: .stretch,
                   children: [
-                    const SizedBox(height: 14),
-                    Text(
-                      ayahByAyahModel.ayahArabic,
-                      textDirection: .rtl,
-                      style: TextStyle(
-                        fontSize: appSettingsState.ayahArabicTextSize,
-                        fontFamily: AppStrings.fontUthmanicHafs,
-                        height: 2.25,
-                        letterSpacing: 0,
+                    SizedBox(height: appSettingsState.isArabicAyahShow ? 14 : 0),
+                    Visibility(
+                      visible: appSettingsState.isArabicAyahShow,
+                      child: Text(
+                        ayahByAyahModel.ayahArabic,
+                        textDirection: .rtl,
+                        style: TextStyle(
+                          fontSize: appSettingsState.ayahArabicTextSize,
+                          fontFamily: AppStrings.fontUthmanicHafs,
+                          height: 2.25,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 14),
-                    Text(
-                      ayahByAyahModel.ayahTranslation,
-                      style: TextStyle(
-                        fontSize: appSettingsState.ayahTranslationTextSize,
-                        fontFamily: AppStrings.fontGilroy,
+                    SizedBox(height: appSettingsState.isTranslationAyahShow ? 14 : 0),
+                    Visibility(
+                      visible: appSettingsState.isTranslationAyahShow,
+                      child: Text(
+                        ayahByAyahModel.ayahTranslation,
+                        style: TextStyle(
+                          fontSize: appSettingsState.ayahTranslationTextSize,
+                          fontFamily: AppStrings.fontGilroy,
+                        ),
                       ),
                     ),
                   ],

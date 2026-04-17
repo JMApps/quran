@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran/features/library/data/arguments/mushaf_page_detail_args.dart';
 
 import '../../features/library/presentation/hizb/pages/hizbs_page.dart';
 import '../../features/reader/pages/mushaf_page_detail.dart';
@@ -19,7 +20,10 @@ class AppRouter {
   }
 
   static Map<String, Widget Function(BuildContext, dynamic)> routes = {
-    NamesRouter.pageSurahDetail: (context, args) => const MushafPageDetail(),
+    NamesRouter.pageSurahDetail: (context, args) {
+      final MushafPageDetailArgs mushafPageArgs = MushafPageDetailArgs(pageNumber: args.pageNumber);
+      return MushafPageDetail(pageNumber: mushafPageArgs.pageNumber,);
+    },
     NamesRouter.pageAllHizbs: (context, args) => const HizbsPage(),
   };
 }

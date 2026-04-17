@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/data/arguments/surah_detail_args.dart';
+import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/main_state.dart';
@@ -30,13 +30,13 @@ class FavoritePageItem extends StatelessWidget {
       onTap: () {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(mushafPageMetaModel.pageNumber);
-        final arguments = SurahDetailArgs(
-          currentMushafPage: mushafPageMetaModel.pageNumber,
+        final MushafPageDetailArgs args = MushafPageDetailArgs(
+          pageNumber: mushafPageMetaModel.pageNumber,
         );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: arguments,
+          arguments: args,
         );
       },
       focusColor: appColors.inversePrimary.withAlpha(55),

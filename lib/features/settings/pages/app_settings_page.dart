@@ -71,6 +71,8 @@ class AppSettingsPage extends StatelessWidget {
                     appSettingsState.translationNameIndex = index;
                   },
                 ),
+                SettingListTileItem(value: appSettingsState.isArabicAyahShow, title: AppStrings.arabicAyah, onChanged: (onChanged) => appSettingsState.isArabicAyahShow = onChanged),
+                SettingListTileItem(value: appSettingsState.isTranslationAyahShow, title: AppStrings.translationAyah, onChanged: (onChanged) => appSettingsState.isTranslationAyahShow = onChanged),
                 const Divider(indent: 14, endIndent: 14),
                 const Padding(
                   padding: AppStyles.mainPadding,

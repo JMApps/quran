@@ -19,14 +19,4 @@ class MainState extends ChangeNotifier {
     _pageNumber = page;
     notifyListeners();
   }
-
-  int _toScrollPageNumber = 1;
-
-  int get toScrollPageNumber => _toScrollPageNumber;
-
-  void onMainPageChangedEnd(int page) {
-    if (_toScrollPageNumber == page) return;
-    _toScrollPageNumber = page;
-    notifyListeners();
-  }
 }

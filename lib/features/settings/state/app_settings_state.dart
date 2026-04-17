@@ -105,6 +105,40 @@ class AppSettingsState extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isArabicAyahShow = true;
+
+  bool get isArabicAyahShow => _isArabicAyahShow;
+
+  set isArabicAyahShow(bool state) {
+    if (_isArabicAyahShow == state) return;
+
+    if (!state && !_isTranslationAyahShow) {
+      _isTranslationAyahShow = true;
+      _appSettingsBox.put(AppKeys.keyShowTranslationAyah, true);
+    }
+
+    _isArabicAyahShow = state;
+    _appSettingsBox.put(AppKeys.keyShowArabicAyah, state);
+    notifyListeners();
+  }
+
+  bool _isTranslationAyahShow = true;
+
+  bool get isTranslationAyahShow => _isTranslationAyahShow;
+
+  set isTranslationAyahShow(bool state) {
+    if (_isTranslationAyahShow == state) return;
+
+    if (!state && !_isArabicAyahShow) {
+      _isArabicAyahShow = true;
+      _appSettingsBox.put(AppKeys.keyShowArabicAyah, true);
+    }
+
+    _isTranslationAyahShow = state;
+    _appSettingsBox.put(AppKeys.keyShowTranslationAyah, state);
+    notifyListeners();
+  }
+
   double _ayahArabicTextSize = 21.0;
 
   double get ayahArabicTextSize => _ayahArabicTextSize;

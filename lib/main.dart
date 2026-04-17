@@ -13,6 +13,8 @@ void main() async {
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 
+  final databaseService = QuranDatabaseService.instance;
+
   try {
     final dir = await getApplicationDocumentsDirectory();
     Hive.init(dir.path);
@@ -24,9 +26,7 @@ void main() async {
     await Hive.openBox(AppKeys.mainAppSettingsBox);
     await Hive.openBox(AppKeys.favoriteSettingsBox);
   }
-
-  final databaseService = QuranDatabaseService.instance;
-
+  
   runApp(
     MultiProvider(
       providers: AppProviders.build(databaseService),

@@ -5,7 +5,7 @@ import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/router/names_router.dart';
 import '../../favorites/widgets/ayah_item_params.dart';
-import '../../library/data/arguments/surah_detail_args.dart';
+import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
@@ -27,7 +27,7 @@ class SearchAyahItem extends StatelessWidget {
     final surahState = Provider.of<SurahNameState>(context, listen: false);
     final String surahInfo = surahState.getSurahNameWithAyah(surah: AppStrings.surah, ayah: AppStrings.ayah, verseKey: ayahByAyahModel.verseKey);
     const arabicStyle = TextStyle(
-      fontSize: 19.0,
+      fontSize: 21.0,
       fontFamily: AppStrings.fontUthmanicHafs,
       height: 2.5,
       letterSpacing: 0,
@@ -68,14 +68,14 @@ class SearchAyahItem extends StatelessWidget {
       onTap: () async {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(ayahByAyahModel.ayahPageNumber);
-        final arguments = SurahDetailArgs(
-          currentMushafPage: ayahByAyahModel.ayahPageNumber,
+        final args = MushafPageDetailArgs(
+          pageNumber: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition,
         );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: arguments,
+          arguments: args,
         );
       },
       onLongPress: () {

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/router/names_router.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../library/data/arguments/surah_detail_args.dart';
+import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/main_state.dart';
 import '../../settings/state/app_settings_state.dart';
@@ -29,14 +29,14 @@ class FavoriteAyahItem extends StatelessWidget {
       onTap: () async {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(ayahByAyahModel.ayahPageNumber);
-        final arguments = SurahDetailArgs(
-          currentMushafPage: ayahByAyahModel.ayahPageNumber,
+        final MushafPageDetailArgs args = MushafPageDetailArgs(
+          pageNumber: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition - 1,
         );
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
-          arguments: arguments,
+          arguments: args,
         );
       },
       onLongPress: () {

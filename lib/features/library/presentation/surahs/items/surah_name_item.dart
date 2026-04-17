@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/features/library/data/arguments/mushaf_page_detail_args.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
@@ -29,7 +30,12 @@ class SurahNameItem extends StatelessWidget {
       onTap: () {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(surahModel.startPageNumber);
-        Navigator.pushNamed(context, NamesRouter.pageSurahDetail);
+        final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: surahModel.startPageNumber);
+        Navigator.pushNamed(
+          context,
+          NamesRouter.pageSurahDetail,
+          arguments: args,
+        );
       },
       child: Container(
         padding: AppStyles.hrMiniVrBigPadding,

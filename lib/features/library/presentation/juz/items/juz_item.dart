@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/juz_entity.dart';
 import '../../state/main_state.dart';
 
@@ -30,9 +31,11 @@ class JuzItem extends StatelessWidget {
       onTap: () {
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(juzModel.startPageNumber);
+        final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: juzModel.startPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
+          arguments: args,
         );
       },
       child: Container(

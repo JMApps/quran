@@ -16,18 +16,34 @@ import '../widgets/to_page_button.dart';
 import '../widgets/translate_mushaf_page_button.dart';
 
 class MushafPageDetail extends StatefulWidget {
-  const MushafPageDetail({super.key});
 
+  final int pageNumber;
+
+  const MushafPageDetail({
+    super.key,
+    required this.pageNumber,
+  });
 
   @override
   State<MushafPageDetail> createState() => _MushafPageDetailState();
 }
 
 class _MushafPageDetailState extends State<MushafPageDetail> {
+  late final PageController _translationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _translationController = PageController(
+      initialPage: widget.pageNumber - 1,
+    );
+  }
+
   @override
   void dispose() {
     _showSystemUiWithDelay();
     super.dispose();
+    _translationController.dispose();
   }
 
   Future<void> _showSystemUiWithDelay() async {
@@ -53,8 +69,12 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
   @override
   Widget build(BuildContext context) {
     final int? currentPageNumber = context.select<MainState, int?>((e) => e.currentPage);
-    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber!));
-    final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber));
+    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>(
+      (s) => s.getPageMeta(currentPageNumber!),
+    );
+    final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>(
+      (s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber),
+    );
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         context.read<FavoritesState>().addLastOpenedPage(currentPageNumber);
@@ -102,7 +122,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
                       actions: [
                         const FavoritePageButton(),
                         TranslateMushafPageButton(currentMushafPage: currentPageNumber!),
-                        const ToPageButton(),
+                        ToPageButton(translationController: _translationController),
                       ],
                     ),
                   ),
@@ -120,6 +140,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
           },
           child: MushafPageDetailList(
             currentPage: currentPageNumber!,
+              translationController: _translationController
           ),
         ),
       ),
