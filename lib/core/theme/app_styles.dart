@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../strings/app_strings.dart';
 
 class AppStyles {
+  static const bigPadding = EdgeInsets.all(21);
   static const mainPadding = EdgeInsets.all(14);
   static const miniPadding = EdgeInsets.all(7);
   static const microPadding = EdgeInsets.all(3.5);

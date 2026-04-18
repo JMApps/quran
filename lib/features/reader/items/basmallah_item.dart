@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../settings/state/app_settings_state.dart';
 
@@ -14,7 +15,7 @@ class BasmallahItem extends StatelessWidget {
       child: Consumer<AppSettingsState>(
         builder: (context, appSettingsState, _) {
           return Text(
-            '\uFDFD',
+            AppStrings.basmallahGlyph.split('').join('\u200A'),
             textDirection: TextDirection.rtl,
             style: TextStyle(
               fontSize: appSettingsState.ayahArabicTextSize + 5.0,

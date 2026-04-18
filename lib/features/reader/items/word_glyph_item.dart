@@ -40,14 +40,13 @@ class WordGlyphItem extends StatelessWidget {
 
   String get _fontFamily => switch (layoutModel.lineType) {
     LineType.surahName => AppStrings.fontSurahName,
-    LineType.basmallah => AppStrings.fontUthmanicHafs,
+    LineType.basmallah => 'P1',
     _ => 'P${layoutModel.pageNumber}',
   };
 
   double _fontSize(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final isLandscape =
-        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final isLandscape = MediaQuery.orientationOf(context) == Orientation.landscape;
     final deviceTh = isLandscape ? size.width : size.height;
 
     switch (layoutModel.lineType) {
@@ -55,8 +54,8 @@ class WordGlyphItem extends StatelessWidget {
         if (_isSpecialPage) return deviceTh * 0.035;
         return isLandscape ? deviceTh * 0.060 : deviceTh * 0.040;
       case LineType.basmallah:
-        if (_isSpecialPage) return deviceTh * 0.035;
-        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.035;
+        if (_isSpecialPage) return deviceTh * 0.030;
+        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.030;
       default:
         if (_isSpecialPage) return deviceTh * 0.030;
         return isLandscape ? deviceTh * 0.060 : deviceTh * 0.030;
@@ -64,20 +63,16 @@ class WordGlyphItem extends StatelessWidget {
   }
 
   String get _lineText => switch (layoutModel.lineType) {
-    LineType.surahName =>
-        AppStrings.surahNameByNumber(layoutModel.surahNumber!),
-    LineType.basmallah => '\uFDFD',
-    _ => layoutModel.words
-        .map((e) => e.glyph)
-        .where((e) => e.isNotEmpty)
-        .join('\u200A'),
+    LineType.surahName => AppStrings.surahNameByNumber(layoutModel.surahNumber!),
+    LineType.basmallah => AppStrings.basmallahGlyph.split('').join('\u200A'),
+    _ => layoutModel.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A'),
   };
 
   double get _lineHeight {
     if (_isSpecialPage) return 1.75;
     return switch (layoutModel.lineType) {
-      LineType.surahName => 1.35,
-      LineType.basmallah => 1.45,
+      LineType.surahName => 1.75,
+      LineType.basmallah => 1.35,
       _ => 2.0,
     };
   }

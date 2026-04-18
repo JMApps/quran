@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/strings/app_strings.dart';
+import '../../library/presentation/state/surah_name_state.dart';
 
 class SurahHeaderItem extends StatelessWidget {
   const SurahHeaderItem({
@@ -14,9 +16,10 @@ class SurahHeaderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
+    final String surahNameTranscription = context.read<SurahNameState>().getSurahByNumber(surahNumber: surahNumber)!.nameTranscription;
     return Container(
-      padding: AppStyles.miniPadding,
-      margin: AppStyles.miniPadding,
+      padding: AppStyles.bigPadding,
+      margin: AppStyles.mainPadding,
       width: double.infinity,
       alignment: .center,
       decoration: BoxDecoration(
@@ -29,15 +32,14 @@ class SurahHeaderItem extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            AppStrings.surahNameByNumber(surahNumber),
+            surahNameTranscription,
             style: TextStyle(
-              fontSize: 45.0,
-              fontFamily: AppStrings.fontSurahName,
+              fontSize: 19.0,
+              fontFamily: AppStrings.fontGilroy,
               color: appColors.primary,
-              height: 2,
             ),
-            textDirection: .ltr,
             textAlign: .center,
+            overflow: .ellipsis,
           ),
         ],
       ),

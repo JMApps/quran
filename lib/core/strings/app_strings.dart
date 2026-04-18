@@ -96,6 +96,8 @@ class AppStrings {
 
   static const String jumpToPage = 'Переход к странице';
 
+  static const String basmallahGlyph = '\uFC41\uFC42\uFC43\uFC44';
+
   static const List<({String name, String column})> ayahTranslations = [
     (name: 'Кулиев', column: 'kuliev'),
     (name: 'Абу Адель', column: 'adel'),
