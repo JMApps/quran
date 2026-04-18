@@ -1,13 +1,13 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:quran/features/library/data/repositories/word_glyph_repository_impl.dart';
-import 'package:quran/features/library/presentation/state/word_glyph_state.dart';
+import 'package:quran/features/library/presentation/state/selected_ayah_state.dart';
 
 import '../../features/library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../features/library/data/repositories/hizb_repository_impl.dart';
 import '../../features/library/data/repositories/juz_repository_impl.dart';
 import '../../features/library/data/repositories/page_meta_repository_impl.dart';
 import '../../features/library/data/repositories/surah_name_repository_impl.dart';
+import '../../features/library/data/repositories/word_glyph_repository_impl.dart';
 import '../../features/library/presentation/state/ayah_by_ayah_state.dart';
 import '../../features/library/presentation/state/ayah_meta_state.dart';
 import '../../features/library/presentation/state/favorites_state.dart';
@@ -16,6 +16,7 @@ import '../../features/library/presentation/state/juz_state.dart';
 import '../../features/library/presentation/state/main_state.dart';
 import '../../features/library/presentation/state/page_meta_state.dart';
 import '../../features/library/presentation/state/surah_name_state.dart';
+import '../../features/library/presentation/state/word_glyph_state.dart';
 import '../../features/settings/state/app_settings_state.dart';
 import '../database/quran_database_service.dart';
 
@@ -34,6 +35,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<AppSettingsState>(
       create: (_) => AppSettingsState(),
+    ),
+    ChangeNotifierProvider<SelectedAyahState>(
+      create: (_) => SelectedAyahState(),
     ),
   ];
 

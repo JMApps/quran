@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran/core/theme/app_styles.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/line_type.dart';
+import '../../library/domain/entities/word_glyph_entity.dart';
+import '../../library/presentation/state/selected_ayah_state.dart';
 
 class WordGlyphItem extends StatelessWidget {
   const WordGlyphItem({
@@ -12,19 +16,18 @@ class WordGlyphItem extends StatelessWidget {
 
   final LayoutEntity layoutModel;
 
-  // TODO: убрать хардкод страниц 1-2 — определять режим по структуре данных
   bool get _isSpecialPage => layoutModel.pageNumber == 1 || layoutModel.pageNumber == 2;
 
-  bool get _isFixedRender => _isSpecialPage || layoutModel.lineType == LineType.surahName || layoutModel.lineType == LineType.basmallah;
+  bool get _isFixedRender =>
+      _isSpecialPage ||
+      layoutModel.lineType == LineType.surahName ||
+      layoutModel.lineType == LineType.basmallah;
 
-  // TODO: убрать хардкод суры 9 — в БД не должно быть basmallah для at-Tawba
   bool get _isSurah9 => layoutModel.surahNumber == 9;
 
   bool get _shouldHide {
     if (_isSurah9 && layoutModel.lineType == LineType.basmallah) return true;
-    if (layoutModel.pageNumber == 1 && layoutModel.lineType == LineType.surahName) {
-      return true;
-    }
+    if (layoutModel.pageNumber == 1 && layoutModel.lineType == LineType.surahName) return true;
     return false;
   }
 
@@ -83,8 +86,38 @@ class WordGlyphItem extends StatelessWidget {
     return (t == LineType.surahName || t == LineType.basmallah) ? 3.5 : 0;
   }
 
-  Widget _buildChild(TextStyle style, ColorScheme appColors) {
-    if (!_isFixedRender) return _buildScaledText(style);
+  // Группируем слова по ayahNumber, сохраняя порядок
+  List<({int surahNumber, int ayahNumber, List<WordGlyphEntity> words})> get _ayahSegments {
+    final segments = <({int surahNumber, int ayahNumber, List<WordGlyphEntity> words})>[];
+    for (final word in layoutModel.words) {
+      if (segments.isNotEmpty && segments.last.ayahNumber == word.ayahNumber) {
+        segments.last.words.add(word);
+      } else {
+        segments.add((
+          surahNumber: word.surahNumber,
+          ayahNumber: word.ayahNumber,
+          words: [word],
+        ));
+      }
+    }
+    return segments;
+  }
+
+  Widget _buildChild(TextStyle style, ColorScheme appColors, SelectedAyahState selectedState) {
+    // Специальные страницы: surahName и basmallah — без выделения,
+    // ayah — с выделением через сегментированный row
+    if (_isSpecialPage) {
+      switch (layoutModel.lineType) {
+        case LineType.surahName:
+          return _buildSurahName(style, appColors);
+        case LineType.basmallah:
+          return _buildBasmallah(style);
+        default:
+          return _buildSegmentedRow(style, appColors, selectedState);
+      }
+    }
+
+    if (!_isFixedRender) return _buildSegmentedRow(style, appColors, selectedState);
 
     switch (layoutModel.lineType) {
       case LineType.basmallah:
@@ -94,6 +127,79 @@ class WordGlyphItem extends StatelessWidget {
       default:
         return _buildFixedText(style);
     }
+  }
+
+  // Строка аята разбитая на сегменты по ayahNumber
+  Widget _buildSegmentedRow(TextStyle style, ColorScheme appColors, SelectedAyahState selectedState) {
+    final segments = _ayahSegments;
+
+    // Если один аят на строке — простой путь без лишних виджетов
+    if (segments.length == 1) {
+      final seg = segments.first;
+      final isSelected = selectedState.isSelected(seg.surahNumber, seg.ayahNumber);
+      final text = seg.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
+
+      return GestureDetector(
+        onTap: () {
+          selectedState.clear();
+        },
+        onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? appColors.primary.withAlpha(50) : Colors.transparent,
+            borderRadius: AppStyles.mainBorder,
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: _alignment,
+            child: Text(
+              text,
+              textDirection: TextDirection.rtl,
+              textAlign: _textAlign,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.visible,
+              style: style,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Несколько аятов на одной строке — сегментированный Row
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: _alignment,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        textDirection: TextDirection.rtl,
+        children: segments.map((seg) {
+          final isSelected = selectedState.isSelected(seg.surahNumber, seg.ayahNumber);
+          final text = seg.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
+
+          return GestureDetector(
+            onTap: () {
+              selectedState.clear();
+            },
+            onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isSelected ? appColors.primary.withAlpha(50) : Colors.transparent,
+                borderRadius: AppStyles.mainBorder,
+              ),
+              child: Text(
+                text,
+                textDirection: TextDirection.rtl,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
+                style: style,
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   Widget _buildBasmallah(TextStyle style) {
@@ -134,28 +240,13 @@ class WordGlyphItem extends StatelessWidget {
     );
   }
 
-  Widget _buildScaledText(TextStyle style) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: _alignment,
-      child: Text(
-        _lineText,
-        textDirection: TextDirection.rtl,
-        textAlign: _textAlign,
-        maxLines: 1,
-        softWrap: false,
-        overflow: TextOverflow.visible,
-        style: style,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_shouldHide) return const SizedBox.shrink();
 
     final appColors = Theme.of(context).colorScheme;
     final isFixed = _isFixedRender;
+    final selectedState = context.watch<SelectedAyahState>();
 
     final style = TextStyle(
       fontFamily: _fontFamily,
@@ -174,7 +265,7 @@ class WordGlyphItem extends StatelessWidget {
         width: double.infinity,
         child: Align(
           alignment: _alignment,
-          child: _buildChild(style, appColors),
+          child: _buildChild(style, appColors, selectedState),
         ),
       ),
     );
