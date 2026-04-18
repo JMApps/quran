@@ -6,8 +6,10 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
+import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/favorites_state.dart';
 import '../../library/presentation/state/main_state.dart';
+import '../../library/presentation/state/word_glyph_state.dart';
 
 class FavoritePageItem extends StatelessWidget {
   const FavoritePageItem({
@@ -28,6 +30,8 @@ class FavoritePageItem extends StatelessWidget {
     final itemEvenColor = appColors.secondary.withAlpha(05);
     return InkWell(
       onTap: () {
+        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: mushafPageMetaModel.pageNumber);
+        context.read<WordGlyphState>().loadPage(mushafPageMetaModel.pageNumber);
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(mushafPageMetaModel.pageNumber);
         final MushafPageDetailArgs args = MushafPageDetailArgs(

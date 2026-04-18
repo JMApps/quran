@@ -7,7 +7,9 @@ import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../../settings/state/app_settings_state.dart';
 import '../../../domain/entities/surah_name_entity.dart';
+import '../../state/ayah_by_ayah_state.dart';
 import '../../state/main_state.dart';
+import '../../state/word_glyph_state.dart';
 
 class SurahNameItem extends StatelessWidget {
   const SurahNameItem({
@@ -27,7 +29,9 @@ class SurahNameItem extends StatelessWidget {
     return InkWell(
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
-      onTap: () {
+      onTap: () async {
+        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: surahModel.startPageNumber);
+        context.read<WordGlyphState>().loadPage(surahModel.startPageNumber);
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(surahModel.startPageNumber);
         final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: surahModel.startPageNumber);

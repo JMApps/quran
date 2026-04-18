@@ -6,7 +6,9 @@ import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/juz_entity.dart';
+import '../../state/ayah_by_ayah_state.dart';
 import '../../state/main_state.dart';
+import '../../state/word_glyph_state.dart';
 
 class JuzItem extends StatelessWidget {
   const JuzItem({
@@ -29,6 +31,8 @@ class JuzItem extends StatelessWidget {
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
       onTap: () {
+        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: juzModel.startPageNumber);
+        context.read<WordGlyphState>().loadPage(juzModel.startPageNumber);
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(juzModel.startPageNumber);
         final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: juzModel.startPageNumber);

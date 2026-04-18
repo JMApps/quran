@@ -39,10 +39,7 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
-      _ayahState.loadPageAyahs(pageNumber: widget.currentPage);
       _ayahState.prefetchAround(widget.currentPage);
-
-      _wordGlyphState.loadPage(widget.currentPage);
       _wordGlyphState.prefetchAround(widget.currentPage);
     });
   }
@@ -65,13 +62,8 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
       itemCount: AppConstants.totalPagesCount,
       onPageChanged: (pageIndex) {
         final pageNumber = pageIndex + 1;
-
         context.read<MainState>().onMainPageChanged(pageNumber);
-
-        _ayahState.loadPageAyahs(pageNumber: pageNumber);
         _ayahState.prefetchAround(pageNumber);
-
-        _wordGlyphState.loadPage(pageNumber);
         _wordGlyphState.prefetchAround(pageNumber);
       },
       itemBuilder: (context, index) {

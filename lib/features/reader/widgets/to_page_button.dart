@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/strings/app_constants.dart';
+import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/main_state.dart';
+import '../../library/presentation/state/word_glyph_state.dart';
 
 class ToPageButton extends StatelessWidget {
   const ToPageButton({
@@ -47,8 +49,11 @@ class ToPageButton extends StatelessWidget {
                               mainState.onMainPageChanged(value.round());
                             },
                             onChangeEnd: (double value) {
+                              int pageNumber = value.round();
+                              context.read<AyahByAyahState>().loadPageAyahs(pageNumber: pageNumber);
+                              context.read<WordGlyphState>().loadPage(pageNumber);
                               if (translationController.hasClients) {
-                                translationController.jumpToPage(value.round() - 1);
+                                translationController.jumpToPage(pageNumber - 1);
                               }
                             },
                           ),

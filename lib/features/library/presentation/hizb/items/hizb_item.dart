@@ -6,7 +6,9 @@ import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
 import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/hizb_entity.dart';
+import '../../state/ayah_by_ayah_state.dart';
 import '../../state/main_state.dart';
+import '../../state/word_glyph_state.dart';
 
 class HizbItem extends StatelessWidget {
   const HizbItem({
@@ -29,6 +31,8 @@ class HizbItem extends StatelessWidget {
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
       onTap: () {
+        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: hizbModel.startPageNumber);
+        context.read<WordGlyphState>().loadPage(hizbModel.startPageNumber);
         final mainState = context.read<MainState>();
         mainState.onMainPageChanged(hizbModel.startPageNumber);
         final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: hizbModel.startPageNumber);
