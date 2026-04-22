@@ -58,7 +58,7 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
     return PageView.builder(
       controller: widget.translationController,
       reverse: true,
-      physics: const ClampingScrollPhysics(),
+      allowImplicitScrolling: true,
       itemCount: AppConstants.totalPagesCount,
       onPageChanged: (pageIndex) {
         final pageNumber = pageIndex + 1;
