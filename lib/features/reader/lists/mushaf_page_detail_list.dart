@@ -59,12 +59,17 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
       controller: widget.translationController,
       reverse: true,
       allowImplicitScrolling: true,
+      padEnds: false,
+      physics: const BouncingScrollPhysics(
+        parent: PageScrollPhysics(),
+      ),
       itemCount: AppConstants.totalPagesCount,
       onPageChanged: (pageIndex) {
         final pageNumber = pageIndex + 1;
         context.read<MainState>().onMainPageChanged(pageNumber);
-        _ayahState.prefetchAround(pageNumber);
         _wordGlyphState.prefetchAround(pageNumber);
+        _wordGlyphState.onPageSettled(pageNumber);
+        _ayahState.prefetchAround(pageNumber);
       },
       itemBuilder: (context, index) {
         if (!translationEnabled) {

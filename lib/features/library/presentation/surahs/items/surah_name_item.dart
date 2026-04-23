@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/library/data/arguments/mushaf_page_detail_args.dart';
 
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
-import '../../../../settings/state/app_settings_state.dart';
+import '../../../../settings/state/reading_settings_state.dart';
+import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
 import '../../state/ayah_by_ayah_state.dart';
 import '../../state/main_state.dart';
@@ -59,7 +59,7 @@ class SurahNameItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: .stretch,
                 children: [
-                  if (context.watch<AppSettingsState>().arabicNameSurah)
+                  if (context.watch<ReadingSettingsState>().arabicNameSurah)
                     Text(
                       AppStrings.surahNameByNumber(surahModel.surahNumber),
                       style: TextStyle(
@@ -76,7 +76,7 @@ class SurahNameItem extends StatelessWidget {
                         style: AppStyles.mediumTextStyle16,
                         maxLines: 1,
                       ),
-                      if (context.watch<AppSettingsState>().translationNameSurah)
+                      if (context.watch<ReadingSettingsState>().translationNameSurah)
                         Text(
                           ' (${surahModel.nameTranslation})',
                           style: AppStyles.mainTextStyle16,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,24 +15,25 @@ void main() async {
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 
-  final databaseService = QuranDatabaseService.instance;
+  await _openBoxWithRecovery(AppKeys.mainAppSettingsBox);
+  await _openBoxWithRecovery(AppKeys.favoriteSettingsBox);
 
-  try {
-    final dir = await getApplicationDocumentsDirectory();
-    Hive.init(dir.path);
-    await Hive.openBox(AppKeys.mainAppSettingsBox);
-    await Hive.openBox(AppKeys.favoriteSettingsBox);
-  } catch (e) {
-    await Hive.deleteBoxFromDisk(AppKeys.mainAppSettingsBox);
-    await Hive.deleteBoxFromDisk(AppKeys.favoriteSettingsBox);
-    await Hive.openBox(AppKeys.mainAppSettingsBox);
-    await Hive.openBox(AppKeys.favoriteSettingsBox);
-  }
-  
+  final databaseService = QuranDatabaseService.instance;
+  unawaited(databaseService.db);
+
   runApp(
     MultiProvider(
       providers: AppProviders.build(databaseService),
       child: const RootPage(),
     ),
   );
+}
+
+Future<void> _openBoxWithRecovery(String name) async {
+  try {
+    await Hive.openBox(name);
+  } catch (_, _) {
+    await Hive.deleteBoxFromDisk(name);
+    await Hive.openBox(name);
+  }
 }

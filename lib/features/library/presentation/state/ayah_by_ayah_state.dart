@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../core/strings/app_constants.dart';
 import '../../../../core/strings/app_strings.dart';
-import '../../../settings/state/app_settings_state.dart';
+import '../../../settings/state/locale_settings_state.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/repositories/ayah_by_ayah_repository.dart';
 
 class AyahByAyahState extends ChangeNotifier {
   final AyahByAyahRepository _ayahByAyahRepository;
-  final AppSettingsState _appSettingsState;
+  final LocaleSettingsState _localeSettingsState;
 
-  AyahByAyahState(this._ayahByAyahRepository, this._appSettingsState) {
-    _appSettingsState.addListener(_onSettingsChanged);
+  AyahByAyahState(this._ayahByAyahRepository, this._localeSettingsState) {
+    _localeSettingsState.addListener(_onSettingsChanged);
   }
 
-  String get translationsColumn => AppStrings.ayahTranslations[_appSettingsState.translationNameIndex].column;
+  String get translationsColumn => AppStrings.ayahTranslations[_localeSettingsState.translationNameIndex].column;
 
   void _onSettingsChanged() => clearCache();
 
@@ -93,7 +93,7 @@ class AyahByAyahState extends ChangeNotifier {
 
   @override
   void dispose() {
-    _appSettingsState.removeListener(_onSettingsChanged);
+    _localeSettingsState.removeListener(_onSettingsChanged);
     super.dispose();
   }
 }

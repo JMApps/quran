@@ -52,6 +52,8 @@ class WordGlyphItem extends StatelessWidget {
     final isLandscape = MediaQuery.orientationOf(context) == Orientation.landscape;
     final deviceTh = isLandscape ? size.width : size.height;
 
+    final ayahFontSize = _isSpecialPage ? deviceTh * 0.030 : (isLandscape ? deviceTh * 0.060 : deviceTh * 0.030);
+
     switch (layoutModel.lineType) {
       case LineType.surahName:
         if (_isSpecialPage) return deviceTh * 0.035;
@@ -60,8 +62,7 @@ class WordGlyphItem extends StatelessWidget {
         if (_isSpecialPage) return deviceTh * 0.030;
         return isLandscape ? deviceTh * 0.060 : deviceTh * 0.030;
       default:
-        if (_isSpecialPage) return deviceTh * 0.030;
-        return isLandscape ? deviceTh * 0.060 : deviceTh * 0.030;
+        return ayahFontSize;
     }
   }
 
@@ -140,9 +141,6 @@ class WordGlyphItem extends StatelessWidget {
       final text = seg.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
 
       return GestureDetector(
-        onTap: () {
-          selectedState.clear();
-        },
         onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
         child: Container(
           decoration: BoxDecoration(
@@ -178,9 +176,6 @@ class WordGlyphItem extends StatelessWidget {
           final text = seg.words.map((e) => e.glyph).where((e) => e.isNotEmpty).join('\u200A');
 
           return GestureDetector(
-            onTap: () {
-              selectedState.clear();
-            },
             onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
             child: Container(
               decoration: BoxDecoration(

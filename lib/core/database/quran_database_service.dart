@@ -10,7 +10,6 @@ class QuranDatabaseService {
 
   static const String _dbFileName = 'quran.db';
   static const int _dbVersion = 1;
-
   static const String _assetPath = 'assets/databases/$_dbFileName';
 
   Database? _db;
@@ -33,42 +32,61 @@ class QuranDatabaseService {
     final dbPath = p.join(dbDir, _dbFileName);
 
     await Directory(p.dirname(dbPath)).create(recursive: true);
+    await _ensureDatabaseInstalled(dbPath);
 
-    final file = File(dbPath);
-    if (!await file.exists()) {
-      await _copyAssetDbTo(dbPath);
-    }
-
-    // Open DB
-    var database = await openDatabase(
+    final database = await openDatabase(
       dbPath,
       singleInstance: true,
+      readOnly: true,
     );
-
-    final currentVersion = await database.getVersion();
-    if (currentVersion < _dbVersion) {
-      await database.close();
-
-      await deleteDatabase(dbPath);
-      await _copyAssetDbTo(dbPath);
-
-      database = await openDatabase(
-        dbPath,
-        singleInstance: true,
-      );
-      await database.setVersion(_dbVersion);
-    } else if (currentVersion == 0) {
-      await database.setVersion(_dbVersion);
-    }
 
     _db = database;
     _opening = null;
     return database;
   }
 
+  Future<void> _ensureDatabaseInstalled(String dbPath) async {
+    final file = File(dbPath);
+
+    // Случай 1: файла нет — первый запуск или после очистки данных.
+    if (!await file.exists()) {
+      await _copyAssetDbTo(dbPath);
+      await _setVersionRW(dbPath, _dbVersion);
+      return;
+    }
+
+    // Случай 2: файл есть — проверяем версию через отдельное соединение.
+    final probe = await openDatabase(dbPath, singleInstance: false);
+    final int currentVersion;
+    try {
+      currentVersion = await probe.getVersion();
+    } finally {
+      await probe.close();
+    }
+
+    if (currentVersion >= _dbVersion) return;
+
+    // Случай 3: БД устарела — перезаливаем из assets.
+    await deleteDatabase(dbPath);
+    await _copyAssetDbTo(dbPath);
+    await _setVersionRW(dbPath, _dbVersion);
+  }
+
+  Future<void> _setVersionRW(String dbPath, int version) async {
+    final db = await openDatabase(dbPath, singleInstance: false);
+    try {
+      await db.setVersion(version);
+    } finally {
+      await db.close();
+    }
+  }
+
   Future<void> _copyAssetDbTo(String dbPath) async {
     final data = await rootBundle.load(_assetPath);
-    final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    final bytes = data.buffer.asUint8List(
+      data.offsetInBytes,
+      data.lengthInBytes,
+    );
     await File(dbPath).writeAsBytes(bytes, flush: true);
   }
 
@@ -88,6 +106,7 @@ class QuranDatabaseService {
     await close();
     await deleteDatabase(dbPath);
     await _copyAssetDbTo(dbPath);
+    await _setVersionRW(dbPath, _dbVersion);
 
     await db;
   }

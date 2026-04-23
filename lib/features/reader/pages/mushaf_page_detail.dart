@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -41,9 +43,9 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
 
   @override
   void dispose() {
-    _showSystemUiWithDelay();
-    super.dispose();
     _translationController.dispose();
+    unawaited(_showSystemUiWithDelay());
+    super.dispose();
   }
 
   Future<void> _showSystemUiWithDelay() async {
@@ -68,13 +70,12 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final int? currentPageNumber = context.select<MainState, int?>((e) => e.currentPage);
-    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>(
-      (s) => s.getPageMeta(currentPageNumber!),
-    );
-    final SurahNameEntity? surahNameModel = context.select<SurahNameState, SurahNameEntity?>(
-      (s) => s.getSurahByNumber(surahNumber: pageMetaModel!.surahNumber),
-    );
+    final int currentPageNumber = context.select<MainState, int>((e) => e.currentPage);
+    final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber));
+    final SurahNameEntity? surahNameModel = pageMetaModel == null ? null : context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel.surahNumber),);
+    if (pageMetaModel == null || surahNameModel == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
+    }
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         context.read<FavoritesState>().addLastOpenedPage(currentPageNumber);
@@ -102,7 +103,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
                         crossAxisAlignment: .stretch,
                         children: [
                           Text(
-                            '${AppStrings.surah} ${surahNameModel!.nameTranscription}',
+                            '${AppStrings.surah} ${surahNameModel.nameTranscription}',
                             style: AppStyles.mainTextStyle18,
                           ),
                           Row(
@@ -112,7 +113,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
                                 style: AppStyles.mainTextStyle12,
                               ),
                               Text(
-                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel!.juzNumber}',
+                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel.juzNumber}',
                                 style: AppStyles.mainTextStyle12,
                               ),
                             ],
@@ -121,7 +122,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
                       ),
                       actions: [
                         const FavoritePageButton(),
-                        TranslateMushafPageButton(currentMushafPage: currentPageNumber!),
+                        TranslateMushafPageButton(currentMushafPage: currentPageNumber),
                         ToPageButton(translationController: _translationController),
                       ],
                     ),
@@ -139,7 +140,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
             surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
           },
           child: MushafPageDetailList(
-            currentPage: currentPageNumber!,
+            currentPage: currentPageNumber,
               translationController: _translationController
           ),
         ),

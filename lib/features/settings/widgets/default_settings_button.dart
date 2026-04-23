@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../state/app_settings_state.dart';
+import '../state/settings_reset_coordinator.dart';
 
 class DefaultSettingsButton extends StatelessWidget {
   const DefaultSettingsButton({super.key});
@@ -35,7 +35,7 @@ class DefaultSettingsButton extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  context.read<AppSettingsState>().setDefaultSettings();
+                                  context.read<SettingsResetCoordinator>().resetAll();
                                 },
                                 child: Text(
                                   AppStrings.reset,

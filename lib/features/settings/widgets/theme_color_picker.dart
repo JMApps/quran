@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
-import '../state/app_settings_state.dart';
+import '../state/display_settings_state.dart';
 
 class ThemeColorPicker extends StatelessWidget {
   const ThemeColorPicker({
@@ -40,7 +40,7 @@ class ThemeColorPicker extends StatelessWidget {
                   elevation: 0.5,
                   allowShades: false,
                   onMainColorChange: onChanged,
-                  selectedColor: Provider.of<AppSettingsState>(context).themeColor,
+                  selectedColor: context.watch<DisplaySettingsState>().themeColor,
                 ),
               ),
             ),

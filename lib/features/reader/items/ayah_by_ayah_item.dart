@@ -5,7 +5,7 @@ import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../favorites/widgets/ayah_item_params.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../settings/state/app_settings_state.dart';
+import '../../settings/state/reading_settings_state.dart';
 
 class AyahByAyahItem extends StatelessWidget {
   const AyahByAyahItem({
@@ -59,32 +59,32 @@ class AyahByAyahItem extends StatelessWidget {
                 ),
               ],
             ),
-            Consumer<AppSettingsState>(
-              builder: (context, appSettingsState, _) {
+            Consumer<ReadingSettingsState>(
+              builder: (context, readingSettingsState, _) {
                 return Column(
                   crossAxisAlignment: .stretch,
                   children: [
-                    SizedBox(height: appSettingsState.isArabicAyahShow ? 14 : 0),
+                    SizedBox(height: readingSettingsState.isArabicAyahShow ? 14 : 0),
                     Visibility(
-                      visible: appSettingsState.isArabicAyahShow,
+                      visible: readingSettingsState.isArabicAyahShow,
                       child: Text(
                         ayahByAyahModel.ayahArabic,
                         textDirection: .rtl,
                         style: TextStyle(
-                          fontSize: appSettingsState.ayahArabicTextSize,
+                          fontSize: readingSettingsState.ayahArabicTextSize,
                           fontFamily: AppStrings.fontUthmanicHafs,
                           height: 2.25,
                           letterSpacing: 0,
                         ),
                       ),
                     ),
-                    SizedBox(height: appSettingsState.isTranslationAyahShow ? 14 : 0),
+                    SizedBox(height: readingSettingsState.isTranslationAyahShow ? 14 : 0),
                     Visibility(
-                      visible: appSettingsState.isTranslationAyahShow,
+                      visible: readingSettingsState.isTranslationAyahShow,
                       child: Text(
                         ayahByAyahModel.ayahTranslation,
                         style: TextStyle(
-                          fontSize: appSettingsState.ayahTranslationTextSize,
+                          fontSize: readingSettingsState.ayahTranslationTextSize,
                           fontFamily: AppStrings.fontGilroy,
                         ),
                       ),

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/strings/app_locale.dart';
-import '../../../settings/state/app_settings_state.dart';
+import '../../../settings/state/locale_settings_state.dart';
 import '../../domain/entities/surah_name_entity.dart';
 import '../../domain/repositories/surah_name_repository.dart';
 
 class SurahNameState extends ChangeNotifier {
   final SurahNameRepository _surahNameRepository;
-  final AppSettingsState _appSettingsState;
+  final LocaleSettingsState _appSettingsState;
 
   SurahNameState(this._surahNameRepository, this._appSettingsState) {
     _appSettingsState.addListener(_onSettingsChanged);
@@ -48,8 +48,11 @@ class SurahNameState extends ChangeNotifier {
     final parts = verseKey.split(':');
     final surahNumber = int.parse(parts[0]);
     final ayahNumber = int.parse(parts[1]);
-
-    return '$surah ${_surahMap[surahNumber]!.nameTranscription}, $ayah $ayahNumber';
+    final surahModel = _surahMap[surahNumber];
+    if (surahModel == null) {
+      return '$surah $surahNumber, $ayah $ayahNumber';
+    }
+    return '$surah ${surahModel.nameTranscription}, $ayah $ayahNumber';
   }
 
   Future<void> loadAllSurahNames() => _loadData(force: false);
@@ -63,7 +66,7 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[_appSettingsState.getAppLocaleIndex].languageCode);
+      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[_appSettingsState.appLocaleIndex].languageCode);
       _surahMap..clear()..addEntries(_allSurahs.map((s) => MapEntry(s.surahNumber, s)));
       _isLoaded = true;
     } catch (e) {

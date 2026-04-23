@@ -9,7 +9,7 @@ import '../../library/domain/entities/ayah_by_ayah_entity.dart';
 import '../../library/presentation/state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/word_glyph_state.dart';
-import '../../settings/state/app_settings_state.dart';
+import '../../settings/state/reading_settings_state.dart';
 import '../widgets/ayah_item_params.dart';
 
 class FavoriteAyahItem extends StatelessWidget {
@@ -63,8 +63,8 @@ class FavoriteAyahItem extends StatelessWidget {
             ),
           ),
         ),
-        child: Consumer<AppSettingsState>(
-          builder: (context, appSettingsState, _) {
+        child: Consumer<ReadingSettingsState>(
+          builder: (context, readingSettingsState, _) {
             return Column(
               crossAxisAlignment: .stretch,
               children: [
@@ -72,7 +72,7 @@ class FavoriteAyahItem extends StatelessWidget {
                   ayahByAyahModel.ayahArabic,
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
-                    fontSize: appSettingsState.ayahArabicTextSize,
+                    fontSize: readingSettingsState.ayahArabicTextSize,
                     fontFamily: AppStrings.fontUthmanicHafs,
                     height: 2.5,
                     letterSpacing: 0,
@@ -82,7 +82,7 @@ class FavoriteAyahItem extends StatelessWidget {
                 Text(
                   ayahByAyahModel.ayahTranslation,
                   style: TextStyle(
-                    fontSize: appSettingsState.ayahTranslationTextSize,
+                    fontSize: readingSettingsState.ayahTranslationTextSize,
                     fontFamily: AppStrings.fontGilroy,
                   ),
                 ),

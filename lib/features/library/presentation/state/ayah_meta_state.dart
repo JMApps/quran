@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../../settings/state/app_settings_state.dart';
+import '../../../settings/state/locale_settings_state.dart';
 import '../../domain/entities/ayah_by_ayah_entity.dart';
 import '../../domain/repositories/ayah_by_ayah_repository.dart';
 
 class AyahMetaState extends ChangeNotifier {
   final AyahByAyahRepository _ayahByAyahRepository;
-  final AppSettingsState _appSettingsState;
+  final LocaleSettingsState _appSettingsState;
 
   AyahMetaState(this._ayahByAyahRepository, this._appSettingsState) {
     _appSettingsState.addListener(_onSettingsChanged);
@@ -28,23 +28,28 @@ class AyahMetaState extends ChangeNotifier {
   bool get isLoading => _isLoading;
   Object? get error => _error;
 
-  Future<void> loadAyahsMeta({required List<int> ayahIds}) async {
-    if (_isLoading) return;
+  int _generation = 0;
 
+  Future<void> loadAyahsMeta({required List<int> ayahIds}) async {
+    final int myGen = ++_generation;
     _isLoading = true;
     _error = null;
     notifyListeners();
-
     try {
-      final List<AyahByAyahEntity> result = await _ayahByAyahRepository.getAyahsByIds(ayahIds: ayahIds, translationColumn: translationsColumn);
-      _ayahMetaById = {
-        for (final item in result) item.ayahId: item,
-      };
+      final result = await _ayahByAyahRepository.getAyahsByIds(
+        ayahIds: ayahIds,
+        translationColumn: translationsColumn,
+      );
+      if (myGen != _generation) return; // устарели — молча выходим
+      _ayahMetaById = { for (final item in result) item.ayahId: item};
     } catch (e) {
+      if (myGen != _generation) return;
       _error = e;
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      if (myGen == _generation) {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
