@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/settings/widgets/default_settings_button.dart';
 
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../items/setting_list_tile_item.dart';
-import '../state/app_settings_state.dart';
+import '../state/display_settings_state.dart';
+import '../state/locale_settings_state.dart';
+import '../state/reading_settings_state.dart';
 import '../widgets/ayah_text_size_slider.dart';
+import '../widgets/default_settings_button.dart';
 import '../widgets/theme_color_picker.dart';
 import '../widgets/theme_mode_drop_down.dart';
 import '../widgets/translation_drop_down.dart';
@@ -25,89 +27,113 @@ class AppSettingsPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const .only(bottom: kBottomNavigationBarHeight),
-        child: Consumer<AppSettingsState>(
-          builder: (context, appSettingsState, _) {
-            return Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                const Divider(indent: 14, endIndent: 14),
-                SettingListTileItem(
-                  value: appSettingsState.arabicNameSurah,
-                  title: AppStrings.arabicSurahName,
-                  onChanged: (bool onChanged) {
-                    appSettingsState.arabicNameSurah = onChanged;
-                  },
-                ),
-                SettingListTileItem(
-                  value: appSettingsState.translationNameSurah,
-                  title: AppStrings.translationSurahName,
-                  onChanged: (bool onChanged) {
-                    appSettingsState.translationNameSurah = onChanged;
-                  },
-                ),
-                const Divider(indent: 14, endIndent: 14),
-                SettingListTileItem(
-                  value: appSettingsState.displayAlwaysOn,
-                  title: AppStrings.alwaysDisplayOn,
-                  onChanged: (bool onChanged) {
-                    appSettingsState.setDisplayAlwaysOn(onChanged);
-                  },
-                ),
-                const Divider(indent: 14, endIndent: 14),
-                ThemeModeDropDown(
-                  value: appSettingsState.appThemeModeIndex,
-                  title: AppStrings.appTheme,
-                  onChanged: (int? index) {
-                    appSettingsState.appThemeModeIndex = index!;
-                  },
-                ),
-                const Divider(indent: 14, endIndent: 14),
-                ThemeColorPicker(
-                  color: appSettingsState.themeColor,
-                  onChanged: (Color? color) {
-                    Navigator.pop(context);
-                    appSettingsState.themeColor = color!;
-                  },
-                ),
-                const Divider(indent: 14, endIndent: 14),
-                TranslationDropDown(
-                  selectedIndex: appSettingsState.translationNameIndex,
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            const Divider(indent: 14, endIndent: 14),
+            Consumer<ReadingSettingsState>(
+              builder: (BuildContext context, readingSettings, _) {
+                return Column(
+                  children: [
+                    SettingListTileItem(
+                      value: readingSettings.arabicNameSurah,
+                      title: AppStrings.arabicSurahName,
+                      onChanged: (bool onChanged) {
+                        readingSettings.arabicNameSurah = onChanged;
+                      },
+                    ),
+                    SettingListTileItem(
+                      value: readingSettings.translationNameSurah,
+                      title: AppStrings.translationSurahName,
+                      onChanged: (bool onChanged) {
+                        readingSettings.translationNameSurah = onChanged;
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+            const Divider(indent: 14, endIndent: 14),
+            Consumer<DisplaySettingsState>(
+              builder: (BuildContext context, displaySettings, _) {
+                return Column(
+                  children: [
+                    SettingListTileItem(
+                      value: displaySettings.displayAlwaysOn,
+                      title: AppStrings.alwaysDisplayOn,
+                      onChanged: (bool onChanged) {
+                        displaySettings.setDisplayAlwaysOn(onChanged);
+                      },
+                    ),
+                    const Divider(indent: 14, endIndent: 14),
+                    ThemeModeDropDown(
+                      value: displaySettings.appThemeModeIndex,
+                      title: AppStrings.appTheme,
+                      onChanged: (int? index) {
+                        displaySettings.appThemeModeIndex = index!;
+                      },
+                    ),
+                    const Divider(indent: 14, endIndent: 14),
+                    ThemeColorPicker(
+                      color: displaySettings.themeColor,
+                      onChanged: (Color? color) {
+                        Navigator.pop(context);
+                        displaySettings.themeColor = color!;
+                      },
+                    ),
+                    const Divider(indent: 14, endIndent: 14),
+                  ],
+                );
+              },
+            ),
+            Consumer<LocaleSettingsState>(
+              builder: (context, localeSettings, _) {
+                return TranslationDropDown(
+                  selectedIndex: localeSettings.translationNameIndex,
                   onChanged: (index) {
-                    appSettingsState.translationNameIndex = index;
+                    localeSettings.translationNameIndex = index;
                   },
-                ),
-                SettingListTileItem(
-                  value: appSettingsState.isArabicAyahShow,
-                  title: AppStrings.arabicAyah,
-                  onChanged: (onChanged) => appSettingsState.isArabicAyahShow = onChanged,
-                ),
-                SettingListTileItem(
-                  value: appSettingsState.isTranslationAyahShow,
-                  title: AppStrings.translationAyah,
-                  onChanged: (onChanged) => appSettingsState.isTranslationAyahShow = onChanged,
-                ),
-                const Divider(indent: 14, endIndent: 14),
-                const Padding(
-                  padding: AppStyles.mainPadding,
-                  child: Text(
-                    AppStrings.ayahsTextSize,
-                    style: AppStyles.mainTextStyle16,
-                  ),
-                ),
-                AyahTextSizeSlider(
-                  title: AppStrings.arabic,
-                  size: appSettingsState.ayahArabicTextSize,
-                  onChanged: (double value) => appSettingsState.ayahArabicTextSize = value,
-                ),
-                AyahTextSizeSlider(
-                  title: AppStrings.translation,
-                  size: appSettingsState.ayahTranslationTextSize,
-                  onChanged: (double value) => appSettingsState.ayahTranslationTextSize = value,
-                ),
-                const Divider(indent: 14, endIndent: 14),
-              ],
-            );
-          },
+                );
+              },
+            ),
+            Consumer<ReadingSettingsState>(
+              builder: (context, readingSettings, _) {
+                return Column(
+                  children: [
+                    SettingListTileItem(
+                      value: readingSettings.isArabicAyahShow,
+                      title: AppStrings.arabicAyah,
+                      onChanged: (onChanged) => readingSettings.isArabicAyahShow = onChanged,
+                    ),
+                    SettingListTileItem(
+                      value: readingSettings.isTranslationAyahShow,
+                      title: AppStrings.translationAyah,
+                      onChanged: (onChanged) => readingSettings.isTranslationAyahShow = onChanged,
+                    ),
+                    const Divider(indent: 14, endIndent: 14),
+                    const Padding(
+                      padding: AppStyles.mainPadding,
+                      child: Text(
+                        AppStrings.ayahsTextSize,
+                        style: AppStyles.mainTextStyle16,
+                      ),
+                    ),
+                    AyahTextSizeSlider(
+                      title: AppStrings.arabic,
+                      size: readingSettings.ayahArabicTextSize,
+                      onChanged: (double value) => readingSettings.ayahArabicTextSize = value,
+                    ),
+                    AyahTextSizeSlider(
+                      title: AppStrings.translation,
+                      size: readingSettings.ayahTranslationTextSize,
+                      onChanged: (double value) => readingSettings.ayahTranslationTextSize = value,
+                    ),
+                  ],
+                );
+              },
+            ),
+            const Divider(indent: 14, endIndent: 14),
+          ],
         ),
       ),
     );

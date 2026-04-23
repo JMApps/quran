@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:quran/features/library/presentation/state/selected_ayah_state.dart';
 
 import '../../features/library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../features/library/data/repositories/hizb_repository_impl.dart';
@@ -15,26 +14,47 @@ import '../../features/library/presentation/state/hizb_state.dart';
 import '../../features/library/presentation/state/juz_state.dart';
 import '../../features/library/presentation/state/main_state.dart';
 import '../../features/library/presentation/state/page_meta_state.dart';
+import '../../features/library/presentation/state/selected_ayah_state.dart';
 import '../../features/library/presentation/state/surah_name_state.dart';
 import '../../features/library/presentation/state/word_glyph_state.dart';
-import '../../features/settings/state/app_settings_state.dart';
+import '../../features/settings/state/locale_settings_state.dart';
+import '../../features/settings/state/display_settings_state.dart';
+import '../../features/settings/state/reading_settings_state.dart';
+import '../../features/settings/state/settings_reset_coordinator.dart';
 import '../database/quran_database_service.dart';
 
 class AppProviders {
   static List<SingleChildWidget> build(QuranDatabaseService databaseService) {
     return [
+      ..._settingsProviders(),
       ..._coreProviders(),
       ..._repositoryProviders(databaseService),
       ..._stateProviders(),
     ];
   }
 
+  static List<SingleChildWidget> _settingsProviders() => [
+    ChangeNotifierProvider<LocaleSettingsState>(
+      create: (_) => LocaleSettingsState(),
+    ),
+    ChangeNotifierProvider<DisplaySettingsState>(
+      create: (_) => DisplaySettingsState(),
+    ),
+    ChangeNotifierProvider<ReadingSettingsState>(
+      create: (_) => ReadingSettingsState(),
+    ),
+    Provider<SettingsResetCoordinator>(
+      create: (context) => SettingsResetCoordinator(
+        context.read<LocaleSettingsState>(),
+        context.read<DisplaySettingsState>(),
+        context.read<ReadingSettingsState>(),
+      ),
+    ),
+  ];
+
   static List<SingleChildWidget> _coreProviders() => [
     ChangeNotifierProvider<MainState>(
       create: (_) => MainState(),
-    ),
-    ChangeNotifierProvider<AppSettingsState>(
-      create: (_) => AppSettingsState(),
     ),
     ChangeNotifierProvider<SelectedAyahState>(
       create: (_) => SelectedAyahState(),
@@ -73,13 +93,13 @@ class AppProviders {
       lazy: false,
       create: (context) => SurahNameState(
         context.read<SurahNameRepositoryImpl>(),
-        context.read<AppSettingsState>(),
+        context.read<LocaleSettingsState>(),
       )..loadAllSurahNames(),
     ),
     ChangeNotifierProvider<AyahByAyahState>(
       create: (context) => AyahByAyahState(
         context.read<AyahByAyahRepositoryImpl>(),
-          context.read<AppSettingsState>(),
+          context.read<LocaleSettingsState>(),
       ),
     ),
     ChangeNotifierProvider<JuzState>(
@@ -97,7 +117,7 @@ class AppProviders {
     ChangeNotifierProvider<AyahMetaState>(
       create: (context) => AyahMetaState(
         context.read<AyahByAyahRepositoryImpl>(),
-        context.read<AppSettingsState>(),
+        context.read<LocaleSettingsState>(),
       ),
     ),
     ChangeNotifierProvider<PageMetaState>(
