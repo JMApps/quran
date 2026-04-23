@@ -25,22 +25,21 @@ class MushafPageDetailList extends StatefulWidget {
 }
 
 class _MushafPageDetailListState extends State<MushafPageDetailList> with WidgetsBindingObserver {
-  late final AyahByAyahState _ayahState;
   late final WordGlyphState _wordGlyphState;
+  late final AyahByAyahState _ayahState;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _ayahState = context.read<AyahByAyahState>();
     _wordGlyphState = context.read<WordGlyphState>();
+    _ayahState = context.read<AyahByAyahState>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-
-      _ayahState.prefetchAround(widget.currentPage);
       _wordGlyphState.prefetchAround(widget.currentPage);
+      _ayahState.prefetchAround(widget.currentPage);
     });
   }
 
@@ -50,6 +49,12 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
       final currentPage = context.read<MainState>().currentPage;
       context.read<FavoritesState>().addLastOpenedPage(currentPage);
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override

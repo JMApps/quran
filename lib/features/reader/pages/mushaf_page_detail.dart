@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/strings/app_strings.dart';
-import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
@@ -13,12 +11,9 @@ import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/mushaf_page_detail_list.dart';
-import '../widgets/favorite_page_button.dart';
-import '../widgets/to_page_button.dart';
-import '../widgets/translate_mushaf_page_button.dart';
+import '../widgets/mushaf_page_app_bar.dart';
 
 class MushafPageDetail extends StatefulWidget {
-
   final int pageNumber;
 
   const MushafPageDetail({
@@ -72,7 +67,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
   Widget build(BuildContext context) {
     final int currentPageNumber = context.select<MainState, int>((e) => e.currentPage);
     final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber));
-    final SurahNameEntity? surahNameModel = pageMetaModel == null ? null : context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel.surahNumber),);
+    final SurahNameEntity? surahNameModel = pageMetaModel == null ? null : context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel.surahNumber));
     if (pageMetaModel == null || surahNameModel == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
     }
@@ -85,51 +80,11 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Consumer<SurahNameState>(
-            builder: (context, surahState, _) {
-              return AnimatedSlide(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeInOut,
-                offset: surahState.showAppBar ? .zero : const Offset(0, -1),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: surahState.showAppBar ? 1 : 0,
-                  child: IgnorePointer(
-                    ignoring: !surahState.showAppBar,
-                    child: AppBar(
-                      elevation: 3.5,
-                      titleSpacing: 0,
-                      title: Column(
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          Text(
-                            '${AppStrings.surah} ${surahNameModel.nameTranscription}',
-                            style: AppStyles.mainTextStyle18,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '${AppStrings.page} $currentPageNumber, ',
-                                style: AppStyles.mainTextStyle12,
-                              ),
-                              Text(
-                                '${AppStrings.juz.toLowerCase()} ${pageMetaModel.juzNumber}',
-                                style: AppStyles.mainTextStyle12,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        const FavoritePageButton(),
-                        TranslateMushafPageButton(currentMushafPage: currentPageNumber),
-                        ToPageButton(translationController: _translationController),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+          child: MushafPageAppBar(
+            currentPageNumber: currentPageNumber,
+            pageMetaModel: pageMetaModel,
+            surahNameModel: surahNameModel,
+            translationController: _translationController,
           ),
         ),
         body: GestureDetector(
@@ -141,7 +96,7 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
           },
           child: MushafPageDetailList(
             currentPage: currentPageNumber,
-              translationController: _translationController
+            translationController: _translationController,
           ),
         ),
       ),

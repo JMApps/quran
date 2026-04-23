@@ -19,61 +19,45 @@ class WordGlyphList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSpecialPage = layoutsPage.first.pageNumber == 1 || layoutsPage.first.pageNumber == 2;
+    final layoutModel = layoutsPage.first;
 
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final mediaQuery = MediaQuery.of(context);
-        final isLandscape = orientation == Orientation.landscape;
-        final screenHeight = mediaQuery.size.height;
-        final headerHeight = isLandscape ? screenHeight * 0.115 : screenHeight * 0.085;
-        final footerHeight = isLandscape ? screenHeight * 0.075: screenHeight * 0.025;
+    final items = layoutsPage.map((layout) => WordGlyphItem(layoutModel: layout)).toList(growable: false);
 
-        final items = layoutsPage.map((layout) => WordGlyphItem(
-          layoutModel: layout,
-        )).toList();
-
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: screenHeight,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: AppStyles.hrMainPadding,
-                  child: SizedBox(
-                    height: headerHeight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${AppStrings.surah} $surahNameTranscription'),
-                        Text('${AppStrings.juz} $juzNumber'),
-                      ],
-                    ),
-                  ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          height: constraints.maxHeight,
+          child: Column(
+            children: [
+              Padding(
+                padding: AppStyles.bigPadding,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${AppStrings.surah} $surahNameTranscription'),
+                    Text('${AppStrings.juz} $juzNumber'),
+                  ],
                 ),
-                isSpecialPage ? Center(
+              ),
+              Expanded(
+                child: layoutModel.isCentered ? Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items,
                   ),
                 ) : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: items,
                 ),
-                Padding(
-                  padding: AppStyles.hrMainPadding,
-                  child: SizedBox(
-                    height: footerHeight,
-                    child: Text(
-                      layoutsPage.first.pageNumber.toString(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+              ),
+              Padding(
+                padding: AppStyles.miniPadding,
+                child: Text(
+                  layoutModel.pageNumber.toString(),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
