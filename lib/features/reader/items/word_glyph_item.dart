@@ -13,9 +13,11 @@ class WordGlyphItem extends StatelessWidget {
   WordGlyphItem({
     super.key,
     required this.layoutModel,
+    required this.fontSize,
   }) : _segments = _buildSegments(layoutModel.words);
 
   final LayoutEntity layoutModel;
+  final double fontSize;
   final List<Segment> _segments;
 
   static List<Segment> _buildSegments(List<WordGlyphEntity> words) {
@@ -46,12 +48,6 @@ class WordGlyphItem extends StatelessWidget {
     return out;
   }
 
-  double get _fontSize => switch (layoutModel.lineType) {
-    LineType.basmallah => 26.0,
-    LineType.surahName => 26.0,
-    _ => 26.0,
-  };
-
   String get _fontFamily => switch (layoutModel.lineType) {
     LineType.surahName => AppStrings.fontSurahName,
     LineType.basmallah => 'P1',
@@ -78,7 +74,7 @@ class WordGlyphItem extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: _fontFamily,
-          fontSize: _fontSize,
+          fontSize: fontSize,
           height: _fontHeight,
         ),
       ),
@@ -100,7 +96,7 @@ class WordGlyphItem extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: _fontFamily,
-          fontSize: _fontSize,
+          fontSize: fontSize,
           height: _fontHeight,
         ),
       ),
@@ -108,34 +104,30 @@ class WordGlyphItem extends StatelessWidget {
   }
 
   Widget _buildSegmentedRow(SelectedAyahState selectedState, Color primaryColor) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        textDirection: TextDirection.rtl,
-        children: _segments.map((seg) {
-          final isSelected = selectedState.isSelected(seg.surahNumber, seg.ayahNumber);
-          return GestureDetector(
-            onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected ? primaryColor.withAlpha(50) : Colors.transparent,
-                borderRadius: AppStyles.mainBorder,
-              ),
-              child: Text(
-                seg.text,  // ← уже готовая строка
-                textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontFamily: _fontFamily,
-                  fontSize: _fontSize,
-                  height: _fontHeight,
-                ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      textDirection: TextDirection.rtl,
+      children: _segments.map((seg) {
+        final isSelected = selectedState.isSelected(seg.surahNumber, seg.ayahNumber);
+        return GestureDetector(
+          onLongPress: () => selectedState.select(seg.surahNumber, seg.ayahNumber),
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected ? primaryColor.withAlpha(50) : Colors.transparent,
+              borderRadius: AppStyles.mainBorder,
+            ),
+            child: Text(
+              seg.text,  // ← уже готовая строка
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                fontFamily: _fontFamily,
+                fontSize: fontSize,
+                height: _fontHeight,
               ),
             ),
-          );
-        }).toList(growable: false),
-      ),
+          ),
+        );
+      }).toList(growable: false),
     );
   }
 
