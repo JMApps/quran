@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../../reader/state/mushaf_page_number_state.dart';
 import '../../../../settings/state/reading_settings_state.dart';
 import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/surah_name_entity.dart';
-import '../../state/ayah_by_ayah_state.dart';
-import '../../state/main_state.dart';
-import '../../state/word_glyph_state.dart';
+import '../../../../reader/state/ayah_by_ayah_state.dart';
+import '../../../../reader/state/word_glyph_state.dart';
 
 class SurahNameItem extends StatelessWidget {
   const SurahNameItem({
@@ -30,10 +30,17 @@ class SurahNameItem extends StatelessWidget {
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
       onTap: () async {
-        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: surahModel.startPageNumber);
-        context.read<WordGlyphState>().loadPage(surahModel.startPageNumber);
-        final mainState = context.read<MainState>();
-        mainState.onMainPageChanged(surahModel.startPageNumber);
+        final ayahByAyahState = context.read<AyahByAyahState>();
+        final wordGlyphState = context.read<WordGlyphState>();
+
+        ayahByAyahState.loadSelectPageAyahs(pageNumber: surahModel.startPageNumber);
+        ayahByAyahState.prefetchAround(pageNumber: surahModel.startPageNumber);
+        wordGlyphState.loadSelectPageLines(pageNumber: surahModel.startPageNumber);
+        wordGlyphState.prefetchAround(pageNumber: surahModel.startPageNumber);
+
+        final mushafPageNumberState = context.read<MushafPageNumberState>();
+        mushafPageNumberState.currentPageNumber = surahModel.startPageNumber;
+
         final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: surahModel.startPageNumber);
         Navigator.pushNamed(
           context,
@@ -66,7 +73,7 @@ class SurahNameItem extends StatelessWidget {
                         color: appColors.primary,
                         fontFamily: AppStrings.fontSurahName,
                         fontSize: 27.5,
-                        height: 1,
+                        height: 1.0,
                       ),
                     ),
                   Row(

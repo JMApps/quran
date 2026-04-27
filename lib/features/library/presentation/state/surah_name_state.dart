@@ -7,18 +7,11 @@ import '../../domain/repositories/surah_name_repository.dart';
 
 class SurahNameState extends ChangeNotifier {
   final SurahNameRepository _surahNameRepository;
-  final LocaleSettingsState _appSettingsState;
+  final LocaleSettingsState _localeSettingsState;
 
-  SurahNameState(this._surahNameRepository, this._appSettingsState) {
-    _appSettingsState.addListener(_onSettingsChanged);
+  SurahNameState(this._surahNameRepository, this._localeSettingsState) {
+    _localeSettingsState.addListener(_onSettingsChanged);
   }
-
-  void _onSettingsChanged() {
-    refreshAllSurahs();
-    notifyListeners();
-  }
-
-  bool _showAppBar = true;
 
   List<SurahNameEntity> _allSurahs = const [];
   final Map<int, SurahNameEntity> _surahMap = {};
@@ -27,18 +20,11 @@ class SurahNameState extends ChangeNotifier {
   bool _isLoaded = false;
   Object? _error;
 
-  bool get showAppBar => _showAppBar;
-
   List<SurahNameEntity> get allSurahs => List.unmodifiable(_allSurahs);
 
   bool get isLoading => _isLoading;
 
   Object? get error => _error;
-
-  void toggleShowAppBar() {
-    _showAppBar = !_showAppBar;
-    notifyListeners();
-  }
 
   SurahNameEntity? getSurahByNumber({required int surahNumber}) {
     return _surahMap[surahNumber];
@@ -66,7 +52,7 @@ class SurahNameState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[_appSettingsState.appLocaleIndex].languageCode);
+      _allSurahs = await _surahNameRepository.getAllSurahs(languageCode: AppLocale.appLocales[_localeSettingsState.appLocaleIndex].languageCode);
       _surahMap..clear()..addEntries(_allSurahs.map((s) => MapEntry(s.surahNumber, s)));
       _isLoaded = true;
     } catch (e) {
@@ -80,9 +66,14 @@ class SurahNameState extends ChangeNotifier {
 
   Future<void> refreshAllSurahs() => _loadData(force: true);
 
+  void _onSettingsChanged() {
+    refreshAllSurahs();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
-    _appSettingsState.removeListener(_onSettingsChanged);
+    _localeSettingsState.removeListener(_onSettingsChanged);
     super.dispose();
   }
 }

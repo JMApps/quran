@@ -16,7 +16,7 @@ class SurahHeaderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final String surahNameTranscription = context.read<SurahNameState>().getSurahByNumber(surahNumber: surahNumber)!.nameTranscription;
+    final String surahNameTranscription = context.select<SurahNameState, String>((s) => s.getSurahByNumber(surahNumber: surahNumber)!.nameTranscription);
     return Container(
       padding: AppStyles.bigPadding,
       margin: AppStyles.mainPadding,
@@ -29,19 +29,15 @@ class SurahHeaderItem extends StatelessWidget {
           fit: .scaleDown,
         ),
       ),
-      child: Column(
-        children: [
-          Text(
-            surahNameTranscription,
-            style: TextStyle(
-              fontSize: 19.0,
-              fontFamily: AppStrings.fontGilroy,
-              color: appColors.primary,
-            ),
-            textAlign: .center,
-            overflow: .ellipsis,
-          ),
-        ],
+      child: Text(
+        surahNameTranscription,
+        style: TextStyle(
+          fontSize: 19.0,
+          fontFamily: AppStrings.fontGilroy,
+          color: appColors.primary,
+        ),
+        textAlign: .center,
+        overflow: .ellipsis,
       ),
     );
   }

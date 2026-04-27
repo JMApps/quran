@@ -17,15 +17,6 @@ class PageMetaState extends ChangeNotifier {
   bool get isLoading => _isLoading;
   Object? get error => _error;
 
-  bool _translationEnabled = false;
-
-  bool get translationEnabled => _translationEnabled;
-
-  set translationEnabled(bool state) {
-    _translationEnabled = state;
-    notifyListeners();
-  }
-
   Future<void> loadAllPagesMeta() async {
     if (_isLoading || _isLoaded) return;
 

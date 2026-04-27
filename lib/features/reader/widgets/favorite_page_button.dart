@@ -4,15 +4,18 @@ import 'package:provider/provider.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../library/presentation/state/favorites_state.dart';
-import '../../library/presentation/state/main_state.dart';
 
 class FavoritePageButton extends StatelessWidget {
-  const FavoritePageButton({super.key});
+  const FavoritePageButton({
+    super.key,
+    required this.currentPage,
+  });
+
+  final int currentPage;
 
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).colorScheme;
-    final int currentPage = context.select<MainState, int>((s) => s.currentPage);
     return Consumer<FavoritesState>(
       builder: (context, mushafPageMetaState, _) {
         return IconButton(
@@ -30,7 +33,8 @@ class FavoritePageButton extends StatelessWidget {
             );
           },
           tooltip: mushafPageMetaState.isFavoritePage(currentPage) ? AppStrings.removeFromFavorite : AppStrings.addToFavorite,
-          icon: Icon(mushafPageMetaState.isFavoritePage(currentPage) ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+          icon: Icon(
+            mushafPageMetaState.isFavoritePage(currentPage) ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
           ),
         );
       },

@@ -1,16 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/favorites_state.dart';
-import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
 import '../lists/mushaf_page_detail_list.dart';
+import '../state/mushaf_page_number_state.dart';
+import '../state/show_app_bar_state.dart';
+import '../state/translation_mode_state.dart';
 import '../widgets/mushaf_page_app_bar.dart';
 
 class MushafPageDetail extends StatefulWidget {
@@ -39,33 +38,12 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
   @override
   void dispose() {
     _translationController.dispose();
-    unawaited(_showSystemUiWithDelay());
     super.dispose();
-  }
-
-  Future<void> _showSystemUiWithDelay() async {
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarContrastEnforced: false,
-        systemStatusBarContrastEnforced: false,
-      ),
-    );
-  }
-
-  Future<void> _hideSystemUiWithDelay() async {
-    await Future<void>.delayed(const Duration(milliseconds: 125));
-    await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.immersiveSticky,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final int currentPageNumber = context.select<MainState, int>((e) => e.currentPage);
+    final int currentPageNumber = context.select<MushafPageNumberState, int>((e) => e.currentPageNumber);
     final PageMetaEntity? pageMetaModel = context.select<PageMetaState, PageMetaEntity?>((s) => s.getPageMeta(currentPageNumber));
     final SurahNameEntity? surahNameModel = pageMetaModel == null ? null : context.select<SurahNameState, SurahNameEntity?>((s) => s.getSurahByNumber(surahNumber: pageMetaModel.surahNumber));
     if (pageMetaModel == null || surahNameModel == null) {
@@ -75,28 +53,40 @@ class _MushafPageDetailState extends State<MushafPageDetail> {
       onPopInvokedWithResult: (didPop, result) {
         context.read<FavoritesState>().addLastOpenedPage(currentPageNumber);
       },
-      child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: MushafPageAppBar(
-            currentPageNumber: currentPageNumber,
-            pageMetaModel: pageMetaModel,
-            surahNameModel: surahNameModel,
-            translationController: _translationController,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ShowAppBarState(),
           ),
-        ),
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            final surahState = Provider.of<SurahNameState>(context, listen: false);
-            surahState.toggleShowAppBar();
-            surahState.showAppBar ? _showSystemUiWithDelay() : _hideSystemUiWithDelay();
-          },
-          child: MushafPageDetailList(
-            currentPage: currentPageNumber,
-            translationController: _translationController,
+          ChangeNotifierProvider(
+            create: (_) => TranslationModeState(),
+          ),
+        ],
+        child: Scaffold(
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: MushafPageAppBar(
+              currentPageNumber: currentPageNumber,
+              pageMetaModel: pageMetaModel,
+              surahNameModel: surahNameModel,
+              translationController: _translationController,
+            ),
+          ),
+          body: Consumer<ShowAppBarState>(
+            builder: (context, showAppBarState, _) {
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  showAppBarState.changeShowingAppBar();
+                },
+                child: MushafPageDetailList(
+                  currentPageNumber: currentPageNumber,
+                  translationController: _translationController,
+                ),
+              );
+            },
           ),
         ),
       ),

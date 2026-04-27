@@ -5,7 +5,7 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/repositories/ayah_by_ayah_repository_impl.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/ayah_by_ayah_state.dart';
+import '../../reader/state/ayah_by_ayah_state.dart';
 import '../lists/ayah_search_list.dart';
 
 class SearchAyahsBody extends StatelessWidget {

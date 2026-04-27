@@ -58,7 +58,7 @@ flutter:
         - asset: assets/fonts/sf_pro_regular.ttf
     - family: 'Surah name'
       fonts:
-        - asset: assets/fonts/surah_name_v2.ttf
+        - asset: assets/fonts/surah_name_v4.ttf
     - family: 'P1'
       fonts:
         - asset: assets/pagefonts/p1.ttf

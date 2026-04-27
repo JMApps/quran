@@ -7,8 +7,8 @@ import '../../../core/router/names_router.dart';
 import '../../favorites/widgets/ayah_item_params.dart';
 import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/main_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
+import '../../reader/state/mushaf_page_number_state.dart';
 
 class SearchAyahItem extends StatelessWidget {
   const SearchAyahItem({
@@ -66,8 +66,8 @@ class SearchAyahItem extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        final mainState = context.read<MainState>();
-        mainState.onMainPageChanged(ayahByAyahModel.ayahPageNumber);
+        final mainState = context.read<MushafPageNumberState>();
+        mainState.currentPageNumber = ayahByAyahModel.ayahPageNumber;
         final args = MushafPageDetailArgs(
           pageNumber: ayahByAyahModel.ayahPageNumber,
           ayahPosition: ayahByAyahModel.ayahPosition,

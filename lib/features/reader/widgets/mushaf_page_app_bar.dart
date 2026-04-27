@@ -5,9 +5,9 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
-import '../../library/presentation/state/surah_name_state.dart';
+import '../state/show_app_bar_state.dart';
 import 'favorite_page_button.dart';
-import 'to_page_button.dart';
+import 'to_mushaf_page_button.dart';
 import 'translate_mushaf_page_button.dart';
 
 class MushafPageAppBar extends StatelessWidget {
@@ -25,7 +25,7 @@ class MushafPageAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showAppBar = context.select<SurahNameState, bool>((s) => s.showAppBar);
+    final showAppBar = context.select<ShowAppBarState, bool>((s) => s.showAppBar);
     return AnimatedSlide(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
@@ -60,9 +60,9 @@ class MushafPageAppBar extends StatelessWidget {
               ],
             ),
             actions: [
-              const FavoritePageButton(),
+              FavoritePageButton(currentPage: currentPageNumber),
               TranslateMushafPageButton(currentMushafPage: currentPageNumber),
-              ToPageButton(translationController: translationController),
+              ToMushafPageButton(translationController: translationController),
             ],
           ),
         ),

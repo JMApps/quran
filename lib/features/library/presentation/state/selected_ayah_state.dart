@@ -7,8 +7,9 @@ class SelectedAyahState extends ChangeNotifier {
   int? get surahNumber => _surahNumber;
   int? get ayahNumber => _ayahNumber;
 
-  bool isSelected(int surahNumber, int ayahNumber) =>
-      _surahNumber == surahNumber && _ayahNumber == ayahNumber;
+  bool isSelected(int surahNumber, int ayahNumber) {
+    return _surahNumber == surahNumber && _ayahNumber == ayahNumber;
+  }
 
   void select(int surahNumber, int ayahNumber) {
     if (isSelected(surahNumber, ayahNumber)) {

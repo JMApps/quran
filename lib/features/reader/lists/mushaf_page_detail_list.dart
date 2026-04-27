@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/strings/app_constants.dart';
-import '../../library/presentation/state/ayah_by_ayah_state.dart';
+import '../state/ayah_by_ayah_state.dart';
 import '../../library/presentation/state/favorites_state.dart';
-import '../../library/presentation/state/main_state.dart';
-import '../../library/presentation/state/page_meta_state.dart';
-import '../../library/presentation/state/word_glyph_state.dart';
-import '../items/mushaf_translation_list_item.dart';
+import '../state/word_glyph_state.dart';
+import '../items/translation_ayah_detail_item.dart';
 import '../items/word_glyph_detail_item.dart';
+import '../state/mushaf_page_number_state.dart';
+import '../state/translation_mode_state.dart';
 
 class MushafPageDetailList extends StatefulWidget {
   const MushafPageDetailList({
     super.key,
-    required this.currentPage,
+    required this.currentPageNumber,
     required this.translationController,
   });
 
-  final int currentPage;
+  final int currentPageNumber;
   final PageController translationController;
 
   @override
@@ -38,17 +38,15 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _wordGlyphState.prefetchAround(widget.currentPage);
-      _ayahState.prefetchAround(widget.currentPage);
+      _wordGlyphState.prefetchAround(pageNumber: widget.currentPageNumber);
+      _ayahState.prefetchAround(pageNumber: widget.currentPageNumber);
     });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
-      final currentPage = context.read<MainState>().currentPage;
-      context.read<FavoritesState>().addLastOpenedPage(currentPage);
-    }
+    if (state == AppLifecycleState.resumed) return;
+    context.read<FavoritesState>().addLastOpenedPage(context.read<MushafPageNumberState>().currentPageNumber);
   }
 
   @override
@@ -59,34 +57,18 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
 
   @override
   Widget build(BuildContext context) {
-    final translationEnabled = context.select<PageMetaState, bool>((s) => s.translationEnabled);
+    final translationMode = context.select<TranslationModeState, bool>((s) => s.translationMode);
     return PageView.builder(
       controller: widget.translationController,
       reverse: true,
-      allowImplicitScrolling: true,
-      padEnds: false,
-      physics: const BouncingScrollPhysics(
-        parent: PageScrollPhysics(),
-      ),
       itemCount: AppConstants.totalPagesCount,
-      onPageChanged: (pageIndex) {
-        final pageNumber = pageIndex + 1;
-        context.read<MainState>().onMainPageChanged(pageNumber);
-        _wordGlyphState.prefetchAround(pageNumber);
-        _wordGlyphState.onPageSettled(pageNumber);
-        _ayahState.prefetchAround(pageNumber);
+      onPageChanged: (index) {
+        final currentPageNumber = index + 1;
+        context.read<MushafPageNumberState>().currentPageNumber = currentPageNumber;
+        _wordGlyphState.prefetchAround(pageNumber: currentPageNumber);
+        _ayahState.prefetchAround(pageNumber: currentPageNumber);
       },
-      itemBuilder: (context, index) {
-        if (!translationEnabled) {
-          return WordGlyphDetailItem(
-            index: index,
-          );
-        } else {
-          return MushafTranslationListItem(
-            index: index,
-          );
-        }
-      },
+      itemBuilder: (context, index) => translationMode ? TranslationAyahDetailItem(index: index) : WordGlyphDetailItem(index: index),
     );
   }
 }

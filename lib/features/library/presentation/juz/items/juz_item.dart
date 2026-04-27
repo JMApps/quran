@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import '../../../../../core/router/names_router.dart';
 import '../../../../../core/strings/app_strings.dart';
 import '../../../../../core/theme/app_styles.dart';
+import '../../../../reader/state/mushaf_page_number_state.dart';
 import '../../../data/arguments/mushaf_page_detail_args.dart';
 import '../../../domain/entities/juz_entity.dart';
-import '../../state/ayah_by_ayah_state.dart';
-import '../../state/main_state.dart';
-import '../../state/word_glyph_state.dart';
+import '../../../../reader/state/ayah_by_ayah_state.dart';
+import '../../../../reader/state/word_glyph_state.dart';
 
 class JuzItem extends StatelessWidget {
   const JuzItem({
@@ -31,10 +31,17 @@ class JuzItem extends StatelessWidget {
       splashColor: appColors.inversePrimary,
       focusColor: appColors.inversePrimary.withAlpha(55),
       onTap: () {
-        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: juzModel.startPageNumber);
-        context.read<WordGlyphState>().loadPage(juzModel.startPageNumber);
-        final mainState = context.read<MainState>();
-        mainState.onMainPageChanged(juzModel.startPageNumber);
+        final ayahByAyahState = context.read<AyahByAyahState>();
+        final wordGlyphState = context.read<WordGlyphState>();
+
+        ayahByAyahState.loadSelectPageAyahs(pageNumber: juzModel.startPageNumber);
+        ayahByAyahState.prefetchAround(pageNumber: juzModel.startPageNumber);
+        wordGlyphState.loadSelectPageLines(pageNumber: juzModel.startPageNumber);
+        wordGlyphState.prefetchAround(pageNumber: juzModel.startPageNumber);
+
+        final mushafPageNumberState = context.read<MushafPageNumberState>();
+        mushafPageNumberState.currentPageNumber = juzModel.startPageNumber;
+
         final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: juzModel.startPageNumber);
         Navigator.pushNamed(
           context,

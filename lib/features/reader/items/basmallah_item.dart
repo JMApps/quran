@@ -13,14 +13,13 @@ class BasmallahItem extends StatelessWidget {
     return Padding(
       padding: AppStyles.bottomMainPadding,
       child: Text(
-        AppStrings.basmallahGlyph.split('').join(''),
-        textDirection: TextDirection.rtl,
+        AppStrings.basmallahGlyph.split('').join('\u200A'),
+        textDirection: .rtl,
         style: TextStyle(
           fontSize: context.watch<ReadingSettingsState>().ayahArabicTextSize + 5.0,
           fontFamily: 'P1',
-          wordSpacing: 0
         ),
-        textAlign: TextAlign.center,
+        textAlign: .center,
       ),
     );
   }

@@ -6,9 +6,9 @@ import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/data/arguments/mushaf_page_detail_args.dart';
 import '../../library/domain/entities/ayah_by_ayah_entity.dart';
-import '../../library/presentation/state/ayah_by_ayah_state.dart';
-import '../../library/presentation/state/main_state.dart';
-import '../../library/presentation/state/word_glyph_state.dart';
+import '../../reader/state/ayah_by_ayah_state.dart';
+import '../../reader/state/word_glyph_state.dart';
+import '../../reader/state/mushaf_page_number_state.dart';
 import '../../settings/state/reading_settings_state.dart';
 import '../widgets/ayah_item_params.dart';
 
@@ -29,14 +29,18 @@ class FavoriteAyahItem extends StatelessWidget {
     final appColors = Theme.of(context).colorScheme;
     return InkWell(
       onTap: () {
-        context.read<AyahByAyahState>().loadPageAyahs(pageNumber: ayahByAyahModel.ayahPageNumber);
-        context.read<WordGlyphState>().loadPage(ayahByAyahModel.ayahPageNumber);
-        final mainState = context.read<MainState>();
-        mainState.onMainPageChanged(ayahByAyahModel.ayahPageNumber);
-        final MushafPageDetailArgs args = MushafPageDetailArgs(
-          pageNumber: ayahByAyahModel.ayahPageNumber,
-          ayahPosition: ayahByAyahModel.ayahPosition - 1,
-        );
+        final ayahByAyahState = context.read<AyahByAyahState>();
+        final wordGlyphState = context.read<WordGlyphState>();
+
+        ayahByAyahState.loadSelectPageAyahs(pageNumber: ayahByAyahModel.ayahPageNumber);
+        ayahByAyahState.prefetchAround(pageNumber: ayahByAyahModel.ayahPageNumber);
+        wordGlyphState.loadSelectPageLines(pageNumber: ayahByAyahModel.ayahPageNumber);
+        wordGlyphState.prefetchAround(pageNumber: ayahByAyahModel.ayahPageNumber);
+
+        final mushafPageNumberState = context.read<MushafPageNumberState>();
+        mushafPageNumberState.currentPageNumber = ayahByAyahModel.ayahPageNumber;
+
+        final MushafPageDetailArgs args = MushafPageDetailArgs(pageNumber: ayahByAyahModel.ayahPageNumber);
         Navigator.pushNamed(
           context,
           NamesRouter.pageSurahDetail,
