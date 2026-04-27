@@ -4,67 +4,59 @@ import 'package:provider/provider.dart';
 import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../library/domain/entities/layout_entity.dart';
-import '../../library/domain/entities/line_type.dart';
-import '../../library/presentation/state/selected_ayah_state.dart';
+import '../../settings/state/reading_settings_state.dart';
 
 class WordGlyphItem extends StatelessWidget {
-  const WordGlyphItem({super.key, required this.layoutModel});
-  final LayoutEntity layoutModel;
+  const WordGlyphItem({
+    super.key,
+    required this.surahNameTranscription,
+    required this.juzNumber,
+    required this.pageNumber,
+    required this.layoutsPage,
+  });
 
-  String get _fontFamily => switch (layoutModel.lineType) {
-    LineType.surahName => AppStrings.fontSurahName,
-    LineType.basmallah => 'P1',
-    _ => 'P${layoutModel.pageNumber}',
-  };
-
-  double get _fontHeight => layoutModel.lineType == LineType.ayah ? 2.15 : 1.75;
-
-  TextStyle get _style => TextStyle(fontFamily: _fontFamily, fontSize: 24.0, height: _fontHeight, letterSpacing: 0);
+  final String surahNameTranscription;
+  final int juzNumber;
+  final int pageNumber;
+  final List<LayoutEntity> layoutsPage;
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    return switch (layoutModel.lineType) {
-      LineType.surahName => Container(
-        width: double.maxFinite,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            colorFilter: ColorFilter.mode(primary, .srcIn),
-            image: const AssetImage('assets/pictures/s_header.png'),
+    final baseStyle = TextStyle(
+      fontFamily: 'P$pageNumber',
+      fontSize: context.select<ReadingSettingsState, double>((s) => s.ayahArabicTextSize),
+      height: 2.15,
+    );
+
+    return Column(
+      children: [
+        Padding(
+          padding: AppStyles.bigPadding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${AppStrings.surah} $surahNameTranscription'),
+              Text('${AppStrings.juz} $juzNumber'),
+            ],
           ),
         ),
-        child: Text(
-          AppStrings.surahNameByNumber(layoutModel.surahNumber!),
-          textDirection: .rtl,
-          textAlign: .center,
-          style: _style,
-        ),
-      ),
-      LineType.basmallah => IntrinsicWidth(
-        child: Text(
-          AppStrings.basmallahGlyph,
-          textDirection: .rtl,
-          textAlign: .center,
-          style: _style,
-        ),
-      ),
-      _ => Row(
-        mainAxisSize: .min,
-        textDirection: .rtl,
-        children: layoutModel.glyphs.map((segment) {
-          final selected = context.watch<SelectedAyahState>().isSelected(segment.surahNumber, segment.ayahNumber);
-          return GestureDetector(
-            onLongPress: () => context.read<SelectedAyahState>().select(segment.surahNumber, segment.ayahNumber),
-            child: Container(
-              decoration: BoxDecoration(
-                color: selected ? primary.withAlpha(50) : Colors.transparent,
-                borderRadius: AppStyles.mainBorder,
+        Expanded(
+          child: Column(
+            mainAxisAlignment: .center,
+            children: layoutsPage.map((line) => Text.rich(
+              TextSpan(
+                style: baseStyle,
+                children: line.glyphs.map((segment) => TextSpan(text: segment.glyph)).toList(growable: false),
               ),
-              child: Text(segment.glyph, textDirection: .rtl, style: _style),
-            ),
-          );
-        }).toList(growable: false),
-      ),
-    };
+              textDirection: TextDirection.rtl,
+            )).toList(growable: false),
+          ),
+        ),
+        Padding(
+          padding: AppStyles.mainPadding,
+          child: Text(pageNumber.toString(), textAlign: TextAlign.center),
+        ),
+      ],
+    );
   }
 }
