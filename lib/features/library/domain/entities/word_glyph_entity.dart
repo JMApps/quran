@@ -6,7 +6,6 @@ class WordGlyphEntity extends Equatable {
   final int ayahNumber;
   final int wordNumber;
   final String glyph;
-  final String wholeWord;
 
   const WordGlyphEntity({
     required this.location,
@@ -14,7 +13,6 @@ class WordGlyphEntity extends Equatable {
     required this.ayahNumber,
     required this.wordNumber,
     required this.glyph,
-    required this.wholeWord,
   });
 
   @override
@@ -24,6 +22,5 @@ class WordGlyphEntity extends Equatable {
     ayahNumber,
     wordNumber,
     glyph,
-    wholeWord,
   ];
 }

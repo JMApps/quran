@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/strings/app_strings.dart';
-import '../../library/presentation/state/page_meta_state.dart';
+import '../state/translation_mode_state.dart';
 
 class TranslateMushafPageButton extends StatelessWidget {
   const TranslateMushafPageButton({
@@ -14,15 +14,17 @@ class TranslateMushafPageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PageMetaState>(
-      builder: (context, pageMetaState, _) {
+    return Consumer<TranslationModeState>(
+      builder: (context, translationModeState, _) {
         return IconButton(
           onPressed: () {
-            pageMetaState.translationEnabled = !pageMetaState.translationEnabled;
+            translationModeState.changeTranslationMode();
           },
           visualDensity: const VisualDensity(horizontal: -4),
           tooltip: AppStrings.translate,
-          icon: Icon(pageMetaState.translationEnabled ? Icons.menu_book_rounded : Icons.public_outlined),
+          icon: Icon(
+            translationModeState.translationMode ? Icons.menu_book_rounded : Icons.public_outlined,
+          ),
         );
       },
     );

@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import '../../../../core/strings/app_strings.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/strings/app_constants.dart';
-import '../../library/presentation/state/ayah_by_ayah_state.dart';
-import '../../library/presentation/state/main_state.dart';
-import '../../library/presentation/state/word_glyph_state.dart';
+import '../state/ayah_by_ayah_state.dart';
+import '../state/word_glyph_state.dart';
+import '../state/mushaf_page_number_state.dart';
 
-class ToPageButton extends StatelessWidget {
-  const ToPageButton({
+class ToMushafPageButton extends StatelessWidget {
+  const ToMushafPageButton({
     super.key,
     required this.translationController,
   });
@@ -23,14 +23,14 @@ class ToPageButton extends StatelessWidget {
         showModalBottomSheet(
           context: context,
           builder: (ctx) {
-            return Container(
-              margin: AppStyles.topMiniPadding,
-              padding: AppStyles.withoutTopPadding,
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  Consumer<MainState>(
-                    builder: (context, mainState, _) {
+            return Column(
+              mainAxisSize: .min,
+              children: [
+                Container(
+                  margin: AppStyles.topMiniPadding,
+                  padding: AppStyles.withoutTopPadding,
+                  child: Consumer<MushafPageNumberState>(
+                    builder: (context, mushafPageNumberState, _) {
                       return SliderTheme(
                         data: SliderTheme.of(context).copyWith(
                           trackHeight: 1.75,
@@ -40,18 +40,25 @@ class ToPageButton extends StatelessWidget {
                           textDirection: .rtl,
                           child: Slider(
                             showValueIndicator: .alwaysVisible,
-                            value: mainState.currentPage.toDouble(),
-                            label: '${mainState.currentPage}',
+                            value: mushafPageNumberState.currentPageNumber.toDouble(),
+                            label: '${mushafPageNumberState.currentPageNumber}',
                             min: 1,
                             max: AppConstants.totalPagesCount.toDouble(),
                             divisions: AppConstants.totalPagesCount,
                             onChanged: (double value) {
-                              mainState.onMainPageChanged(value.round());
+                              mushafPageNumberState.currentPageNumber = value.round();
                             },
                             onChangeEnd: (double value) {
                               int pageNumber = value.round();
-                              context.read<AyahByAyahState>().loadPageAyahs(pageNumber: pageNumber);
-                              context.read<WordGlyphState>().loadPage(pageNumber);
+
+                              final ayahByAyahState = context.read<AyahByAyahState>();
+                              final wordGlyphState = context.read<WordGlyphState>();
+
+                              ayahByAyahState.loadSelectPageAyahs(pageNumber: pageNumber);
+                              ayahByAyahState.prefetchAround(pageNumber: pageNumber);
+                              wordGlyphState.loadSelectPageLines(pageNumber: pageNumber);
+                              wordGlyphState.prefetchAround(pageNumber: pageNumber);
+                              
                               if (translationController.hasClients) {
                                 translationController.jumpToPage(pageNumber - 1);
                               }
@@ -61,13 +68,8 @@ class ToPageButton extends StatelessWidget {
                       );
                     },
                   ),
-                  const Text(
-                    AppStrings.jumpToPage,
-                    style: AppStyles.mainTextStyle18,
-                  ),
-                  const SizedBox(height: 7),
-                ],
-              ),
+                ),
+              ],
             );
           },
         );

@@ -29,6 +29,7 @@ class _AyahByAyahListState extends State<AyahByAyahList> {
   void initState() {
     super.initState();
     _itemScrollController = ItemScrollController();
+    // TODO передать позицию аята
     _scrollToIndex(0);
   }
 

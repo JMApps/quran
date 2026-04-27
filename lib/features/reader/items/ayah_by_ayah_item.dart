@@ -33,19 +33,17 @@ class AyahByAyahItem extends StatelessWidget {
       },
       child: Container(
         padding: AppStyles.vrBigHrMiniPadding,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: .symmetric(
             horizontal: BorderSide(
               width: 0.25,
-              color: Colors.grey,
+              color: appColors.secondary,
             ),
           ),
         ),
         child: Column(
-          crossAxisAlignment: .start,
           children: [
             Row(
-              mainAxisAlignment: .start,
               children: [
                 Container(
                   width: 65,

@@ -34,25 +34,18 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
       [pageNumber],
     );
 
-    return result
-        .map((map) => AyahByAyahModel.fromMap(map).toEntity())
-        .toList(growable: false);
+    return result.map((map) => AyahByAyahModel.fromMap(map).toEntity()).toList(growable: false);
   }
 
   @override
-  Future<List<AyahByAyahEntity>> getSearchAyah({
-    required String query,
-    required String translationColumn,
-  }) async {
+  Future<List<AyahByAyahEntity>> getSearchAyah({required String query, required String translationColumn}) async {
     final db = await _quranDatabaseService.db;
     final trimmedQuery = query.trim();
 
     if (trimmedQuery.isEmpty) return const [];
 
     final isArabicQuery = _containsArabic(trimmedQuery);
-    final matchQuery = isArabicQuery
-        ? _buildArabicMatchQuery(trimmedQuery)
-        : _buildTextMatchQuery(translationColumn, trimmedQuery);
+    final matchQuery = isArabicQuery ? _buildArabicMatchQuery(trimmedQuery) : _buildTextMatchQuery(translationColumn, trimmedQuery);
 
     if (matchQuery.isEmpty) return const [];
 
@@ -113,10 +106,7 @@ class AyahByAyahRepositoryImpl implements AyahByAyahRepository {
   }
 
   @override
-  Future<List<AyahByAyahEntity>> getAyahsByIds({
-    required List<int> ayahIds,
-    required String translationColumn,
-  }) async {
+  Future<List<AyahByAyahEntity>> getAyahsByIds({required List<int> ayahIds, required String translationColumn}) async {
     if (ayahIds.isEmpty) return const [];
 
     final db = await _quranDatabaseService.db;

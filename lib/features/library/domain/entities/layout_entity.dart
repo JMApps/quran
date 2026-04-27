@@ -9,7 +9,7 @@ class LayoutEntity extends Equatable {
   final LineType lineType;
   final bool isCentered;
   final int? surahNumber;
-  final List<WordGlyphEntity> words;
+  final List<WordGlyphEntity> glyphs;
 
   const LayoutEntity({
     required this.pageNumber,
@@ -17,7 +17,7 @@ class LayoutEntity extends Equatable {
     required this.lineType,
     required this.isCentered,
     required this.surahNumber,
-    required this.words,
+    required this.glyphs,
   });
 
   @override
@@ -27,6 +27,6 @@ class LayoutEntity extends Equatable {
     lineType,
     isCentered,
     surahNumber,
-    words,
+    glyphs,
   ];
 }

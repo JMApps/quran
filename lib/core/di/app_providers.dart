@@ -7,7 +7,7 @@ import '../../features/library/data/repositories/juz_repository_impl.dart';
 import '../../features/library/data/repositories/page_meta_repository_impl.dart';
 import '../../features/library/data/repositories/surah_name_repository_impl.dart';
 import '../../features/library/data/repositories/word_glyph_repository_impl.dart';
-import '../../features/library/presentation/state/ayah_by_ayah_state.dart';
+import '../../features/reader/state/ayah_by_ayah_state.dart';
 import '../../features/library/presentation/state/ayah_meta_state.dart';
 import '../../features/library/presentation/state/favorites_state.dart';
 import '../../features/library/presentation/state/hizb_state.dart';
@@ -16,7 +16,8 @@ import '../../features/library/presentation/state/main_state.dart';
 import '../../features/library/presentation/state/page_meta_state.dart';
 import '../../features/library/presentation/state/selected_ayah_state.dart';
 import '../../features/library/presentation/state/surah_name_state.dart';
-import '../../features/library/presentation/state/word_glyph_state.dart';
+import '../../features/reader/state/word_glyph_state.dart';
+import '../../features/reader/state/mushaf_page_number_state.dart';
 import '../../features/settings/state/locale_settings_state.dart';
 import '../../features/settings/state/display_settings_state.dart';
 import '../../features/settings/state/reading_settings_state.dart';
@@ -53,6 +54,9 @@ class AppProviders {
   ];
 
   static List<SingleChildWidget> _coreProviders() => [
+    ChangeNotifierProvider(
+      create: (_) => MushafPageNumberState(),
+    ),
     ChangeNotifierProvider<MainState>(
       create: (_) => MainState(),
     ),
@@ -84,7 +88,6 @@ class AppProviders {
 
   static List<SingleChildWidget> _stateProviders() => [
     ChangeNotifierProvider<WordGlyphState>(
-      lazy: false,
       create: (context) => WordGlyphState(
         context.read<WordGlyphRepositoryImpl>(),
       ),
