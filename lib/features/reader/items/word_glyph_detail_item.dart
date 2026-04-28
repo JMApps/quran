@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran/features/reader/items/word_glyph_item.dart';
 
-import '../../library/domain/entities/layout_entity.dart';
 import '../../library/domain/entities/page_meta_entity.dart';
 import '../../library/domain/entities/surah_name_entity.dart';
 import '../../library/presentation/state/page_meta_state.dart';
 import '../../library/presentation/state/surah_name_state.dart';
+import '../../settings/state/reading_settings_state.dart';
 import '../state/word_glyph_state.dart';
+import 'word_glyph_item.dart';
 
 class WordGlyphDetailItem extends StatelessWidget {
   const WordGlyphDetailItem({
@@ -21,11 +21,17 @@ class WordGlyphDetailItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final pageNumber = index + 1;
 
-    final isLoaded = context.select<WordGlyphState, bool>((s) => s.isLinesLoaded(pageNumber: pageNumber));
-    final error = context.select<WordGlyphState, Object?>((s) => s.isLinesError(pageNumber: pageNumber));
-    final linesPage = context.select<WordGlyphState, List<LayoutEntity>>((s) => s.getPageLines(pageNumber: pageNumber));
+    final wordGlyphState = context.read<WordGlyphState>();
 
-    if (error != null) {
+    //final isLoaded = context.select<WordGlyphState, bool>((s) => s.isLinesLoaded(pageNumber:pageNumber));
+    // final error = context.select<WordGlyphState, Object?>((s) => s.isLinesError(pageNumber:pageNumber));
+    // final linesPage = context.select<WordGlyphState, List<LayoutEntity>>((s) => s.getPageLines(pageNumber: pageNumber));
+
+    final isLoaded = context.watch<WordGlyphState>().isLinesLoaded(pageNumber: pageNumber);
+    final isError = context.watch<WordGlyphState>().isLinesError(pageNumber: pageNumber);
+    final linesPage = context.read<WordGlyphState>().getPageLines(pageNumber: pageNumber);
+
+    if (isError != null) {
       return const Center(
         child: Icon(
           Icons.error_rounded,
@@ -54,12 +60,19 @@ class WordGlyphDetailItem extends StatelessWidget {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
 
+    final baseStyle = TextStyle(
+      fontFamily: 'P$pageNumber',
+      fontSize: context.watch<ReadingSettingsState>().ayahArabicTextSize,
+      height: 2.15,
+    );
+
     return RepaintBoundary(
       child: WordGlyphItem(
         surahNameTranscription: surahNameModel.nameTranscription,
         juzNumber: pageMetaModel.juzNumber,
         pageNumber: pageNumber,
         layoutsPage: linesPage,
+        fontStyle: baseStyle,
       ),
     );
   }
