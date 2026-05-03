@@ -62,7 +62,9 @@ class _MushafPageDetailListState extends State<MushafPageDetailList> with Widget
     final translationMode = context.select<TranslationModeState, bool>((s) => s.translationMode);
     return PageView.builder(
       controller: widget.translationController,
-      physics: const AlwaysScrollableScrollPhysics(),
+      allowImplicitScrolling: false,
+      clipBehavior: Clip.hardEdge,
+      physics: const ClampingScrollPhysics(),
       reverse: true,
       dragStartBehavior: .down,
       itemCount: AppConstants.totalPagesCount,

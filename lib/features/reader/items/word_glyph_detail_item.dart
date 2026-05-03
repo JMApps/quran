@@ -27,8 +27,8 @@ class WordGlyphDetailItem extends StatelessWidget {
     // final error = context.select<WordGlyphState, Object?>((s) => s.isLinesError(pageNumber:pageNumber));
     // final linesPage = context.select<WordGlyphState, List<LayoutEntity>>((s) => s.getPageLines(pageNumber: pageNumber));
 
-    final isLoaded = context.watch<WordGlyphState>().isLinesLoaded(pageNumber: pageNumber);
-    final isError = context.watch<WordGlyphState>().isLinesError(pageNumber: pageNumber);
+    final isLoaded = context.select<WordGlyphState, bool>((s) => s.isLinesLoaded(pageNumber: pageNumber));
+    final isError = context.select<WordGlyphState, Object?>((s) => s.isLinesError(pageNumber: pageNumber));
     final linesPage = context.read<WordGlyphState>().getPageLines(pageNumber: pageNumber);
 
     if (isError != null) {

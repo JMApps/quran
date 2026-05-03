@@ -35,7 +35,6 @@ class SurahNameItem extends StatelessWidget {
 
         ayahByAyahState.loadSelectPageAyahs(pageNumber: surahModel.startPageNumber);
         ayahByAyahState.prefetchAround(pageNumber: surahModel.startPageNumber);
-        wordGlyphState.loadSelectPageLines(pageNumber: surahModel.startPageNumber);
         wordGlyphState.prefetchAround(pageNumber: surahModel.startPageNumber);
 
         final mushafPageNumberState = context.read<MushafPageNumberState>();

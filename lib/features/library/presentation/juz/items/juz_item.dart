@@ -36,7 +36,6 @@ class JuzItem extends StatelessWidget {
 
         ayahByAyahState.loadSelectPageAyahs(pageNumber: juzModel.startPageNumber);
         ayahByAyahState.prefetchAround(pageNumber: juzModel.startPageNumber);
-        wordGlyphState.loadSelectPageLines(pageNumber: juzModel.startPageNumber);
         wordGlyphState.prefetchAround(pageNumber: juzModel.startPageNumber);
 
         final mushafPageNumberState = context.read<MushafPageNumberState>();

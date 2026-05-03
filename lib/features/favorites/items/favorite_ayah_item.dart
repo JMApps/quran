@@ -34,7 +34,6 @@ class FavoriteAyahItem extends StatelessWidget {
 
         ayahByAyahState.loadSelectPageAyahs(pageNumber: ayahByAyahModel.ayahPageNumber);
         ayahByAyahState.prefetchAround(pageNumber: ayahByAyahModel.ayahPageNumber);
-        wordGlyphState.loadSelectPageLines(pageNumber: ayahByAyahModel.ayahPageNumber);
         wordGlyphState.prefetchAround(pageNumber: ayahByAyahModel.ayahPageNumber);
 
         final mushafPageNumberState = context.read<MushafPageNumberState>();

@@ -34,7 +34,6 @@ class LastFavoritePageItem extends StatelessWidget {
 
         ayahByAyahState.loadSelectPageAyahs(pageNumber: mushafPageMetaModel.pageNumber);
         ayahByAyahState.prefetchAround(pageNumber: mushafPageMetaModel.pageNumber);
-        wordGlyphState.loadSelectPageLines(pageNumber: mushafPageMetaModel.pageNumber);
         wordGlyphState.prefetchAround(pageNumber: mushafPageMetaModel.pageNumber);
 
         final mushafPageNumberState = context.read<MushafPageNumberState>();

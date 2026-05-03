@@ -56,7 +56,6 @@ class ToMushafPageButton extends StatelessWidget {
 
                               ayahByAyahState.loadSelectPageAyahs(pageNumber: pageNumber);
                               ayahByAyahState.prefetchAround(pageNumber: pageNumber);
-                              wordGlyphState.loadSelectPageLines(pageNumber: pageNumber);
                               wordGlyphState.prefetchAround(pageNumber: pageNumber);
                               
                               if (translationController.hasClients) {

@@ -36,7 +36,6 @@ class HizbItem extends StatelessWidget {
 
         ayahByAyahState.loadSelectPageAyahs(pageNumber: hizbModel.startPageNumber);
         ayahByAyahState.prefetchAround(pageNumber: hizbModel.startPageNumber);
-        wordGlyphState.loadSelectPageLines(pageNumber: hizbModel.startPageNumber);
         wordGlyphState.prefetchAround(pageNumber: hizbModel.startPageNumber);
 
         final mushafPageNumberState = context.read<MushafPageNumberState>();
